@@ -2,8 +2,8 @@ const express = require('express');
 const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const { Doc } = require('../../models');
+const catchAsync = require('../../utils/catchAsync');
 
 const router = express.Router();
 const multer = require('multer');
@@ -36,6 +36,10 @@ const upload = multer({
 router
   .route('/')
   .post(auth(), upload.single('document'), (req, res) => {
+
+    Doc.create({name: 'test', type: 'homework', rating: 0, file: {}});
+    //const resu = documentf.create(req.file);
+
     res.status(httpStatus.CREATED).send( req.file );
   });
 
