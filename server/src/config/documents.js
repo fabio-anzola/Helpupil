@@ -6,6 +6,9 @@ const documentTypes = {
   SCRIPT: 'script',
 };
 
+const documentMimes = ['image/jpg', 'image/png', 'application/pdf'];
+
 module.exports = {
   documentTypes,
+  documentMimes,
 };

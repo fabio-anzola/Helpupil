@@ -2,7 +2,9 @@ const express = require('express');
 const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
+const documentValidation = require('../../validations/document.validation');
 const { Doc } = require('../../models');
+const { documentMimes } = require('../../config/documents');
 
 const router = express.Router();
 const multer = require('multer');
@@ -17,7 +19,8 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
+  if (documentMimes.includes(file.mimetype)) {
+  // if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
     cb(null, true);
   } else {
     cb(null, false);
@@ -25,21 +28,22 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({
+  fileFilter: fileFilter,
   storage: storage,
   limits: {
     fileSize: 1024 * 1024 * 200
   },
-  fileFilter: fileFilter
 });
-
 
 router
   .route('/')
-  .post(auth(), upload.single('document'), (req, res) => {
+  .post(auth(), upload.single('file'), validate(documentValidation.create),  (req, res) => {
 
-    Doc.create({name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file});
+    const obj = {name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file};
 
-    res.status(httpStatus.CREATED).send( {name: req.name, type: req.type, user: req.user._id, rating: 0, file: req.file} );
+    Doc.create(obj);
+
+    res.status(httpStatus.CREATED).send(obj);
   });
 
 module.exports = router;
