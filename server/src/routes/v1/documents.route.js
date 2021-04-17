@@ -3,7 +3,6 @@ const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const { Doc } = require('../../models');
-const catchAsync = require('../../utils/catchAsync');
 
 const router = express.Router();
 const multer = require('multer');
@@ -33,14 +32,14 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
+
 router
   .route('/')
   .post(auth(), upload.single('document'), (req, res) => {
 
-    Doc.create({name: 'test', type: 'homework', rating: 0, file: {}});
-    //const resu = documentf.create(req.file);
+    Doc.create({name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file});
 
-    res.status(httpStatus.CREATED).send( req.file );
+    res.status(httpStatus.CREATED).send( {name: req.name, type: req.type, user: req.user._id, rating: 0, file: req.file} );
   });
 
 module.exports = router;
