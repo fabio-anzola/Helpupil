@@ -36,10 +36,10 @@
 
 ## Document Routes
 
-- [ ] POST /v1/documents - create a document
-- [ ] GET /v1/documents - get all documents
-- [ ] GET /v1/documents/:documentId - get document
-- [ ] DELETE /v1/documents/:documentId - delete a document
+- [x] POST /v1/documents - create a document
+- [x] GET /v1/documents - get all documents
+- [x] GET /v1/documents/:documentId - get document
+- [x] DELETE /v1/documents/:documentId - delete a document
 
 ## Rating Routes
 
