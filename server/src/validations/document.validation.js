@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { documentTypes, documentMimes } = require('../config/documents');
+const { objectId } = require('./custom.validation');
 
 const create = {
 	body: Joi.object().keys({
@@ -18,6 +19,18 @@ const create = {
 	}).required(),
 };
 
+const getAll = {
+	query: Joi.object().keys({
+		name: Joi.string(),
+		type: Joi.string().valid(...Object.values(documentTypes)),
+		user: Joi.string().custom(objectId),
+		sortBy: Joi.string(),
+		limit: Joi.number().integer(),
+		page: Joi.number().integer(),
+	  }),
+};
+
 module.exports = {
   create,
+  getAll,
 };

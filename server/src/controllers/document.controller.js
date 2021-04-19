@@ -10,6 +10,14 @@ const createDocument = catchAsync(async (req, res) => {
     res.status(httpStatus.CREATED).send(obj);
 });
 
+const getDocuments = catchAsync(async (req, res) => {
+    const filter = pick(req.query, ['name', 'role']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const result = await documentService.queryDocuments(filter, options);
+    res.send(result);
+  });
+
 module.exports = {
     createDocument,
+    getDocuments,
 };
