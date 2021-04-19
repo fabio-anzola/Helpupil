@@ -1,12 +1,11 @@
 {
-  "name": "create-nodejs-express-app",
-  "version": "1.7.0",
-  "description": "Create a Node.js app for building production-ready RESTful APIs using Express, by running one command",
-  "bin": "bin/createNodejsApp.js",
+  "name": "helpupil",
+  "version": "1.0",
+  "description": "Helpupil is platform where pupils can upload and download documents in exchange of points",
   "main": "src/index.js",
-  "repository": "https://github.com/hagopj13/node-express-boilerplate.git",
-  "author": "Hagop Jamkojian <hagopj13@gmail.com>",
-  "license": "MIT",
+  "repository": "https://github.com/fabio-anzola/Helpupil",
+  "author": "Anzola Fabio <fabio.anzola@htl.rennweg.at>, Krikler Richard <richard.krikler@htl.rennweg.at>, Rigler Tobias <tobias.rigler@htl.rennweg.at>",
+  "license": "",
   "engines": {
     "node": ">=12.0.0"
   },
