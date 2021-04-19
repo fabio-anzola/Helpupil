@@ -1,6 +1,6 @@
 {
   "name": "helpupil",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Helpupil is platform where pupils can upload and download documents in exchange of points",
   "main": "src/index.js",
   "repository": "https://github.com/fabio-anzola/Helpupil",
