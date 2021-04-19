@@ -6,7 +6,7 @@ const { Doc } = require('../models');
 /**
  * Create a document in db
  * @param {Object} docuemntBody
- * @returns {Promise<User>}
+ * @returns {Promise<Document>}
  */
 const createDoc = async (documentBody) => {
   if (!documentBody) {
@@ -31,16 +31,32 @@ const queryDocuments = async (filter, options) => {
 };
 
 /**
- * Get user by id
+ * Get document by id
  * @param {ObjectId} id
- * @returns {Promise<User>}
+ * @returns {Promise<Document>}
  */
 const getDocumentById = async (id) => {
   return Doc.findById(id);
+};
+
+
+/**
+ * Delete document by id
+ * @param {ObjectId} documentId
+ * @returns {Promise<Document>}
+ */
+ const deleteDocumentById = async (documentId) => {
+  const document = await getDocumentById(documentId);
+  if (!document) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
+  }
+  await document.remove();
+  return document;
 };
 
 module.exports = {
     createDoc,
     queryDocuments,
 		getDocumentById,
+		deleteDocumentById,
 };

@@ -41,7 +41,8 @@ router
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
 
 router
-  .route('/:userId')
-  .get(auth(), validate(documentValidation.get), documentController.getDocument);
+  .route('/:documentId')
+  .get(auth(), validate(documentValidation.get), documentController.getDocument)
+  .delete(auth(), documentController.deleteDocument);
 
 module.exports = router;

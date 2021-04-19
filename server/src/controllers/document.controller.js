@@ -18,15 +18,29 @@ const getDocuments = catchAsync(async (req, res) => {
 });
 
 const getDocument = catchAsync(async (req, res) => {
-	const document = await documentService.getDocumentById(req.params.userId);
+	const document = await documentService.getDocumentById(req.params.documentId);
 	if (!document) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
 	}
 	res.send(document);
 });
 
+const deleteDocument = catchAsync(async (req, res) => {
+	const document = await documentService.getDocumentById(req.params.documentId);
+	if (!document) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
+	}
+	if (req.user.role == 'moderator' || document.user.toString() == req.user._id.toString()) {
+		await documentService.deleteDocumentById(req.params.documentId);
+	} else {
+		throw new ApiError(httpStatus.UNAUTHORIZED, 'You dont have the required rights');
+	}
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 module.exports = {
 	createDocument,
 	getDocuments,
 	getDocument,
+	deleteDocument,
 };
