@@ -1,5 +1,54 @@
 components:
   schemas:
+    Document:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [homework, exam, test, revision, script]
+        user:
+          type: string
+        rating:
+          type: number
+        file:
+          type: object
+          properties:
+            fieldname:
+              type: string
+            originalname:
+              type: string
+            encoding:
+              type: string
+              enum: [7bit]
+            mimetype:
+              type: string
+              enum: [application/pdf, image/png, image/jpg]
+            destination:
+              type: string
+              enum: [uploads]
+            filename:
+              type: string
+            path:
+              type: string
+            size:
+              type: number
+      example:
+        name: SEW
+        type: test
+        user: 6077fdad1d54bb0c4fd573f2
+        rating: 0
+        file: 
+          fieldname: file,
+          originalname: Anschreiben.pdf,
+          encoding: 7bit,
+          mimetype: application/pdf,
+          destination: uploads,
+          filename: Anschreiben.pdf,
+          path: uploads/Anschreiben.pdf,
+          size: 444018
+
     User:
       type: object
       properties:
@@ -48,6 +97,16 @@ components:
           type: string
 
   responses:
+    FieldNotFilled:
+      description: Field has not been filled
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: <Field> is required
+
     DuplicateEmail:
       description: Email already taken
       content:
