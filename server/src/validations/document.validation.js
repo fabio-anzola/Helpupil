@@ -19,7 +19,7 @@ const create = {
 	}).required(),
 };
 
-const getAll = {
+const get = {
 	query: Joi.object().keys({
 		name: Joi.string(),
 		type: Joi.string().valid(...Object.values(documentTypes)),
@@ -32,5 +32,5 @@ const getAll = {
 
 module.exports = {
   create,
-  getAll,
+  get,
 };

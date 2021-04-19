@@ -25,12 +25,22 @@ const createDoc = async (documentBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
- const queryDocuments = async (filter, options) => {
+const queryDocuments = async (filter, options) => {
     const documents = await Doc.paginate(filter, options);
     return documents;
-  };
+};
+
+/**
+ * Get user by id
+ * @param {ObjectId} id
+ * @returns {Promise<User>}
+ */
+const getDocumentById = async (id) => {
+  return Doc.findById(id);
+};
 
 module.exports = {
     createDoc,
     queryDocuments,
+		getDocumentById,
 };

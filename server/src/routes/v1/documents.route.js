@@ -38,6 +38,10 @@ const upload = multer({
 router
   .route('/')
   .post(auth(), upload.single('file'), validate(documentValidation.create),  documentController.createDocument)
-  .get(auth(), validate(documentValidation.getAll), documentController.getDocuments);
+  .get(auth(), validate(documentValidation.get), documentController.getDocuments);
+
+router
+  .route('/:userId')
+  .get(auth(), validate(documentValidation.get), documentController.getDocument);
 
 module.exports = router;
