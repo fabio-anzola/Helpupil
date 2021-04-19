@@ -3,8 +3,8 @@ const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const documentValidation = require('../../validations/document.validation');
-const { Doc } = require('../../models');
 const { documentMimes } = require('../../config/documents');
+const documentController = require('../../controllers/document.controller');
 
 const router = express.Router();
 const multer = require('multer');
@@ -37,13 +37,6 @@ const upload = multer({
 
 router
   .route('/')
-  .post(auth(), upload.single('file'), validate(documentValidation.create),  (req, res) => {
-
-    const obj = {name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file};
-
-    Doc.create(obj);
-
-    res.status(httpStatus.CREATED).send(obj);
-  });
+  .post(auth(), upload.single('file'), validate(documentValidation.create),  documentController.createDocument);
 
 module.exports = router;
