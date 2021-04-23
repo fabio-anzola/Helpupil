@@ -13,7 +13,7 @@ router
 
 router
   .route('/:subjectId')
-  .get(auth(), validate(subjectValidation.getSubject), userController.getSubject)
+  .get(auth(), validate(subjectValidation.getSubject), subjectController.getSubject)
   .patch(auth('manageSubjects'), validate(subjectValidation.updateSubject), subjectController.updateSubject)
   .delete(auth('manageSubjects'), validate(subjectValidation.deleteSubject), subjectController.deleteSubject);
 
