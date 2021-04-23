@@ -3,6 +3,10 @@ components:
     Document:
       type: object
       properties:
+        reviewer:
+          type: array
+          items: 
+            type: string
         name:
           type: string
         type:
@@ -34,7 +38,15 @@ components:
               type: string
             size:
               type: number
+        status:
+          type: string
+          enum: [approved, pending, declined]
       example:
+        reviewer: [
+          "607d93b3ab9fe96585327a8d",
+          "6077fdad1d54bb0c4fd573f2",
+          "60795e84cb8cce353c356658"
+        ]
         name: SEW
         type: test
         user: 6077fdad1d54bb0c4fd573f2
@@ -48,7 +60,8 @@ components:
           filename: Anschreiben.pdf,
           path: uploads/Anschreiben.pdf,
           size: 444018
-
+        status: pending
+        
     User:
       type: object
       properties:
