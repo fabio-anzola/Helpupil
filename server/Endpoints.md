@@ -43,8 +43,7 @@
 
 ## Rating Routes
 
-- [ ] GET /v1/rating/:documentId - get document rating
-- [ ] PATCH /v1/rating/:documentId - update document rating
+- [x] PATCH /v1/rating/:documentId - update document rating
 
 ## Moderator Routes
 
