@@ -5,16 +5,14 @@ const catchAsync = require('../utils/catchAsync');
 const { moderatorService } = require('../services');
 
 const getDocuments = catchAsync(async (req, res) => {
-	const filter = pick(req.query, ['name', 'role']);
+	const filter = pick(req.query, ['name', 'type']);
 	const options = pick(req.query, ['sortBy', 'limit', 'page']);
-	//const result = await moderatorService.queryDocuments(filter, options);
-	const result = null;
+	const result = await moderatorService.queryDocuments(filter, options);
 	res.send(result);
 });
 
 const approve = catchAsync(async (req, res) => {
-	//const document = await moderatorService.getDocumentById(req.params.documentId);
-	const document = null;
+	const document = await moderatorService.getDocumentById(req.params.documentId);
 	if (!document) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
 	}
@@ -22,8 +20,7 @@ const approve = catchAsync(async (req, res) => {
 });
 
 const decline = catchAsync(async (req, res) => {
-	//const document = await moderatorService.getDocumentById(req.params.documentId);
-	const document = null;
+	const document = await moderatorService.getDocumentById(req.params.documentId);
 	if (!document) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
 	}
