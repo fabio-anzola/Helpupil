@@ -16,6 +16,21 @@ const createSubject = async (subjectBody, userBody) => {
   return subject;
 };
 
+/**
+ * Query for subjects
+ * @param {Object} filter - Mongo filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @returns {Promise<QueryResult>}
+ */
+ const querySubjects = async (filter, options) => {
+  const subjects = await Subject.paginate(filter, options);
+  return subjects;
+};
+
 module.exports = {
 	createSubject,
+	querySubjects,
 };
