@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const documentRoute = require('./documents.route');
 const moderatorRoute = require('./moderator.route');
 const ratingRoute = require('./rating.route');
+const subjectRoute = require('./subject.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/rating',
     route: ratingRoute,
+  },
+  {
+    path: '/subject',
+    route: subjectRoute,
   }
 ];
 
