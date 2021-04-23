@@ -30,7 +30,41 @@ const createSubject = async (subjectBody, userBody) => {
   return subjects;
 };
 
+/**
+ * Get subject by id
+ * @param {ObjectId} id
+ * @returns {Promise<Subject>}
+ */
+ const getSubjectById = async (id) => {
+  return Subject.findById(id);
+};
+
+/**
+ * Update user by id
+ * @param {ObjectId} subjectId
+ * @param {Object} updateBody
+ * @returns {Promise<Subject>}
+ */
+ const updateSubjectById = async (subjectId, updateBody) => {
+	 console.log(updateBody);
+  const subject = await getSubjectById(subjectId);
+  if (!subject) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found');
+  }
+  if (updateBody.name && (await Subject.isNameTaken(updateBody.name, subjectId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
+  }
+	if (updateBody.shortname && (await Subject.isShortnameTaken(updateBody.shortname, subjectId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Shortname already taken');
+  }
+  Object.assign(subject, updateBody);
+  await subject.save();
+  return subject;
+};
+
 module.exports = {
 	createSubject,
 	querySubjects,
+	getSubjectById,
+	updateSubjectById,
 };

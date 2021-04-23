@@ -31,9 +31,9 @@ const updateSubject = {
   }),
   body: Joi.object()
     .keys({
-      name: Joi.string().required(),
-    	shortname: Joi.string().required(),
-    	description: Joi.string().required(),
+      name: Joi.string(),
+    	shortname: Joi.string(),
+    	description: Joi.string(),
     })
     .min(1),
 };
