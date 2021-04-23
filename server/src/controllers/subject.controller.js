@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const { subjectService } = require('../services');
 
 const createSubject = catchAsync(async (req, res) => {
-  const subject = await subjectService.createSubject(req.body);
+  const subject = await subjectService.createSubject(req.body, req.user);
   res.status(httpStatus.CREATED).send(subject);
 });
 
