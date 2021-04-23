@@ -8,7 +8,14 @@ const documentTypes = {
 
 const documentMimes = ['image/jpg', 'image/png', 'application/pdf'];
 
+const statusTypes = {
+  APPROVED: 'approved',
+  WAITING: 'waiting',
+  DECLINED: 'declined',
+};
+
 module.exports = {
   documentTypes,
   documentMimes,
+  statusTypes,
 };

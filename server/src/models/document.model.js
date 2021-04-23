@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { documentTypes } = require('../config/documents');
+const { documentTypes, statusTypes } = require('../config/documents');
 
 const documentSchema = mongoose.Schema(
   {
@@ -26,7 +26,12 @@ const documentSchema = mongoose.Schema(
     file: {
       type: Object,
       required: true,
-    }
+    },
+    status: {
+      type: String,
+      enum: [statusTypes.APPROVED, statusTypes.WAITING, statusTypes.DECLINED],
+      required: true,
+    },
   },
   {
     timestamps: true,

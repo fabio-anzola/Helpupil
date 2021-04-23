@@ -3,10 +3,11 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { documentService } = require('../services');
+const { statusTypes } = require('../config/documents');
 
 const createDocument = catchAsync(async (req, res) => {
-	const obj = {name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file};
-	const documet = await documentService.createDoc(obj);
+	const obj = {name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file, status: statusTypes.WAITING};
+	const document = await documentService.createDoc(obj);
 	res.status(httpStatus.CREATED).send(obj);
 });
 
