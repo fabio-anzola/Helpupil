@@ -62,9 +62,24 @@ const createSubject = async (subjectBody, userBody) => {
   return subject;
 };
 
+/**
+ * Delete subject by id
+ * @param {ObjectId} subjectId
+ * @returns {Promise<Subject>}
+ */
+ const deleteSubjectById = async (subjectId) => {
+  const subject = await getSubjectById(subjectId);
+  if (!subject) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found');
+  }
+  await subject.remove();
+  return subject;
+};
+
 module.exports = {
 	createSubject,
 	querySubjects,
 	getSubjectById,
 	updateSubjectById,
+	deleteSubjectById,
 };
