@@ -32,6 +32,13 @@ const documentSchema = mongoose.Schema(
       enum: [statusTypes.APPROVED, statusTypes.PENDING, statusTypes.DECLINED],
       required: true,
     },
+    reviewer: {
+      type: [
+        mongoose.SchemaTypes.ObjectId
+      ],
+      ref: 'User',
+      require: true,
+    }
   },
   {
     timestamps: true,
