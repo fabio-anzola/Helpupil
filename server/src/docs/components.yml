@@ -3,6 +3,10 @@ components:
     Document:
       type: object
       properties:
+        reviewer:
+          type: array
+          items: 
+            type: string
         name:
           type: string
         type:
@@ -35,6 +39,11 @@ components:
             size:
               type: number
       example:
+        reviewer: [
+          "607d93b3ab9fe96585327a8d",
+          "6077fdad1d54bb0c4fd573f2",
+          "60795e84cb8cce353c356658"
+        ]
         name: SEW
         type: test
         user: 6077fdad1d54bb0c4fd573f2
