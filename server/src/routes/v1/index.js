@@ -23,7 +23,7 @@ const defaultRoutes = [
   },
   {
     path: '/mod',
-    route: documentRoute
+    route: moderatorRoute
   }
 ];
 
