@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const documentRoute = require('./documents.route');
 const moderatorRoute = require('./moderator.route');
+const ratingRoute = require('./rating.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -19,11 +20,15 @@ const defaultRoutes = [
   },
   {
     path: '/documents',
-    route: documentRoute
+    route: documentRoute,
   },
   {
     path: '/mod',
-    route: moderatorRoute
+    route: moderatorRoute,
+  },
+  {
+    path: '/rating',
+    route: ratingRoute,
   }
 ];
 
