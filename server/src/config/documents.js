@@ -10,7 +10,7 @@ const documentMimes = ['image/jpg', 'image/png', 'application/pdf'];
 
 const statusTypes = {
   APPROVED: 'approved',
-  WAITING: 'waiting',
+  PENDING: 'pending',
   DECLINED: 'declined',
 };
 

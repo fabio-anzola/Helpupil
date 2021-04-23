@@ -29,7 +29,7 @@ const documentSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: [statusTypes.APPROVED, statusTypes.WAITING, statusTypes.DECLINED],
+      enum: [statusTypes.APPROVED, statusTypes.PENDING, statusTypes.DECLINED],
       required: true,
     },
   },

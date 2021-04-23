@@ -26,8 +26,6 @@ const getDocumentById = async (id) => {
 };
 
 module.exports = {
-	createDoc,
 	queryDocuments,
 	getDocumentById,
-	deleteDocumentById,
 };
