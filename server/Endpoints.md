@@ -48,6 +48,6 @@
 
 ## Moderator Routes
 
-- [ ] GET /v1/mod/pending - get all pending documents
-- [ ] PATCH /v1/mod/approve/:documentId - approve document
-- [ ] PATCH /v1/mod/decline/:documentId - approve document
+- [x] GET /v1/mod/pending - get all pending documents
+- [x] PATCH /v1/mod/approve/:documentId - approve document
+- [x] PATCH /v1/mod/decline/:documentId - approve document
