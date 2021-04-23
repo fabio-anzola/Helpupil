@@ -25,7 +25,24 @@ const getDocumentById = async (id) => {
   return Doc.findById(id);
 };
 
+/**
+ * Update document by id
+ * @param {ObjectId} documentId
+ * @param {Object} updateBody
+ * @returns {Promise<Document>}
+ */
+const updateDocumentById = async (documentId, updateBody) => {
+	const document = await getDocumentById(documentId);
+	if (!document) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
+	}
+	Object.assign(document, updateBody);
+	await document.save();
+	return document;
+};
+
 module.exports = {
 	queryDocuments,
 	getDocumentById,
+	updateDocumentById,
 };
