@@ -20,12 +20,11 @@ const approve = catchAsync(async (req, res) => {
 });
 
 const decline = catchAsync(async (req, res) => {
-	const document = await moderatorService.getDocumentById(req.params.documentId);
-	if (!document) {
-		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
-	}
+	req.body.status = statusTypes.DECLINED;
+	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
 	res.send(document);
 });
+
 
 module.exports = {
 	getDocuments,
