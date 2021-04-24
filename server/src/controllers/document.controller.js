@@ -6,7 +6,7 @@ const { documentService } = require('../services');
 const { statusTypes } = require('../config/documents');
 
 const createDocument = catchAsync(async (req, res) => {
-	const obj = {name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file, status: statusTypes.PENDING, reviewer: []};
+	const obj = {name: req.body.name, type: req.body.type, user: req.user._id, rating: 0, file: req.file, status: statusTypes.PENDING, reviewer: [], subject: req.body.subject};
 	const document = await documentService.createDoc(obj);
 	res.status(httpStatus.CREATED).send(obj);
 });

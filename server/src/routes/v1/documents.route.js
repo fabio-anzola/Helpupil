@@ -73,6 +73,7 @@ module.exports = router;
  *               - file
  *               - name
  *               - type
+ *               - subject
  *             properties:
  *               file:
  *                 type: string
@@ -85,10 +86,14 @@ module.exports = router;
  *                 type: string
  *                 enum: [homework, exam, test, revision, script]
  *                 description: Type of document
+ *               subject:
+ *                 type: string
+ *                 description: ObjectId of subject
  *             example:
  *               file: <example.pdf>
  *               name: example_homework
  *               type: homework
+ *               subject: 60833a0fdefaa30582041ea7
  *     responses:
  *       "201":
  *         description: Created

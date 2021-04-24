@@ -6,6 +6,7 @@ const create = {
 	body: Joi.object().keys({
 		name: Joi.string().required(),
 		type: Joi.string().valid(...Object.values(documentTypes)).required(),
+		subject: Joi.string().custom(objectId).required(),
 	}),
 	file: Joi.object({
 		fieldname: Joi.string().required(),

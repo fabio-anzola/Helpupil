@@ -41,6 +41,8 @@ components:
         status:
           type: string
           enum: [approved, pending, declined]
+        subject:
+          type: string
       example:
         reviewer: [
           "607d93b3ab9fe96585327a8d",
@@ -61,6 +63,7 @@ components:
           path: uploads/Anschreiben.pdf,
           size: 444018
         status: pending
+        subject: 60833a0fdefaa30582041ea7
         
     User:
       type: object
