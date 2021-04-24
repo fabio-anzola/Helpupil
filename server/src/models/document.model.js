@@ -38,6 +38,11 @@ const documentSchema = mongoose.Schema(
       ],
       ref: 'User',
       require: true,
+    },
+    subject: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Subject',
+      required: true,
     }
   },
   {

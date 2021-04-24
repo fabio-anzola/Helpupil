@@ -1,115 +1,81 @@
 const express = require('express');
-const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const documentValidation = require('../../validations/document.validation');
-const { documentMimes } = require('../../config/documents');
-const documentController = require('../../controllers/document.controller');
+const subjectValidation = require('../../validations/subject.validation');
+const subjectController = require('../../controllers/subject.controller');
 
 const router = express.Router();
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'uploads');
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  if (documentMimes.includes(file.mimetype)) {
-  // if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  fileFilter: fileFilter,
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 200
-  },
-});
 
 router
   .route('/')
-  .post(auth(), upload.single('file'), validate(documentValidation.create),  documentController.createDocument)
-  .get(auth(), validate(documentValidation.get), documentController.getDocuments);
+  .post(auth(), validate(subjectValidation.createSubject), subjectController.createSubject)
+  .get(auth(), validate(subjectValidation.getSubjects), subjectController.getSubjects);
 
 router
-  .route('/:documentId')
-  .get(auth(), validate(documentValidation.get), documentController.getDocument)
-  .delete(auth(), documentController.deleteDocument);
+  .route('/:subjectId')
+  .get(auth(), validate(subjectValidation.getSubject), subjectController.getSubject)
+  .patch(auth('manageSubjects'), validate(subjectValidation.updateSubject), subjectController.updateSubject)
+  .delete(auth('manageSubjects'), validate(subjectValidation.deleteSubject), subjectController.deleteSubject);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Documents
- *   description: Document management and retrieval
+ *   name: Subject
+ *   description: Subject management and retrieval
  */
 
 /**
  * @swagger
- * /documents:
+ * /subject:
  *   post:
- *     summary: Create a document
- *     description: Only logged in users can create documents.
- *     tags: [Documents]
+ *     summary: Create a subject
+ *     description: Only logged in users can create a subject.
+ *     tags: [Subject]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
- *               - file
  *               - name
- *               - type
- *               - subject
+ *               - shortname
+ *               - description
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: document
  *               name:
  *                 type: string
- *                 description: Name of document
- *               type:
+ *                 description: must be unique
+ *               shortname:
  *                 type: string
- *                 enum: [homework, exam, test, revision, script]
- *                 description: Type of document
- *               subject:
+ *                 description: must be unique
+ *               description:
  *                 type: string
- *                 description: ObjectId of subject
  *             example:
- *               file: <example.pdf>
- *               name: example_homework
- *               type: homework
- *               subject: 60833a0fdefaa30582041ea7
+ *               name: Math
+ *               shortname: M
+ *               description: Subject of Math
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Document'
+ *                $ref: '#/components/schemas/Subject'
  *       "400":
- *         $ref: '#/components/responses/FieldNotFilled'
+ *         $ref: '#/components/responses/DuplicateSubject'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all documents
- *     description: Only logged in users can retrieve all documents.
- *     tags: [Documents]
+ *     summary: Get all subjects
+ *     description: Only logged in users can retrieve all subjects.
+ *     tags: [Subject]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -117,18 +83,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: Document name
+ *         description: Name
  *       - in: query
- *         name: type
+ *         name: shortname
  *         schema:
  *           type: string
- *           enum: [homework, exam, test, revision, script]
- *         description: Document type
- *       - in: query
- *         name: user
- *         schema:
- *           type: string
- *         description: user id of creator
+ *         description: Shortname
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -140,7 +100,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of subjects
  *       - in: query
  *         name: page
  *         schema:
@@ -159,7 +119,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Document'
+ *                     $ref: '#/components/schemas/Subject'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -180,11 +140,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /documents/{id}:
+ * /subject/{id}:
  *   get:
- *     summary: Get a document
- *     description: Logged in users can get a document.
- *     tags: [Documents]
+ *     summary: Get a subject
+ *     description: Logged in users can fetch all subjects
+ *     tags: [Subject]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -193,14 +153,60 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Document id
+ *         description: Subject id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Document'
+ *                $ref: '#/components/schemas/Subject'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   patch:
+ *     summary: Update a subject
+ *     description: Moderators can use this route
+ *     tags: [Subject]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Subject id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               shortname:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *             example:
+ *               name: Applied Math
+ *               shortname: AM
+ *               description: Subject for applied math
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Subject'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateSubject'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -209,9 +215,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a document
- *     description: Only moderators and owners can delete a document.
- *     tags: [Documents]
+ *     summary: Delete a subject
+ *     description: Only moderators can delete a subject
+ *     tags: [Subject]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -220,7 +226,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Subject id
  *     responses:
  *       "200":
  *         description: No content
