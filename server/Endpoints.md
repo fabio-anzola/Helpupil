@@ -20,11 +20,11 @@
 
 ## Subject Routes
 
-- [ ] POST /v1/subjects - create a subject
-- [ ] GET /v1/subjects - get all subjects
-- [ ] GET /v1/subjects/:subjectId - get subject
-- [ ] PATCH /v1/subjects/:subjectId - update subject
-- [ ] DELETE /v1/subjects/:subjectId - delete subject
+- [x] POST /v1/subject - create a subject
+- [x] GET /v1/subject - get all subjects
+- [x] GET /v1/subject/:subjectId - get subject
+- [x] PATCH /v1/subject/:subjectId - update subject
+- [x] DELETE /v1/subject/:subjectId - delete subject
 
 ## Teacher Routes
 
