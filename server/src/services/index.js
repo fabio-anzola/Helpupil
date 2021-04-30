@@ -5,3 +5,4 @@ module.exports.userService = require('./user.service');
 module.exports.documentService = require('./document.service');
 module.exports.moderatorService = require('./moderator.service');
 module.exports.subjectService = require('./subject.service');
+module.exports.teacherService = require('./teacher.service');
