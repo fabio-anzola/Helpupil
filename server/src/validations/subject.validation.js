@@ -32,8 +32,8 @@ const updateSubject = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
-    	shortname: Joi.string(),
-    	description: Joi.string(),
+      shortname: Joi.string(),
+      description: Joi.string(),
     })
     .min(1),
 };
@@ -47,7 +47,7 @@ const deleteSubject = {
 module.exports = {
   createSubject,
   getSubjects,
-	getSubject,
-	updateSubject,
-	deleteSubject,
+  getSubject,
+  updateSubject,
+  deleteSubject,
 };

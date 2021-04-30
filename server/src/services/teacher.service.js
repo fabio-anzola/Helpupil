@@ -8,12 +8,12 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Teacher>}
  */
 const createTeacher = async (teacherBody, userBody) => {
-  if (await Teacher.isNameTaken(teacherBody.name) || await Teacher.isShortnameTaken(teacherBody.shortname)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Name or Shortname already taken');
-  }
+	if (await Teacher.isNameTaken(teacherBody.name) || await Teacher.isShortnameTaken(teacherBody.shortname)) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'Name or Shortname already taken');
+	}
 	teacherBody.user = userBody._id;
-  const teacher = await Teacher.create(teacherBody);
-  return teacher;
+	const teacher = await Teacher.create(teacherBody);
+	return teacher;
 };
 
 /**
@@ -25,9 +25,9 @@ const createTeacher = async (teacherBody, userBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
- const queryTeachers = async (filter, options) => {
-  const teachers = await Teacher.paginate(filter, options);
-  return teachers;
+const queryTeachers = async (filter, options) => {
+	const teachers = await Teacher.paginate(filter, options);
+	return teachers;
 };
 
 /**
@@ -35,8 +35,8 @@ const createTeacher = async (teacherBody, userBody) => {
  * @param {ObjectId} id
  * @returns {Promise<Teacher>}
  */
- const getTeacherById = async (id) => {
-  return Teacher.findById(id);
+const getTeacherById = async (id) => {
+	return Teacher.findById(id);
 };
 
 /**
@@ -45,21 +45,21 @@ const createTeacher = async (teacherBody, userBody) => {
  * @param {Object} updateBody
  * @returns {Promise<Teacher>}
  */
- const updateTeacherById = async (teacherId, updateBody) => {
-	 console.log(updateBody);
-  const teacher = await getTeacherById(teacherId);
-  if (!teacher) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Teacher not found');
-  }
-  if (updateBody.name && (await Teacher.isNameTaken(updateBody.name, teacherId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
-  }
+const updateTeacherById = async (teacherId, updateBody) => {
+	console.log(updateBody);
+	const teacher = await getTeacherById(teacherId);
+	if (!teacher) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Teacher not found');
+	}
+	if (updateBody.name && (await Teacher.isNameTaken(updateBody.name, teacherId))) {
+		throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
+	}
 	if (updateBody.shortname && (await Teacher.isShortnameTaken(updateBody.shortname, teacherId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Shortname already taken');
-  }
-  Object.assign(teacher, updateBody);
-  await teacher.save();
-  return teacher;
+		throw new ApiError(httpStatus.BAD_REQUEST, 'Shortname already taken');
+	}
+	Object.assign(teacher, updateBody);
+	await teacher.save();
+	return teacher;
 };
 
 /**
@@ -67,13 +67,13 @@ const createTeacher = async (teacherBody, userBody) => {
  * @param {ObjectId} teacherId
  * @returns {Promise<Teacher>}
  */
- const deleteTeacherById = async (teacherId) => {
-  const teacher = await getTeacherById(teacherId);
-  if (!teacher) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Teacher not found');
-  }
-  await teacher.remove();
-  return teacher;
+const deleteTeacherById = async (teacherId) => {
+	const teacher = await getTeacherById(teacherId);
+	if (!teacher) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Teacher not found');
+	}
+	await teacher.remove();
+	return teacher;
 };
 
 module.exports = {

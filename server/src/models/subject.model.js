@@ -2,31 +2,31 @@ const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
 const subjectSchema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    shortname: {
+	{
+		name: {
 			type: String,
 			required: true,
 			trim: true,
-    },
+		},
+		shortname: {
+			type: String,
+			required: true,
+			trim: true,
+		},
 		description: {
 			type: String,
 			required: true,
 			trim: true,
-    },
-    user: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
+		},
+		user: {
+			type: mongoose.SchemaTypes.ObjectId,
+			ref: 'User',
+			required: true,
+		},
+	},
+	{
+		timestamps: true,
+	}
 );
 
 // add plugin that converts mongoose to json
@@ -40,8 +40,8 @@ subjectSchema.plugin(paginate);
  * @returns {Promise<boolean>}
  */
 subjectSchema.statics.isNameTaken = async function (name, excludeSubjectId) {
-  const subject = await this.findOne({ name, _id: { $ne: excludeSubjectId } });
-  return !!subject;
+	const subject = await this.findOne({ name, _id: { $ne: excludeSubjectId } });
+	return !!subject;
 };
 
 /**
@@ -50,9 +50,9 @@ subjectSchema.statics.isNameTaken = async function (name, excludeSubjectId) {
  * @param {ObjectId} [excludeSubjectId] - The id of the subject to be excluded
  * @returns {Promise<boolean>}
  */
- subjectSchema.statics.isShortnameTaken = async function (shortname, excludeSubjectId) {
-  const subject = await this.findOne({ shortname, _id: { $ne: excludeSubjectId } });
-  return !!subject;
+subjectSchema.statics.isShortnameTaken = async function (shortname, excludeSubjectId) {
+	const subject = await this.findOne({ shortname, _id: { $ne: excludeSubjectId } });
+	return !!subject;
 };
 
 /**
