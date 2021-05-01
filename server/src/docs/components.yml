@@ -43,6 +43,8 @@ components:
           enum: [approved, pending, declined]
         subject:
           type: string
+        teacher:
+          type: string
       example:
         reviewer: [
           "607d93b3ab9fe96585327a8d",
@@ -64,6 +66,7 @@ components:
           size: 444018
         status: pending
         subject: 60833a0fdefaa30582041ea7
+        teacher: 608c81ec640bb32f5ce13552
         
     User:
       type: object
@@ -113,6 +116,23 @@ components:
         shortname: M
         description: Subject of Math
 
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        shortname:
+          type: string
+        description:
+          type: string
+      example:
+        id: 608c81ec640bb32f5ce13552
+        name: Max Mustermann
+        shortname: MUS
+        description: Teacher MUS @ HTL3R
+
     AuthTokens:
       type: object
       properties:
@@ -151,6 +171,16 @@ components:
             message: Email already taken
 
     DuplicateSubject:
+      description: Name or shortname already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Name or shortname already taken
+
+    DuplicateTeacher:
       description: Name or shortname already taken
       content:
         application/json:

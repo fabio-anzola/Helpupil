@@ -43,6 +43,11 @@ const documentSchema = mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'Subject',
       required: true,
+    },
+    teacher: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Teacher',
+      required: true,
     }
   },
   {

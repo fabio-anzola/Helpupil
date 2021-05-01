@@ -37,7 +37,7 @@ const upload = multer({
 
 router
   .route('/')
-  .post(auth(), upload.single('file'), validate(documentValidation.create),  documentController.createDocument)
+  .post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
 
 router
@@ -74,6 +74,7 @@ module.exports = router;
  *               - name
  *               - type
  *               - subject
+ *               - teacher
  *             properties:
  *               file:
  *                 type: string
@@ -89,11 +90,15 @@ module.exports = router;
  *               subject:
  *                 type: string
  *                 description: ObjectId of subject
+ *               teacher:
+ *                 type: string
+ *                 description: ObjectId of teacher
  *             example:
  *               file: <example.pdf>
  *               name: example_homework
  *               type: homework
  *               subject: 60833a0fdefaa30582041ea7
+ *               teacher: 608c81ec640bb32f5ce13552
  *     responses:
  *       "201":
  *         description: Created
