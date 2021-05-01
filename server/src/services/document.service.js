@@ -26,8 +26,8 @@ const createDoc = async (documentBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryDocuments = async (filter, options) => {
-    const documents = await Doc.paginate(filter, options);
-    return documents;
+  const documents = await Doc.paginate(filter, options);
+  return documents;
 };
 
 /**
@@ -55,8 +55,8 @@ const getDocumentById = async (id) => {
 };
 
 module.exports = {
-    createDoc,
-    queryDocuments,
-		getDocumentById,
-		deleteDocumentById,
+  createDoc,
+  queryDocuments,
+  getDocumentById,
+  deleteDocumentById,
 };
