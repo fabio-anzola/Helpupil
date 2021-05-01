@@ -28,11 +28,11 @@
 
 ## Teacher Routes
 
-- [ ] POST /v1/teacher - create a teacher
-- [ ] GET /v1/teacher - get all teachers
-- [ ] GET /v1/teacher/:teacherId - get teacher
-- [ ] PATCH /v1/teacher/:teacherId - update teacher
-- [ ] DELETE /v1/teacher/:teacherId - delete teacher
+- [x] POST /v1/teacher - create a teacher
+- [x] GET /v1/teacher - get all teachers
+- [x] GET /v1/teacher/:teacherId - get teacher
+- [x] PATCH /v1/teacher/:teacherId - update teacher
+- [x] DELETE /v1/teacher/:teacherId - delete teacher
 
 ## Document Routes
 
