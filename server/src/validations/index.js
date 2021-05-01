@@ -5,3 +5,4 @@ module.exports.moderatorValidation = require('./moderator.validation');
 module.exports.ratingValidation = require('./rating.validation');
 module.exports.subjectValidation = require('./subject.validation');
 module.exports.teacherValidation = require('./teacher.validation');
+module.exports.contentValidation = require('./content.validation');
