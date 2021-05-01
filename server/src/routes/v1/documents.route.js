@@ -12,7 +12,7 @@ const crypto = require("crypto");
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, 'uploads');
+    cb(null, 'content');
   },
   filename: function(req, file, cb) {
     contents = file.originalname + ' @ ' + req._startTime + ' BY ' + req.user._id;
