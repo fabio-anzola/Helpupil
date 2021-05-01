@@ -1,120 +1,81 @@
 const express = require('express');
-const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const documentValidation = require('../../validations/document.validation');
-const { documentMimes } = require('../../config/documents');
-const documentController = require('../../controllers/document.controller');
+const teacherValidation = require('../../validations/teacher.validation');
+const teacherController = require('../../controllers/teacher.controller');
 
 const router = express.Router();
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'uploads');
-  },
-  filename: function(req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const fileFilter = (req, file, cb) => {
-  if (documentMimes.includes(file.mimetype)) {
-  // if (file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  fileFilter: fileFilter,
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 200
-  },
-});
 
 router
-  .route('/')
-  .post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
-  .get(auth(), validate(documentValidation.get), documentController.getDocuments);
+	.route('/')
+	.post(auth(), validate(teacherValidation.createTeacher), teacherController.createTeacher)
+	.get(auth(), validate(teacherValidation.getTeachers), teacherController.getTeachers);
 
 router
-  .route('/:documentId')
-  .get(auth(), validate(documentValidation.get), documentController.getDocument)
-  .delete(auth(), documentController.deleteDocument);
+	.route('/:teacherId')
+	.get(auth(), validate(teacherValidation.getTeacher), teacherController.getTeacher)
+	.patch(auth('manageTeacher'), validate(teacherValidation.updateTeacher), teacherController.updateTeacher)
+	.delete(auth('manageTeacher'), validate(teacherValidation.deleteTeacher), teacherController.deleteTeacher);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Documents
- *   description: Document management and retrieval
+ *   name: Teacher
+ *   description: Teacher management and retrieval
  */
 
 /**
  * @swagger
- * /documents:
+ * /teacher:
  *   post:
- *     summary: Create a document
- *     description: Only logged in users can create documents.
- *     tags: [Documents]
+ *     summary: Create a teacher
+ *     description: Only logged in users can create a teacher.
+ *     tags: [Teacher]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             required:
- *               - file
  *               - name
- *               - type
- *               - subject
- *               - teacher
+ *               - shortname
+ *               - description
  *             properties:
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: document
  *               name:
  *                 type: string
- *                 description: Name of document
- *               type:
+ *                 description: must be unique
+ *               shortname:
  *                 type: string
- *                 enum: [homework, exam, test, revision, script]
- *                 description: Type of document
- *               subject:
+ *                 description: must be unique
+ *               description:
  *                 type: string
- *                 description: ObjectId of subject
- *               teacher:
- *                 type: string
- *                 description: ObjectId of teacher
  *             example:
- *               file: <example.pdf>
- *               name: example_homework
- *               type: homework
- *               subject: 60833a0fdefaa30582041ea7
- *               teacher: 608c81ec640bb32f5ce13552
+ *               name: Max Mustermann
+ *               shortname: MUS
+ *               description: Teacher MUS @ HTL3R
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Document'
+ *                $ref: '#/components/schemas/Teacher'
  *       "400":
- *         $ref: '#/components/responses/FieldNotFilled'
+ *         $ref: '#/components/responses/DuplicateTeacher'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all documents
- *     description: Only logged in users can retrieve all documents.
- *     tags: [Documents]
+ *     summary: Get all teachers
+ *     description: Only logged in users can retrieve all teachers.
+ *     tags: [Teacher]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -122,18 +83,12 @@ module.exports = router;
  *         name: name
  *         schema:
  *           type: string
- *         description: Document name
+ *         description: Name
  *       - in: query
- *         name: type
+ *         name: shortname
  *         schema:
  *           type: string
- *           enum: [homework, exam, test, revision, script]
- *         description: Document type
- *       - in: query
- *         name: user
- *         schema:
- *           type: string
- *         description: user id of creator
+ *         description: Shortname
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -145,7 +100,7 @@ module.exports = router;
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of teachers
  *       - in: query
  *         name: page
  *         schema:
@@ -164,7 +119,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Document'
+ *                     $ref: '#/components/schemas/Teacher'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -185,11 +140,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /documents/{id}:
+ * /teacher/{id}:
  *   get:
- *     summary: Get a document
- *     description: Logged in users can get a document.
- *     tags: [Documents]
+ *     summary: Get a teacher
+ *     description: Logged in users can fetch all teachers
+ *     tags: [Teacher]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -198,14 +153,60 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: Document id
+ *         description: Teacher id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Document'
+ *                $ref: '#/components/schemas/Teacher'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ *
+ *   patch:
+ *     summary: Update a teacher
+ *     description: Moderators can use this route
+ *     tags: [Teacher]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Teacher id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               shortname:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *             example:
+ *               name: Max Mustermann
+ *               shortname: MUS
+ *               description: Teacher MUS @ HTL3R
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Teacher'
+ *       "400":
+ *         $ref: '#/components/responses/DuplicateTeacher'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -214,9 +215,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a document
- *     description: Only moderators and owners can delete a document.
- *     tags: [Documents]
+ *     summary: Delete a teacher
+ *     description: Only moderators can delete a teacher
+ *     tags: [Teacher]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -225,7 +226,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Teacher id
  *     responses:
  *       "200":
  *         description: No content
