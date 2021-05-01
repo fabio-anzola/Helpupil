@@ -10,3 +10,8 @@ yarn-error.log
 
 # Code coverage
 coverage
+
+# Content folder
+content/*.png
+content/*.jpg
+content/*.pdf
