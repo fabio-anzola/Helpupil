@@ -21,7 +21,8 @@ const createDocument = catchAsync(async (req, res) => {
 });
 
 const getDocuments = catchAsync(async (req, res) => {
-	const filter = pick(req.query, ['name', 'role']);
+	const filter = pick(req.query, ['name', 'type']);
+	filter.status = statusTypes.APPROVED;
 	const options = pick(req.query, ['sortBy', 'limit', 'page']);
 	const result = await documentService.queryDocuments(filter, options);
 	res.send(result);
@@ -31,6 +32,9 @@ const getDocument = catchAsync(async (req, res) => {
 	const document = await documentService.getDocumentById(req.params.documentId);
 	if (!document) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
+	}
+	if (document.status != statusTypes.APPROVED && req.user.role != 'moderator') {
+		throw new ApiError(httpStatus.NOT_FOUND, 'Document not approved');
 	}
 	res.send(document);
 });

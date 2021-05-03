@@ -41,6 +41,10 @@
 - [x] GET /v1/documents/:documentId - get document
 - [x] DELETE /v1/documents/:documentId - delete a document
 
+## Content Routes
+
+- [x] GET /v1/content/:documentName - download a document
+
 ## Rating Routes
 
 - [x] PATCH /v1/rating/:documentId - update document rating

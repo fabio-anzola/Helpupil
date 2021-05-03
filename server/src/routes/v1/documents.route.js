@@ -8,13 +8,17 @@ const documentController = require('../../controllers/document.controller');
 
 const router = express.Router();
 const multer = require('multer');
+const crypto = require("crypto");
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, 'uploads');
+    cb(null, 'content');
   },
   filename: function(req, file, cb) {
-    cb(null, file.originalname);
+    contents = file.originalname + ' @ ' + req._startTime + ' BY ' + req.user._id;
+    file_ending = file.originalname.split('.').pop();
+    hash = crypto.createHash("sha256").update(contents, "base64", "utf-8");
+    cb(null, hash.digest("hex") + '.' + file_ending);
   }
 });
 

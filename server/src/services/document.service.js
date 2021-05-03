@@ -1,7 +1,11 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const {
+  User
+} = require('../models');
 const ApiError = require('../utils/ApiError');
-const { Doc } = require('../models');
+const {
+  Doc
+} = require('../models');
 
 /**
  * Create a document in db
@@ -26,8 +30,8 @@ const createDoc = async (documentBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryDocuments = async (filter, options) => {
-    const documents = await Doc.paginate(filter, options);
-    return documents;
+  const documents = await Doc.paginate(filter, options);
+  return documents;
 };
 
 /**
@@ -39,13 +43,24 @@ const getDocumentById = async (id) => {
   return Doc.findById(id);
 };
 
+/**
+ * Get document by name
+ * @param {ObjectId} name
+ * @returns {Promise<Document>}
+ */
+const getDocumentByName = async (name) => {
+  return Doc.findOne({
+    "file.filename": name
+  });
+};
+
 
 /**
  * Delete document by id
  * @param {ObjectId} documentId
  * @returns {Promise<Document>}
  */
- const deleteDocumentById = async (documentId) => {
+const deleteDocumentById = async (documentId) => {
   const document = await getDocumentById(documentId);
   if (!document) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
@@ -55,8 +70,9 @@ const getDocumentById = async (id) => {
 };
 
 module.exports = {
-    createDoc,
-    queryDocuments,
-		getDocumentById,
-		deleteDocumentById,
+  createDoc,
+  queryDocuments,
+  getDocumentById,
+  deleteDocumentById,
+  getDocumentByName,
 };
