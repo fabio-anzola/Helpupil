@@ -31,10 +31,10 @@ const getDocuments = catchAsync(async (req, res) => {
 const getDocument = catchAsync(async (req, res) => {
 	const document = await documentService.getDocumentById(req.params.documentId);
 	if (!document) {
-		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found or approved');
+		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
 	}
 	if (document.status != statusTypes.APPROVED && req.user.role != 'moderator') {
-		throw new ApiError(httpStatus.NOT_FOUND, 'Document not found or approved');
+		throw new ApiError(httpStatus.NOT_FOUND, 'Document not approved');
 	}
 	res.send(document);
 });

@@ -43,7 +43,7 @@
 
 ## Content Routes
 
-- [ ] GET /v1/content/:documentName - download a document
+- [x] GET /v1/content/:documentName - download a document
 
 ## Rating Routes
 
