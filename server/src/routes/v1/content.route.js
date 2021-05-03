@@ -11,3 +11,41 @@ router
 	.get(auth(), validate(contentValidation.get), contentController.downloadDocument);
 
 module.exports = router;
+
+/**
+ * @swagger
+ * tags:
+ *   name: Content
+ *   description: Document download
+ */
+
+/**
+ * @swagger
+ * /content/{filename}:
+ *   get:
+ *     summary: Download document
+ *     description: Logged in users can download a document.
+ *     produces:
+ *       - application/pdf
+ *     tags: [Content]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: filename
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Document filename
+ *     responses:
+ *       "200":
+ *         description: A pdf file
+ *         schema:
+ *           type: file
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
