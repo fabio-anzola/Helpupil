@@ -92,6 +92,7 @@ const addCoins = async (userId, amount) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 	user.wallet += amount;
+	await updateUserById(userId, user);
 	return user;
 };
 
@@ -108,6 +109,7 @@ const addCoins = async (userId, amount) => {
   }
 	if (user.wallet - amount >= 0) {
 		user.wallet -= amount;
+		await updateUserById(userId, user);
 	} else {
 		throw new ApiError(httpStatus.PAYMENT_REQUIRED, 'Not enough coins');
 	}
