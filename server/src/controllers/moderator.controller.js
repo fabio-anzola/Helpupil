@@ -17,7 +17,6 @@ const approve = catchAsync(async (req, res) => {
 	req.body.status = statusTypes.APPROVED;
 	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
 	const user = await userService.addCoins(document.user, priceTypes[document.type.toUpperCase()]);
-	console.log(priceTypes[document.type.toUpperCase()]);
 	res.send(document);
 });
 
