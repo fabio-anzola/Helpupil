@@ -10,7 +10,13 @@ const downloadDocument = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'File not found');
   }
   const document = await documentService.getDocumentByName(req.params.documentName);
-  await userService.removeCoins(req.user._id, priceTypes[document.type.toUpperCase()]);
+	const user = await userService.getUserById(req.user._id);
+	if (!user.purchasedDocuments.includes(document._id)) {
+  	await userService.removeCoins(user._id, priceTypes[document.type.toUpperCase()]);
+		user.purchasedDocuments.push(document._id);
+		console.log(document._id);
+		await userService.updateUserById(user._id, user);
+	}
   originalname = document.file.originalname;
   res.download(file, originalname);
 });

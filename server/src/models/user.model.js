@@ -47,7 +47,14 @@ const userSchema = mongoose.Schema(
     wallet: {
       type: Number,
       default: 0,
-    }
+    },
+    purchasedDocuments: {
+      type: [
+        mongoose.SchemaTypes.ObjectId,
+      ],
+      ref: 'Document',
+      require: true,
+    },
   },
   {
     timestamps: true,
