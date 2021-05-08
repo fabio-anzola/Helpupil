@@ -48,4 +48,6 @@ module.exports = router;
  *         $ref: '#/components/responses/Forbidden'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ *       "404":
+ *         $ref: '#/components/responses/Credits'
  */
