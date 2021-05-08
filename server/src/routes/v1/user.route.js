@@ -60,7 +60,7 @@ module.exports = router;
  *                 description: At least one number and one letter
  *               role:
  *                  type: string
- *                  enum: [user, admin]
+ *                  enum: [user, admin, moderator]
  *             example:
  *               name: fake name
  *               email: fake@example.com
