@@ -1,3 +1,13 @@
 .login-view {
   display: block;
 }
+
+.login-view vaadin-login-form {
+  display: flex;
+  justify-content: center;
+}
+
+.login-view vaadin-login-form-wrapper {
+  text-align: center;
+}
+
