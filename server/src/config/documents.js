@@ -6,6 +6,14 @@ const documentTypes = {
   SCRIPT: 'script',
 };
 
+const priceTypes = {
+  HOMEWORK: 5,
+  EXAM: 6,
+  TEST: 7,
+  REVISION: 8,
+  SCRIPT: 9,
+};
+
 const documentMimes = ['image/jpg', 'image/png', 'application/pdf'];
 
 const statusTypes = {
@@ -16,6 +24,7 @@ const statusTypes = {
 
 module.exports = {
   documentTypes,
+  priceTypes,
   documentMimes,
   statusTypes,
 };

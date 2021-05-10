@@ -80,6 +80,42 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+/**
+ * Add coins to user by id
+ * @param {ObjectId} userId
+ * @param {Number} amount of coins which will be added
+ * @returns {Promise<User>}
+ */
+const addCoins = async (userId, amount) => {
+  const user = await getUserById(userId);
+	if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+	user.wallet += amount;
+	await updateUserById(userId, user);
+	return user;
+};
+
+/**
+ * Remove coins from user by id
+ * @param {ObjectId} userId
+ * @param {Number} amount of coins which will be removed
+ * @returns {Promise<User>}
+ */
+ const removeCoins = async (userId, amount) => {
+  const user = await getUserById(userId);
+	if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+	if (user.wallet - amount >= 0) {
+		user.wallet -= amount;
+		await updateUserById(userId, user);
+	} else {
+		throw new ApiError(httpStatus.PAYMENT_REQUIRED, 'Not enough coins');
+	}
+	return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -87,4 +123,6 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+	addCoins,
+	removeCoins,
 };

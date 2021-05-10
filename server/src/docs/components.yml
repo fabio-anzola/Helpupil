@@ -3,6 +3,10 @@ components:
     Document:
       type: object
       properties:
+        purchasedDocuments:
+          type: array
+          items: 
+            type: string
         reviewer:
           type: array
           items: 
@@ -37,6 +41,8 @@ components:
             path:
               type: string
             size:
+              type: number
+            wallet:
               type: number
         status:
           type: string
@@ -217,6 +223,16 @@ components:
           example:
             code: 404
             message: Not found
+
+    Credits:
+      description: Not enough credits
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 402
+            message: Not enough coins
 
   securitySchemes:
     bearerAuth:
