@@ -1,25 +1,21 @@
 package at.helpupil.application.views.login;
 
-import com.vaadin.flow.component.*;
+import at.helpupil.application.views.main.MainView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.page.Page;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.dom.Element;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
-import at.helpupil.application.views.main.MainView;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.shared.Registration;
-
-import java.util.Locale;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 @Route(value = "login", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
@@ -27,35 +23,57 @@ import java.util.stream.Stream;
 @CssImport("./views/login/login-view.css")
 public class LoginView extends Div {
 
+    private EmailField email = new EmailField("Email address");
+    private PasswordField password = new PasswordField("Password");
+    private Button forgotPassword = new Button("Forgot Password");
+
+    private Button clear = new Button("Clear");
+    private Button login = new Button("Login");
+
+
     public LoginView() {
         addClassName("login-view");
 
-        LoginForm loginForm = new LoginForm();
+        add(createTitle());
+        add(createFormLayout());
+        add(createButtonLayout());
 
-        loginForm.addLoginListener(e -> {
-//            boolean isAuthenticated = authenticate(e);
-//            if (isAuthenticated) {
-//                navigateToMainPage();
-//            } else {
-//                component.setError(true);
-//            }
+        clearForm();
 
-            Notification.show("Login Attempt");
+        clear.addClickListener(e -> clearForm());
+        login.addClickListener(e -> {
+            Notification.show("Logged stored.");
+            clearForm();
         });
-        add(loginForm);
-
-
-
-
-        // The login button is disabled when clicked to prevent multiple submissions.
-        // To restore it, call component.setEnabled(true)
-//        Button restoreLogin = new Button("Restore login button",
-//                event -> component.setEnabled(true));
-
-        // Setting error to true also enables the login button.
-//        Button showError = new Button("Show error",
-//                event -> component.setError(true));
-
+        forgotPassword.addClickListener(e -> {
+            Notification.show("You forgot your password.");
+        });
     }
 
+    private void clearForm() {
+        email.setValue("");
+        password.setValue("");
+    }
+
+    private Component createTitle() {
+        return new H3("Login");
+    }
+
+    private Component createFormLayout() {
+        VerticalLayout formLayout = new VerticalLayout();
+        formLayout.addClassName("form-layout");
+        email.setErrorMessage("Please enter a valid email address");
+        forgotPassword.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL);
+        formLayout.add(email, password, forgotPassword);
+        return formLayout;
+    }
+
+    private Component createButtonLayout() {
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.addClassName("button-layout");
+        login.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonLayout.add(login);
+        buttonLayout.add(clear);
+        return buttonLayout;
+    }
 }
