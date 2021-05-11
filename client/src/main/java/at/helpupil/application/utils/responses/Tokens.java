@@ -1,27 +1,27 @@
 package at.helpupil.application.utils.responses;
 
 public class Tokens {
-    Access AccessObject;
-    Refresh RefreshObject;
+    Access access;
+    Refresh refresh;
 
-
-    // Getter Methods
+    public Tokens(Access accessObject, Refresh refreshObject) {
+        access = accessObject;
+        refresh = refreshObject;
+    }
 
     public Access getAccess() {
-        return AccessObject;
+        return access;
     }
 
     public Refresh getRefresh() {
-        return RefreshObject;
+        return refresh;
     }
 
-    // Setter Methods
-
     public void setAccess(Access accessObject) {
-        this.AccessObject = accessObject;
+        this.access = accessObject;
     }
 
     public void setRefresh(Refresh refreshObject) {
-        this.RefreshObject = refreshObject;
+        this.refresh = refreshObject;
     }
 }

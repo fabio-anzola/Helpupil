@@ -1,10 +1,10 @@
 package at.helpupil.application.utils.responses;
 
-public class Access {
+class Refresh {
     private String token;
     private String expires;
 
-    public Access(String token, String expires) {
+    public Refresh(String token, String expires) {
         this.token = token;
         this.expires = expires;
     }

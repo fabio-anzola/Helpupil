@@ -3,6 +3,7 @@ package at.helpupil.application.views.login;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
+import com.google.gson.Gson;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -85,13 +86,13 @@ public class LoginView extends Div {
         return buttonLayout;
     }
 
-
     private void makeLoginRequest(String email, String password) {
-        String user = Unirest.post(BASE_URL + "/auth/login")
+        User user = Unirest.post(BASE_URL + "/auth/login")
                 .contentType("application/json")
                 .body(new Login(email, password))
-                .asString()
+                .asObject(User.class)
                 .getBody();
-        System.out.println(user);
+
+        System.out.println(user.getTokens().getAccess().getToken());
     }
 }

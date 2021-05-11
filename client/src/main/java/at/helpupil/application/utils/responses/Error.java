@@ -4,8 +4,10 @@ public class Error {
     private float code;
     private String message;
 
-
-    // Getter Methods
+    public Error(float code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 
     public float getCode() {
         return code;
