@@ -1,5 +1,7 @@
 package at.helpupil.application.views.login;
 
+import at.helpupil.application.utils.requests.Login;
+import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -12,10 +14,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import kong.unirest.Unirest;
+
+import static at.helpupil.application.Application.BASE_URL;
 
 @Route(value = "login", layout = MainView.class)
 @RouteAlias(value = "", layout = MainView.class)
@@ -42,8 +46,12 @@ public class LoginView extends Div {
 
         clear.addClickListener(e -> clearForm());
         login.addClickListener(e -> {
-            Notification.show("Logged stored.");
-            clearForm();
+            if (!email.getValue().trim().isEmpty() && !password.getValue().trim().isEmpty()) {
+                makeLoginRequest(email.getValue().trim(), password.getValue().trim());
+                clearForm();
+            } else {
+                Notification.show("Fields must not be empty.");
+            }
         });
         forgotPassword.addClickListener(e -> {
             Notification.show("You forgot your password.");
@@ -75,5 +83,15 @@ public class LoginView extends Div {
         buttonLayout.add(login);
         buttonLayout.add(clear);
         return buttonLayout;
+    }
+
+
+    private void makeLoginRequest(String email, String password) {
+        String user = Unirest.post(BASE_URL + "/auth/login")
+                .contentType("application/json")
+                .body(new Login(email, password))
+                .asString()
+                .getBody();
+        System.out.println(user);
     }
 }

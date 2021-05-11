@@ -28,59 +28,7 @@ public class User {
     }
 }
 
-class Tokens {
-    Access AccessObject;
-    Refresh RefreshObject;
-
-
-    // Getter Methods
-
-    public Access getAccess() {
-        return AccessObject;
-    }
-
-    public Refresh getRefresh() {
-        return RefreshObject;
-    }
-
-    // Setter Methods
-
-    public void setAccess(Access accessObject) {
-        this.AccessObject = accessObject;
-    }
-
-    public void setRefresh(Refresh refreshObject) {
-        this.RefreshObject = refreshObject;
-    }
-}
-
 class Refresh {
-    private String token;
-    private String expires;
-
-
-    // Getter Methods
-
-    public String getToken() {
-        return token;
-    }
-
-    public String getExpires() {
-        return expires;
-    }
-
-    // Setter Methods
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public void setExpires(String expires) {
-        this.expires = expires;
-    }
-}
-
-class Access {
     private String token;
     private String expires;
 
