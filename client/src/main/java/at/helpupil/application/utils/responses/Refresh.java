@@ -1,6 +1,6 @@
 package at.helpupil.application.utils.responses;
 
-class Refresh {
+public class Refresh {
     private String token;
     private String expires;
 

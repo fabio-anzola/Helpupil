@@ -2,11 +2,11 @@ package at.helpupil.application.utils.responses;
 
 import java.util.ArrayList;
 
-class UserObj {
+public class UserObj {
     private String role;
     private boolean isEmailVerified;
     private float wallet;
-    ArrayList<Object> purchasedDocuments = new ArrayList<Object>();
+    private ArrayList<Object> purchasedDocuments;
     private String name;
     private String email;
     private String id;
@@ -45,6 +45,14 @@ class UserObj {
         return id;
     }
 
+    public boolean isEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public ArrayList<Object> getPurchasedDocuments() {
+        return purchasedDocuments;
+    }
+
     // Setter Methods
 
     public void setRole(String role) {
@@ -69,5 +77,13 @@ class UserObj {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
+    }
+
+    public void setPurchasedDocuments(ArrayList<Object> purchasedDocuments) {
+        this.purchasedDocuments = purchasedDocuments;
     }
 }

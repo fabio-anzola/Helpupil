@@ -1,8 +1,8 @@
 package at.helpupil.application.utils.responses;
 
 public class Tokens {
-    Access access;
-    Refresh refresh;
+    private Access access;
+    private Refresh refresh;
 
     public Tokens(Access accessObject, Refresh refreshObject) {
         access = accessObject;

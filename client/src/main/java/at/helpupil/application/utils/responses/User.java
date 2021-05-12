@@ -1,8 +1,8 @@
 package at.helpupil.application.utils.responses;
 
 public class User {
-    UserObj user;
-    Tokens tokens;
+    private UserObj user;
+    private Tokens tokens;
 
     public User(UserObj userObject, Tokens tokensObject) {
         user = userObject;
