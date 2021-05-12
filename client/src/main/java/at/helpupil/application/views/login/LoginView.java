@@ -7,6 +7,7 @@ import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.google.gson.Gson;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -85,6 +86,7 @@ public class LoginView extends Div {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addClassName("button-layout");
         login.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        login.addClickShortcut(Key.ENTER);
         buttonLayout.add(login);
         buttonLayout.add(clear);
         return buttonLayout;
