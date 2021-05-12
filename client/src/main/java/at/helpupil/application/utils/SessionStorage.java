@@ -21,11 +21,6 @@ public class SessionStorage {
 
 
     public static boolean isNull() {
-        try {
-            get();
-            return false;
-        } catch (NullPointerException e) {
-            return true;
-        }
+        return null == get();
     }
 }

@@ -2,6 +2,7 @@ package at.helpupil.application.views.main;
 
 import java.util.Optional;
 
+import at.helpupil.application.utils.SessionStorage;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -91,9 +92,18 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Login", LoginView.class), createTab("Sign Up", SignUpView.class),
-                createTab("Documents", DocumentsView.class), createTab("Teachers", TeachersView.class),
-                createTab("Subjects", SubjectsView.class), createTab("Moderator", ModeratorView.class),
+        if (SessionStorage.isNull()) {
+            return new Tab[]{
+                    createTab("Login", LoginView.class),
+                    createTab("Sign Up", SignUpView.class),
+                    createTab("About", AboutView.class)
+            };
+        }
+        return new Tab[]{
+                createTab("Documents", DocumentsView.class),
+                createTab("Teachers", TeachersView.class),
+                createTab("Subjects", SubjectsView.class),
+                createTab("Moderator", ModeratorView.class),
                 createTab("About", AboutView.class)};
     }
 
