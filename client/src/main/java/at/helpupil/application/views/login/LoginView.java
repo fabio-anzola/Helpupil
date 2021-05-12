@@ -2,6 +2,7 @@ package at.helpupil.application.views.login;
 
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.Login;
+import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -89,14 +91,18 @@ public class LoginView extends Div {
     }
 
     private void makeLoginRequest(String email, String password) {
-        User user = Unirest.post(BASE_URL + "/auth/login")
+        HttpResponse<User> user = Unirest.post(BASE_URL + "/auth/login")
                 .contentType("application/json")
                 .body(new Login(email, password))
-                .asObject(User.class)
-                .getBody();
+                .asObject(User.class);
 
+        Error error = user.mapError(Error.class);
 
-        SessionStorage.set(user);
-        UI.getCurrent().getPage().reload();
+        if (null == error) {
+            SessionStorage.set(user.getBody());
+            UI.getCurrent().getPage().reload();
+        } else {
+            Notification.show("Check your Credentials");
+        }
     }
 }
