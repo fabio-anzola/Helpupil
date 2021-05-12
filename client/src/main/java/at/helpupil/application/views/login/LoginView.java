@@ -1,5 +1,6 @@
 package at.helpupil.application.views.login;
 
+import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
@@ -93,6 +94,8 @@ public class LoginView extends Div {
                 .asObject(User.class)
                 .getBody();
 
-        System.out.println(user.getTokens().getAccess().getToken());
+        
+        SessionStorage.set(user);
+        System.out.println(SessionStorage.get().getTokens().getAccess().getToken());
     }
 }

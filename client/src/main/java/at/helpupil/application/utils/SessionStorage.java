@@ -9,7 +9,13 @@ public class SessionStorage {
         VaadinSession.getCurrent().setAttribute("User", value);
     }
 
+
     public static User get() {
         return (User) VaadinSession.getCurrent().getAttribute("User");
+    }
+
+
+    public static void update(User value) {
+        set(value);
     }
 }
