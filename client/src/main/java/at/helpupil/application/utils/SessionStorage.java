@@ -18,4 +18,14 @@ public class SessionStorage {
     public static void update(User value) {
         set(value);
     }
+
+
+    public static boolean isNull() {
+        try {
+            get();
+            return false;
+        } catch (NullPointerException e) {
+            return true;
+        }
+    }
 }
