@@ -6,6 +6,7 @@ import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.google.gson.Gson;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -48,11 +49,11 @@ public class LoginView extends Div {
 
         clear.addClickListener(e -> clearForm());
         login.addClickListener(e -> {
-            if (!email.getValue().trim().isEmpty() && !password.getValue().trim().isEmpty()) {
+            if (!email.getValue().trim().isEmpty() && !password.getValue().trim().isEmpty() && !email.isInvalid()) {
                 makeLoginRequest(email.getValue().trim(), password.getValue().trim());
                 clearForm();
             } else {
-                Notification.show("Fields must not be empty.");
+                Notification.show("Check your input");
             }
         });
         forgotPassword.addClickListener(e -> {
@@ -94,8 +95,8 @@ public class LoginView extends Div {
                 .asObject(User.class)
                 .getBody();
 
-        
+
         SessionStorage.set(user);
-        System.out.println(SessionStorage.get().getTokens().getAccess().getToken());
+        UI.getCurrent().getPage().reload();
     }
 }
