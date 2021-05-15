@@ -50,6 +50,7 @@ public class MainView extends AppLayout {
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
+        ((Tab) menu.getChildren().findFirst().get()).setSelected(true);
     }
 
     private Component createHeaderContent() {
