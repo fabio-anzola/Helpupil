@@ -1,6 +1,7 @@
 package at.helpupil.application.views.login;
 
 import at.helpupil.application.utils.Auth;
+import at.helpupil.application.utils.OpenView;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.Error;
@@ -11,7 +12,6 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,7 +30,7 @@ import static at.helpupil.application.Application.BASE_URL;
 @RouteAlias(value = "", layout = MainView.class) //This is responsible for this page being default
 @PageTitle("Login")
 @CssImport("./views/login/login-view.css")
-public class LoginView extends Div {
+public class LoginView extends OpenView {
 
     private EmailField email = new EmailField("Email address");
     private PasswordField password = new PasswordField("Password");
@@ -42,8 +42,6 @@ public class LoginView extends Div {
 
     public LoginView() {
         addClassName("login-view");
-
-        Auth.redirectIfValid(); //Is user logged in?
 
         add(createTitle());
         add(createFormLayout());
