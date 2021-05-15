@@ -1,14 +1,13 @@
 package at.helpupil.application.views.login;
 
+import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
-import com.google.gson.Gson;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -28,7 +27,7 @@ import kong.unirest.Unirest;
 import static at.helpupil.application.Application.BASE_URL;
 
 @Route(value = "login", layout = MainView.class)
-@RouteAlias(value = "", layout = MainView.class)
+@RouteAlias(value = "", layout = MainView.class) //This is responsible for this page being default
 @PageTitle("Login")
 @CssImport("./views/login/login-view.css")
 public class LoginView extends Div {
@@ -43,6 +42,8 @@ public class LoginView extends Div {
 
     public LoginView() {
         addClassName("login-view");
+
+        Auth.redirectIfValid(); //Is user logged in?
 
         add(createTitle());
         add(createFormLayout());
@@ -102,7 +103,7 @@ public class LoginView extends Div {
 
         if (null == error) {
             SessionStorage.set(user.getBody());
-            UI.getCurrent().getPage().reload();
+            Auth.redirectIfValid();
         } else {
             Notification.show("Check your Credentials");
         }
