@@ -51,7 +51,7 @@ public class LoginView extends OpenView {
 
         clear.addClickListener(e -> clearForm());
         login.addClickListener(e -> {
-            if (!email.getValue().trim().isEmpty() && !password.getValue().trim().isEmpty() && !email.isInvalid()) {
+            if (!email.getValue().trim().isEmpty()  && !email.isInvalid() && !password.getValue().trim().isEmpty()) {
                 makeLoginRequest(email.getValue().trim(), password.getValue().trim());
                 clearForm();
             } else {
