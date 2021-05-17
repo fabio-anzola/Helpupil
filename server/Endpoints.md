@@ -8,7 +8,7 @@
 - [x] POST /v1/auth/forgot-password - send reset password email
 - [x] POST /v1/auth/reset-password - reset password
 - [x] POST /v1/auth/send-verification-email - send verification email
-- [x] POST /v1/auth/verify-email
+- [x] GET /v1/auth/verify-email
 
 ## User Routes
 

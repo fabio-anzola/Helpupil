@@ -1,3 +1,35 @@
 .login-view {
   display: block;
 }
+
+
+div.login-view {
+  width: 30%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.login-view vaadin-vertical-layout.form-layout {
+  padding: 10px 0;
+}
+
+div.login-view vaadin-vertical-layout.form-layout * {
+  width: 100%;
+}
+
+div.login-view vaadin-horizontal-layout.button-layout {
+  padding-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+div.login-view vaadin-horizontal-layout.button-layout * {
+  flex-grow: 1;
+}
+
+@media only screen and (max-width: 1023px) {
+  div.login-view {
+    width: 65%;
+  }
+}

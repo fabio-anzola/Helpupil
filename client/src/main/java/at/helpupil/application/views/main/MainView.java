@@ -1,36 +1,33 @@
 package at.helpupil.application.views.main;
 
-import java.util.Optional;
-
+import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.views.about.AboutView;
+import at.helpupil.application.views.documents.DocumentsView;
+import at.helpupil.application.views.login.LoginView;
+import at.helpupil.application.views.moderator.ModeratorView;
+import at.helpupil.application.views.signup.SignUpView;
+import at.helpupil.application.views.subjects.SubjectsView;
+import at.helpupil.application.views.teachers.TeachersView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.PageTitle;
-import at.helpupil.application.views.main.MainView;
-import at.helpupil.application.views.login.LoginView;
-import at.helpupil.application.views.signup.SignUpView;
-import at.helpupil.application.views.documents.DocumentsView;
-import at.helpupil.application.views.teachers.TeachersView;
-import at.helpupil.application.views.subjects.SubjectsView;
-import at.helpupil.application.views.moderator.ModeratorView;
-import at.helpupil.application.views.about.AboutView;
-import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dependency.CssImport;
+
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -49,6 +46,7 @@ public class MainView extends AppLayout {
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
+        //((Tab) menu.getChildren().findFirst().get()).setSelected(true);
     }
 
     private Component createHeaderContent() {
@@ -91,9 +89,18 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Login", LoginView.class), createTab("Sign Up", SignUpView.class),
-                createTab("Documents", DocumentsView.class), createTab("Teachers", TeachersView.class),
-                createTab("Subjects", SubjectsView.class), createTab("Moderator", ModeratorView.class),
+        if (SessionStorage.isNull()) {
+            return new Tab[]{
+                    createTab("Login", LoginView.class),
+                    createTab("Sign Up", SignUpView.class),
+                    createTab("About", AboutView.class)
+            };
+        }
+        return new Tab[]{
+                createTab("Documents", DocumentsView.class),
+                createTab("Teachers", TeachersView.class),
+                createTab("Subjects", SubjectsView.class),
+                createTab("Moderator", ModeratorView.class),
                 createTab("About", AboutView.class)};
     }
 
