@@ -103,7 +103,7 @@ public class LoginView extends OpenView {
             SessionStorage.set(user.getBody());
             Auth.redirectIfValid();
         } else {
-            Notification.show("Check your Credentials");
+            Notification.show(error.getMessage());
         }
     }
 }
