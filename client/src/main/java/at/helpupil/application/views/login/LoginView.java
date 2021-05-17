@@ -3,6 +3,7 @@ package at.helpupil.application.views.login;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.requests.ForgotPassword;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.User;
@@ -58,9 +59,7 @@ public class LoginView extends OpenView {
                 Notification.show("Check your input");
             }
         });
-        forgotPassword.addClickListener(e -> {
-            Notification.show("You forgot your password.");
-        });
+        forgotPassword.addClickListener(e -> forgotPassword(email.getValue().trim()));
     }
 
     private void clearForm() {
@@ -105,5 +104,14 @@ public class LoginView extends OpenView {
         } else {
             Notification.show(error.getMessage());
         }
+    }
+
+    private void forgotPassword(String email) {
+        Unirest.post(BASE_URL + "/auth/forgot-password")
+                .contentType("application/json")
+                .body(new ForgotPassword(email))
+                .asEmpty();
+
+        Notification.show("Email sent if account exists");
     }
 }
