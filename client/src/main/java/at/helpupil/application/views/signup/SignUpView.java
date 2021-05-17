@@ -4,6 +4,7 @@ import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.Login;
+import at.helpupil.application.utils.requests.SignUp;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
@@ -29,7 +30,7 @@ import static at.helpupil.application.Application.BASE_URL;
 
 @Route(value = "signup", layout = MainView.class)
 @PageTitle("Sign Up")
-@CssImport("./views/login/sign-up-view.css")
+@CssImport("./views/signup/sign-up-view.css")
 public class SignUpView extends OpenView {
 
     private EmailField email = new EmailField("Email address");
@@ -89,9 +90,9 @@ public class SignUpView extends OpenView {
     }
 
     private void makeSignUpRequest(String email, String username, String password) {
-/*        HttpResponse<User> user = Unirest.post(BASE_URL + "/auth/login")
+        HttpResponse<User> user = Unirest.post(BASE_URL + "/auth/register")
                 .contentType("application/json")
-                .body(new Login(email, password))
+                .body(new SignUp(email, username, password))
                 .asObject(User.class);
 
         Error error = user.mapError(Error.class);
@@ -100,7 +101,7 @@ public class SignUpView extends OpenView {
             SessionStorage.set(user.getBody());
             Auth.redirectIfValid();
         } else {
-            Notification.show("Check your Credentials");
-        }*/
+            Notification.show(error.getMessage());
+        }
     }
 }
