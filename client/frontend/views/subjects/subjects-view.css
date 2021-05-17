@@ -1,3 +1,7 @@
 .subjects-view {
   display: block;
 }
+
+vaadin-horizontal-layout {
+  flex-wrap: wrap;
+}
