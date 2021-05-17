@@ -100,8 +100,16 @@ public class SignUpView extends OpenView {
         if (null == error) {
             SessionStorage.set(user.getBody());
             Auth.redirectIfValid();
+            sendVerifyEmail();
         } else {
             Notification.show(error.getMessage());
         }
+    }
+
+    private void sendVerifyEmail() {
+        Unirest.post(BASE_URL + "/auth/send-verification-email")
+                .queryString("token", SessionStorage.get().getTokens().getAccess().getToken())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asEmpty();
     }
 }
