@@ -3,14 +3,14 @@ package at.helpupil.application.utils.responses;
 public class Subjects {
     private Subject[] results;
     private Integer page;
-    private Integer lime;
+    private Integer limit;
     private Integer totalPages;
     private Integer totalResults;
 
-    public Subjects(Subject[] results, Integer page, Integer lime, Integer totalPages, Integer totalResults) {
+    public Subjects(Subject[] results, Integer page, Integer limit, Integer totalPages, Integer totalResults) {
         this.results = results;
         this.page = page;
-        this.lime = lime;
+        this.limit = limit;
         this.totalPages = totalPages;
         this.totalResults = totalResults;
     }
@@ -31,12 +31,12 @@ public class Subjects {
         this.page = page;
     }
 
-    public Integer getLime() {
-        return lime;
+    public Integer getLimit() {
+        return limit;
     }
 
-    public void setLime(Integer lime) {
-        this.lime = lime;
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     public Integer getTotalPages() {
