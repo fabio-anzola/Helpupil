@@ -31,7 +31,6 @@ public class SubjectsView extends SecuredView {
         HorizontalLayout layout = new HorizontalLayout();
         layout.getThemeList().remove("spacing");
         layout.addClassName("subject-layout");
-        layout.setWidth("100%");
         Subjects subject = getSubjects(1);
         for (Subject result : subject.getResults()) {
 
