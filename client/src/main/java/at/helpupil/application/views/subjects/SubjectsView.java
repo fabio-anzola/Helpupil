@@ -33,6 +33,7 @@ public class SubjectsView extends SecuredView {
         layout.setSpacing(true);
         Subjects subject = getSubjects(1);
         for (Subject result : subject.getResults()) {
+
             Card card = new Card(
                     new TitleLabel(result.getName()),
                     new PrimaryLabel(result.getShortname()),
