@@ -2,6 +2,33 @@
   display: block;
 }
 
-vaadin-horizontal-layout {
+
+div.subjects-view {
+  width: 90%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.subjects-view vaadin-horizontal-layout.subject-layout {
+  display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
+  padding: 10px 0;
+}
+
+div.subjects-view vaadin-horizontal-layout.subject-layout content-card {
+  padding: 15px 0;
+  margin: 0;
+}
+
+@media only screen and (max-width: 1023px) {
+  div.subjects-view {
+    width: 100%;
+  }
+
+  div.subjects-view vaadin-horizontal-layout.subject-layout content-card {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
