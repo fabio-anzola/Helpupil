@@ -10,7 +10,7 @@ div.subjects-view {
   margin-right: auto;
 }
 
-div.subjects-view vaadin-horizontal-layout.subject-layout {
+vaadin-horizontal-layout.subject-layout {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -18,7 +18,7 @@ div.subjects-view vaadin-horizontal-layout.subject-layout {
   padding: 10px 0;
 }
 
-div.subjects-view vaadin-horizontal-layout.subject-layout content-card {
+vaadin-horizontal-layout.subject-layout content-card {
   padding: 15px 0;
   margin: 0;
 }
@@ -28,7 +28,7 @@ div.subjects-view vaadin-horizontal-layout.subject-layout content-card {
     width: 100%;
   }
 
-  div.subjects-view vaadin-horizontal-layout.subject-layout content-card {
+  vaadin-horizontal-layout.subject-layout content-card {
     margin-left: auto;
     margin-right: auto;
   }

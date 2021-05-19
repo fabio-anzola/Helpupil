@@ -9,21 +9,21 @@ div.sign-up-view {
   margin-right: auto;
 }
 
-div.sign-up-view vaadin-vertical-layout.form-layout {
+vaadin-vertical-layout.form-layout {
   padding: 10px 0;
 }
 
-div.sign-up-view vaadin-vertical-layout.form-layout * {
+vaadin-vertical-layout.form-layout * {
   width: 100%;
 }
 
-div.sign-up-view vaadin-horizontal-layout.button-layout {
+vaadin-horizontal-layout.button-layout {
   padding-top: 25px;
   display: flex;
   justify-content: center;
 }
 
-div.sign-up-view vaadin-horizontal-layout.button-layout * {
+vaadin-horizontal-layout.button-layout * {
   flex-grow: 1;
 }
 

@@ -10,21 +10,21 @@ div.login-view {
   margin-right: auto;
 }
 
-div.login-view vaadin-vertical-layout.form-layout {
+vaadin-vertical-layout.form-layout {
   padding: 10px 0;
 }
 
-div.login-view vaadin-vertical-layout.form-layout * {
+vaadin-vertical-layout.form-layout * {
   width: 100%;
 }
 
-div.login-view vaadin-horizontal-layout.button-layout {
+vaadin-horizontal-layout.button-layout {
   padding-top: 25px;
   display: flex;
   justify-content: center;
 }
 
-div.login-view vaadin-horizontal-layout.button-layout * {
+vaadin-horizontal-layout.button-layout * {
   flex-grow: 1;
 }
 
