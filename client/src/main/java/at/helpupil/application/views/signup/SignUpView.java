@@ -34,7 +34,7 @@ import static at.helpupil.application.Application.BASE_URL;
 public class SignUpView extends OpenView {
 
     private EmailField email = new EmailField("Email address");
-    private TextField username = new TextField("Username: ");
+    private TextField name = new TextField("Username: ");
     private PasswordField password = new PasswordField("Password");
 
     private Button clear = new Button("Clear");
@@ -52,8 +52,8 @@ public class SignUpView extends OpenView {
 
         clear.addClickListener(e -> clearForm());
         signUp.addClickListener(e -> {
-            if (!email.getValue().trim().isEmpty() && !email.isInvalid() && !username.getValue().trim().isEmpty() && !password.getValue().trim().isEmpty()) {
-                makeSignUpRequest(email.getValue().trim(), username.getValue().trim(), password.getValue().trim());
+            if (!email.getValue().trim().isEmpty() && !email.isInvalid() && !name.getValue().trim().isEmpty() && !password.getValue().trim().isEmpty()) {
+                makeSignUpRequest(email.getValue().trim(), name.getValue().trim(), password.getValue().trim());
                 clearForm();
             } else {
                 Notification.show("Check your input");
@@ -63,7 +63,7 @@ public class SignUpView extends OpenView {
 
     private void clearForm() {
         email.setValue("");
-        username.setValue("");
+        name.setValue("");
         password.setValue("");
     }
 
@@ -75,7 +75,7 @@ public class SignUpView extends OpenView {
         VerticalLayout formLayout = new VerticalLayout();
         formLayout.addClassName("form-layout");
         email.setErrorMessage("Please enter a valid email address");
-        formLayout.add(email, username, password);
+        formLayout.add(email, name, password);
         return formLayout;
     }
 
@@ -89,10 +89,10 @@ public class SignUpView extends OpenView {
         return buttonLayout;
     }
 
-    private void makeSignUpRequest(String email, String username, String password) {
+    private void makeSignUpRequest(String email, String name, String password) {
         HttpResponse<User> user = Unirest.post(BASE_URL + "/auth/register")
                 .contentType("application/json")
-                .body(new SignUp(email, username, password))
+                .body(new SignUp(email, name, password))
                 .asObject(User.class);
 
         Error error = user.mapError(Error.class);
