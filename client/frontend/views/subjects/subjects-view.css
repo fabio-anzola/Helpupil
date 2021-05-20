@@ -19,6 +19,7 @@ vaadin-horizontal-layout.subject-layout {
 }
 
 vaadin-horizontal-layout.subject-layout content-card {
+  width: 250px;
   padding: 15px 0;
   margin: 0;
 }

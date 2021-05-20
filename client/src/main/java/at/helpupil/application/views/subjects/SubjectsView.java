@@ -33,13 +33,11 @@ public class SubjectsView extends SecuredView {
         layout.addClassName("subject-layout");
         Subjects subject = getSubjects(1);
         for (Subject result : subject.getResults()) {
-
             Card card = new Card(
                     new TitleLabel(result.getName()),
                     new PrimaryLabel(result.getShortname()),
                     new SecondaryLabel(result.getDescription())
             );
-            card.setWidth("250px");
             layout.add(card);
         }
 
