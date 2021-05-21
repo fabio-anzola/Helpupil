@@ -1,5 +1,6 @@
 package at.helpupil.application.views.subjects;
 
+import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.responses.Error;
@@ -10,6 +11,7 @@ import com.github.appreciated.card.Card;
 import com.github.appreciated.card.label.PrimaryLabel;
 import com.github.appreciated.card.label.SecondaryLabel;
 import com.github.appreciated.card.label.TitleLabel;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -39,6 +41,9 @@ public class SubjectsView extends SecuredView {
                     new SecondaryLabel(result.getDescription())
             );
             layout.add(card);
+            card.addClickListener(e -> {
+                UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + result.getShortname() + "\"");
+            });
         }
 
         add(layout);

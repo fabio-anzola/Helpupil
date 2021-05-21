@@ -20,7 +20,7 @@ public class Auth {
         }
     }
 
-    private static String getURL() {
+    public static String getURL() {
         HttpServletRequest httpServletRequest = ((VaadinServletRequest) VaadinService.getCurrentRequest()).getHttpServletRequest();
         String[] requestUrl = httpServletRequest.getRequestURL().toString().split("/");
         return requestUrl[0] + "//" + requestUrl[2];
