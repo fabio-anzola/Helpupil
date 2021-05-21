@@ -13,7 +13,7 @@ div.subjects-view {
 vaadin-horizontal-layout.subject-layout {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   padding: 10px 0;
 }

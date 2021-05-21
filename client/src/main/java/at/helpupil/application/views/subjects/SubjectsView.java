@@ -35,48 +35,76 @@ import static at.helpupil.application.Application.BASE_URL;
 @PageTitle("Subjects")
 @CssImport("./views/subjects/subjects-view.css")
 public class SubjectsView extends SecuredView {
+    private HorizontalLayout subjectLayout = new HorizontalLayout();
+    private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
     private int currentPage = 1;
+    private Subjects subject = getSubjects(currentPage);
 
     private Button previousPage = new Button("Previous");
-    private Label currentPageText = new Label(Integer.toString(currentPage));
+    private Label currentPageText = new Label();
     private Button nextPage = new Button("Next");
 
 
     public SubjectsView() {
         addClassName("subjects-view");
 
-        add(createSubjectCards());
-        add(createPagingMenu());
+        add(createSubjectCards(subject));
+        add(createPagingMenu(subject.getTotalPages()));
+
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                subject = getSubjects(currentPage - 1);
+                currentPage = subject.getPage();
+                updateSubjectPage();
+            }
+        });
+
+        nextPage.addClickListener(e -> {
+            if (currentPage < subject.getTotalPages()) {
+                subject = getSubjects(currentPage + 1);
+                currentPage = subject.getPage();
+                updateSubjectPage();
+            }
+        });
     }
 
-    private Component createSubjectCards() {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.getThemeList().remove("spacing");
-        layout.addClassName("subject-layout");
-        Subjects subject = getSubjects(currentPage);
+    private void updateSubjectPage() {
+        remove(subjectLayout);
+        remove(pagingMenuLayout);
+        subjectLayout = new HorizontalLayout();
+        pagingMenuLayout = new HorizontalLayout();
+        add(createSubjectCards(subject));
+        add(createPagingMenu(subject.getTotalPages()));
+    }
+
+    private Component createSubjectCards(Subjects subject) {
+        subjectLayout.getThemeList().remove("spacing");
+        subjectLayout.addClassName("subject-layout");
+
         for (Subject result : subject.getResults()) {
             Card card = new Card(
                     new TitleLabel(result.getName()),
                     new PrimaryLabel(result.getShortname()),
                     new SecondaryLabel(result.getDescription())
             );
-            layout.add(card);
+            subjectLayout.add(card);
             card.addClickListener(e -> {
                 UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + result.getShortname() + "\"");
             });
         }
 
-        return layout;
+        return subjectLayout;
     }
 
-    private Component createPagingMenu() {
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.addClassName("paging-layout");
+    private Component createPagingMenu(int totalPages) {
+        pagingMenuLayout.addClassName("paging-layout");
 
-        layout.add(previousPage, currentPageText, nextPage);
+        currentPageText.setText(currentPage + " / " + totalPages);
 
-        return layout;
+        pagingMenuLayout.add(previousPage, currentPageText, nextPage);
+
+        return pagingMenuLayout;
     }
 
     private Subjects getSubjects(int page) {
