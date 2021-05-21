@@ -39,6 +39,17 @@ vaadin-horizontal-layout.subject-layout content-card:hover vaadin-vertical-layou
   transition: all 0.4s ease 0s;
 }
 
+vaadin-horizontal-layout.paging-layout {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+vaadin-horizontal-layout.paging-layout label {
+  align-self: center;
+}
+
+
 @media only screen and (max-width: 1023px) {
   div.subjects-view {
     width: 100%;
