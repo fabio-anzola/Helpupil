@@ -11,15 +11,14 @@ import com.github.appreciated.card.Card;
 import com.github.appreciated.card.label.PrimaryLabel;
 import com.github.appreciated.card.label.SecondaryLabel;
 import com.github.appreciated.card.label.TitleLabel;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -35,6 +34,9 @@ import static at.helpupil.application.Application.BASE_URL;
 @PageTitle("Subjects")
 @CssImport("./views/subjects/subjects-view.css")
 public class SubjectsView extends SecuredView {
+
+    private Button addSubject = new Button("Add New Subject");
+
     private HorizontalLayout subjectLayout = new HorizontalLayout();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
@@ -49,8 +51,11 @@ public class SubjectsView extends SecuredView {
     public SubjectsView() {
         addClassName("subjects-view");
 
+        add(addSubject);
         add(createSubjectCards(subject));
         add(createPagingMenu(subject.getTotalPages()));
+
+        addSubject.addClickListener(e -> showAddSubjectDialog());
 
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
@@ -67,6 +72,24 @@ public class SubjectsView extends SecuredView {
                 updateSubjectPage();
             }
         });
+    }
+
+    private void showAddSubjectDialog() {
+        Dialog dialog = new Dialog();
+        dialog.add(new Text("You have unsaved changes that will be discarded if you navigate away."));
+        Span message = new Span();
+
+        Button confirmButton = new Button("Confirm", event -> {
+            message.setText("Confirmed!");
+            dialog.close();
+        });
+        Button cancelButton = new Button("Cancel", event -> {
+            message.setText("Cancelled...");
+            dialog.close();
+        });
+
+        dialog.add(new Div(confirmButton, cancelButton));
+        dialog.open();
     }
 
     private void updateSubjectPage() {
