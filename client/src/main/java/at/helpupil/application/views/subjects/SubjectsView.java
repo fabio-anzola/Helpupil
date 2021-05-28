@@ -3,9 +3,12 @@ package at.helpupil.application.views.subjects;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.requests.SignUp;
+import at.helpupil.application.utils.requests.SubjectObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Subject;
 import at.helpupil.application.utils.responses.Subjects;
+import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.github.appreciated.card.Card;
 import com.github.appreciated.card.label.PrimaryLabel;
@@ -89,7 +92,9 @@ public class SubjectsView extends SecuredView {
         formLayout.add(name, shortname, description);
 
         Button confirmButton = new Button("Confirm", event -> {
-            dialog.close();
+            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
+                makeSubjectCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
+            }
         });
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -99,6 +104,21 @@ public class SubjectsView extends SecuredView {
 
         dialog.add(new Div(formLayout, confirmButton, cancelButton));
         dialog.open();
+    }
+
+    private void makeSubjectCreateRequest(String subject, String shortname, String description) {
+        HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
+                .contentType("application/json")
+                .body(new SubjectObj(subject, shortname, description))
+                .asObject(Subject.class);
+
+        Error error = createSubject.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show(shortname + " successfully created");
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private void updateSubjectPage() {
