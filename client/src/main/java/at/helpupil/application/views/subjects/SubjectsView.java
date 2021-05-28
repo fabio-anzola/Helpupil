@@ -109,6 +109,7 @@ public class SubjectsView extends SecuredView {
     private void makeSubjectCreateRequest(String subject, String shortname, String description) {
         HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
                 .contentType("application/json")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .body(new SubjectObj(subject, shortname, description))
                 .asObject(Subject.class);
 
