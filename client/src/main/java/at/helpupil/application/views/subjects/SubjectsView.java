@@ -14,6 +14,7 @@ import com.github.appreciated.card.label.TitleLabel;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -21,12 +22,12 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-
-import java.awt.*;
 
 import static at.helpupil.application.Application.BASE_URL;
 
@@ -76,19 +77,27 @@ public class SubjectsView extends SecuredView {
 
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
-        dialog.add(new Text("You have unsaved changes that will be discarded if you navigate away."));
+        dialog.add(new Text("Add new Subject"));
         Span message = new Span();
 
+        VerticalLayout formLayout = new VerticalLayout();
+
+        TextField name = new TextField("Name");
+        TextField shortname = new TextField("Shortname");
+        TextField description = new TextField("Description");
+
+        formLayout.add(name, shortname, description);
+
         Button confirmButton = new Button("Confirm", event -> {
-            message.setText("Confirmed!");
             dialog.close();
         });
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         Button cancelButton = new Button("Cancel", event -> {
-            message.setText("Cancelled...");
             dialog.close();
         });
 
-        dialog.add(new Div(confirmButton, cancelButton));
+        dialog.add(new Div(formLayout, confirmButton, cancelButton));
         dialog.open();
     }
 
