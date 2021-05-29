@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (isset($_GET['token'])) {
+    $_SESSION['token'] = $_GET['token'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -116,44 +124,88 @@
         <div class="centered-wrapper">
             <div>
                 <?php
-                if (isset($_GET['landingType']) && isset($_GET['token'])) {
+                if (isset($_GET['landingType']) && isset($_SESSION['token'])) {
                     if ($_GET['landingType'] == "verify") {
                         echo "<h1>Email Verification</h1>";
 
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, "https://api.helpupil.at/v1/auth/verify-email?token=" . $_GET['token']);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        $crl = curl_init();
+                        curl_setopt($crl, CURLOPT_URL, "https://api.helpupil.at/v1/auth/verify-email?token=" . $_SESSION['token']);
+                        curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
 
-                        $data = curl_exec($ch);
-                        curl_close($ch);
-                       
-                        if (empty($data)) {
+                        $result = curl_exec($crl);
+
+                        if (empty($result)) {
                             echo "<h2>You are now verified!</h2>";
                             echo "<h3>Thank you for registering!</h3>";
                         } else {
-                            $obj = json_decode($data);
+                            $obj = json_decode($result);
                             echo "<h2>Verification failed!</h2>";
                             echo "<h3>" . $obj->{'code'} . " Error</h3>";
                             echo "<h3>Message: " . $obj->{'message'} . "</h3>";
                         }
-                    } else if ($_GET['landingType'] == "resetPassword") {
-                        echo `
-                        <h1>Reset Password</h1>
-                        <br>
-                        <div class="inputDiv">
-                            <label for="newPassword">New Password:</label>
-                            <input type="password" name="newPassword" id="newPasswordIn">
-                        </div>
-                        <br>
-                        <div class="inputDiv">
-                            <label for="confirmNewPassword">Confirm new Password:</label>
-                            <input type="password" name="confirmNewPassword" id="newPasswordIn">
-                        </div>
-                        <button id="setNewPassword">Confirm</button>
-                        `;
+
+                        curl_close($crl);
+
+                        session_unset();
+                        session_destroy();
+                    } else if ($_GET['landingType'] == "resetPassword" && isset($_SESSION['token'])) {
+                        echo '
+                        <h1>Reset Password</h1><br>
+                        <form action="' . $_SERVER['PHP_SELF'] . '" method="POST">
+                            <div class="inputDiv">
+                                <label for="newPassword">New Password:</label>
+                                <input type="password" name="password" id="newPasswordIn">
+                            </div>
+                            <button id="setNewPassword" onclick="submit()">Confirm</button>
+                        </form>
+                        ';
                     }
                 }
 
+
+                if (isset($_POST['password']) && isset($_SESSION['token'])) {
+                    echo  "<h1>Reset Password</h1><br>";
+
+                    $data = array(
+                        'password' => $_POST['password'],
+                    );
+
+                    $post_data = json_encode($data);
+
+                    $crl = curl_init('https://api.helpupil.at/v1/auth/reset-password?token=' . $_SESSION['token']);
+                    curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($crl, CURLINFO_HEADER_OUT, true);
+                    curl_setopt($crl, CURLOPT_POST, true);
+                    curl_setopt($crl, CURLOPT_POSTFIELDS, $post_data);
+
+                    curl_setopt(
+                        $crl,
+                        CURLOPT_HTTPHEADER,
+                        array(
+                            'Content-Type: application/json'
+                        )
+                    );
+
+                    $result = curl_exec($crl);
+
+                    if ($result === false) {
+                        echo "Could not reach the API";
+                    } else {
+                        $http_response_code = curl_getinfo($crl, CURLINFO_HTTP_CODE);
+                        if ($http_response_code == 204) {
+                            echo "<h2>Reset successful!</h2>";
+                        } else {
+                            $obj = json_decode($result);
+                            echo "<h2>Reset failed!</h2>";
+                            echo "<h3>" . $obj->{'code'} . " Error</h3>";
+                            echo "<h3>Message: " . $obj->{'message'} . "</h3>";
+                        }
+                    }
+                    curl_close($crl);
+
+                    session_unset();
+                    session_destroy();
+                }
                 ?>
             </div>
         </div>
