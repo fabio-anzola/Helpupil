@@ -11,6 +11,8 @@ div.subjects-view {
   margin: 15px auto;
 }
 
+
+/* Subject Layout */
 vaadin-horizontal-layout.subject-layout {
   width: 100%;
   display: flex;
@@ -19,6 +21,8 @@ vaadin-horizontal-layout.subject-layout {
   padding: 10px 0;
 }
 
+
+/* Subject Content Cards */
 vaadin-horizontal-layout.subject-layout content-card {
   user-select: none;
   width: 250px;
@@ -40,6 +44,8 @@ vaadin-horizontal-layout.subject-layout content-card:hover vaadin-vertical-layou
   transition: all 0.4s ease 0s;
 }
 
+
+/* Paging */
 vaadin-horizontal-layout.paging-layout {
   width: 100%;
   display: flex;
@@ -48,6 +54,36 @@ vaadin-horizontal-layout.paging-layout {
 
 vaadin-horizontal-layout.paging-layout label {
   align-self: center;
+}
+
+
+
+/* Add Subject - Dialog */
+vaadin-vertical-layout.dialog-layout label {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18pt;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-text-field {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
+  width: 60%;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
+  flex-grow: 1;
 }
 
 

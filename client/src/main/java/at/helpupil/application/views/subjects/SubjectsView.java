@@ -80,29 +80,40 @@ public class SubjectsView extends SecuredView {
 
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
-        dialog.add(new Text("Add new Subject"));
-        Span message = new Span();
+        dialog.setWidth("40vw");
 
-        VerticalLayout formLayout = new VerticalLayout();
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Add new Subject");
 
         TextField name = new TextField("Name");
         TextField shortname = new TextField("Shortname");
         TextField description = new TextField("Description");
 
-        formLayout.add(name, shortname, description);
 
-        Button confirmButton = new Button("Confirm", event -> {
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        Button confirmButton = new Button("Confirm");
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e -> {
             if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
                 makeSubjectCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
             }
         });
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        Button cancelButton = new Button("Cancel", event -> {
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> {
             dialog.close();
         });
 
-        dialog.add(new Div(formLayout, confirmButton, cancelButton));
+        dialogButtonLayout.add(confirmButton, cancelButton);
+
+
+        dialogLayout.add(dialogHeading, name, shortname, description, dialogButtonLayout);
+
+
+        dialog.add(dialogLayout);
         dialog.open();
     }
 
