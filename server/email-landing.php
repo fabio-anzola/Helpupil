@@ -40,8 +40,8 @@
         justify-content: center;
         flex-wrap: wrap;
         padding: 50px;
-        margin-left: 25px;        
-        margin-right: 25px;        
+        margin-left: 25px;
+        margin-right: 25px;
         border-radius: 10px;
 
         -webkit-box-shadow: 5px 5px 12px 3px rgba(0, 0, 0, 0.12);
@@ -49,7 +49,9 @@
         box-shadow: 5px 5px 12px 3px rgba(0, 0, 0, 0.12);
     }
 
-    div.centered-wrapper div {
+    h1,
+    h2,
+    h3 {
         text-align: center;
     }
 
@@ -63,6 +65,48 @@
 
     h3 {
         padding-top: 8px 0;
+    }
+
+    label,
+    input {
+        display: block;
+        margin: 10px 0;
+    }
+
+    div.inputDiv {
+        width: 100%;
+    }
+
+    input {
+        width: 94%;
+        font-size: 13pt;
+        border: none;
+        background-color: #e8ebef;
+        
+        border-radius: 4px;
+        padding: 7px;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    button#setNewPassword {
+        margin-top: 25px;
+        border: none;
+        background-color: #1676f3;
+        color: white;
+        font-weight: bold;
+        font-size: 12pt;
+        padding: 10px;
+        margin-top: 35px;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    button#setNewPassword:hover {
+        background-color: #2d83f4;
+        cursor: pointer;
     }
 </style>
 
@@ -94,6 +138,19 @@
                 }
 
                 ?>
+
+                <h1>Reset Password</h1>
+                <br>
+                <div class="inputDiv">
+                    <label for="newPassword">New Password:</label>
+                    <input type="password" name="newPassword" id="newPasswordIn">
+                </div>
+                <br>
+                <div class="inputDiv">
+                    <label for="confirmNewPassword">Confirm new Password:</label>
+                    <input type="password" name="confirmNewPassword" id="newPasswordIn">
+                </div>
+                <button id="setNewPassword">Confirm</button>
             </div>
         </div>
     </div>
