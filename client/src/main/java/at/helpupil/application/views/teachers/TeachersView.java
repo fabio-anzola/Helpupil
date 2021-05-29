@@ -97,6 +97,7 @@ public class TeachersView extends SecuredView {
         confirmButton.addClickListener(e -> {
             if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
                 makeTeacherCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
+                dialog.close();
             } else {
                 Notification.show("Check your input");
             }
