@@ -99,6 +99,8 @@ public class SubjectsView extends SecuredView {
         confirmButton.addClickListener(e -> {
             if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
                 makeSubjectCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
+            } else {
+                Notification.show("Check your input");
             }
         });
 
