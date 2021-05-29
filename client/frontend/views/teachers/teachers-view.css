@@ -11,7 +11,7 @@ div.teachers-view {
 }
 
 
-/* Subject Layout */
+/* Teacher Layout */
 vaadin-horizontal-layout.teachers-layout {
   width: 100%;
   display: flex;
@@ -57,7 +57,7 @@ vaadin-horizontal-layout.paging-layout label {
 
 
 
-/* Add Subject - Dialog */
+/* Add Teacher - Dialog */
 vaadin-vertical-layout.dialog-layout label {
   width: 100%;
   text-align: center;
