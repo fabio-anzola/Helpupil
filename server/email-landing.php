@@ -60,11 +60,12 @@
     }
 
     h2 {
-        padding: 12px 0;
+        padding: 16px 0;
+        padding-bottom: 20px;
     }
 
     h3 {
-        padding-top: 8px 0;
+        padding: 8px 0;
     }
 
     label,
@@ -82,7 +83,7 @@
         font-size: 13pt;
         border: none;
         background-color: #e8ebef;
-        
+
         border-radius: 4px;
         padding: 7px;
     }
@@ -117,40 +118,43 @@
                 <?php
                 if (isset($_GET['landingType']) && isset($_GET['token'])) {
                     if ($_GET['landingType'] == "verify") {
+                        echo "<h1>Email Verification</h1>";
+
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_URL, "https://api.helpupil.at/v1/auth/verify-email?token=" . $_GET['token']);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
                         $data = curl_exec($ch);
                         curl_close($ch);
-
+                       
                         if (empty($data)) {
-                            echo "<h1>You are now verified!</h1>";
+                            echo "<h2>You are now verified!</h2>";
                             echo "<h3>Thank you for registering!</h3>";
                         } else {
                             $obj = json_decode($data);
-                            echo "<h1>Verification failed!</h1>";
-                            echo "<h2>" . $obj->{'code'} . " Error</h2>";
+                            echo "<h2>Verification failed!</h2>";
+                            echo "<h3>" . $obj->{'code'} . " Error</h3>";
                             echo "<h3>Message: " . $obj->{'message'} . "</h3>";
                         }
                     } else if ($_GET['landingType'] == "resetPassword") {
+                        echo `
+                        <h1>Reset Password</h1>
+                        <br>
+                        <div class="inputDiv">
+                            <label for="newPassword">New Password:</label>
+                            <input type="password" name="newPassword" id="newPasswordIn">
+                        </div>
+                        <br>
+                        <div class="inputDiv">
+                            <label for="confirmNewPassword">Confirm new Password:</label>
+                            <input type="password" name="confirmNewPassword" id="newPasswordIn">
+                        </div>
+                        <button id="setNewPassword">Confirm</button>
+                        `;
                     }
                 }
 
                 ?>
-
-                <h1>Reset Password</h1>
-                <br>
-                <div class="inputDiv">
-                    <label for="newPassword">New Password:</label>
-                    <input type="password" name="newPassword" id="newPasswordIn">
-                </div>
-                <br>
-                <div class="inputDiv">
-                    <label for="confirmNewPassword">Confirm new Password:</label>
-                    <input type="password" name="confirmNewPassword" id="newPasswordIn">
-                </div>
-                <button id="setNewPassword">Confirm</button>
             </div>
         </div>
     </div>
