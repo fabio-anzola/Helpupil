@@ -18,6 +18,9 @@ import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.charts.model.Condition;
+import com.vaadin.flow.component.charts.model.Responsive;
+import com.vaadin.flow.component.charts.model.Rules;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -54,6 +57,8 @@ public class SubjectsView extends SecuredView {
 
     public SubjectsView() {
         addClassName("subjects-view");
+
+        addSubject.addClassName("addSubject-button");
 
         add(addSubject);
         add(createSubjectCards(subject));
