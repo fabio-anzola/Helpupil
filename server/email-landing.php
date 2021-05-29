@@ -101,7 +101,6 @@ if (isset($_GET['token'])) {
     }
 
     button#setNewPassword {
-        margin-top: 25px;
         border: none;
         background-color: #1676f3;
         color: white;
@@ -134,14 +133,19 @@ if (isset($_GET['token'])) {
 
                         $result = curl_exec($crl);
 
-                        if (empty($result)) {
-                            echo "<h2>You are now verified!</h2>";
-                            echo "<h3>Thank you for registering!</h3>";
+                        if ($result === false) {
+                            echo "Could not reach the API";
                         } else {
-                            $obj = json_decode($result);
-                            echo "<h2>Verification failed!</h2>";
-                            echo "<h3>" . $obj->{'code'} . " Error</h3>";
-                            echo "<h3>Message: " . $obj->{'message'} . "</h3>";
+                            $http_response_code = curl_getinfo($crl, CURLINFO_HTTP_CODE);
+                            if ($http_response_code == 204) {
+                                echo "<h2>You are now verified!</h2>";
+                                echo "<h3>Thank you for registering!</h3>";
+                            } else {
+                                $obj = json_decode($result);
+                                echo "<h2>Verification failed!</h2>";
+                                echo "<h3>" . $obj->{'code'} . " Error</h3>";
+                                echo "<h3>Message: " . $obj->{'message'} . "</h3>";
+                            }
                         }
 
                         curl_close($crl);
