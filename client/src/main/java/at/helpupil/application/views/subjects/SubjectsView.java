@@ -13,6 +13,7 @@ import com.github.appreciated.card.label.PrimaryLabel;
 import com.github.appreciated.card.label.SecondaryLabel;
 import com.github.appreciated.card.label.TitleLabel;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -94,9 +95,11 @@ public class SubjectsView extends SecuredView {
 
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickShortcut(Key.ENTER);
         confirmButton.addClickListener(e -> {
             if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
                 makeSubjectCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
+                dialog.close();
             } else {
                 Notification.show("Check your input");
             }
