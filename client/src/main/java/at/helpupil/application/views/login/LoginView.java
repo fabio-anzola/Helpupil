@@ -54,7 +54,6 @@ public class LoginView extends OpenView {
         login.addClickListener(e -> {
             if (!email.getValue().trim().isEmpty()  && !email.isInvalid() && !password.getValue().trim().isEmpty()) {
                 makeLoginRequest(email.getValue().trim(), password.getValue().trim());
-                clearForm();
             } else {
                 Notification.show("Check your input");
             }

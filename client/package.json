@@ -47,7 +47,8 @@
     "@vaadin/vaadin-upload": "4.4.1",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "lit-element": "2.4.0",
-    "lumo-css-framework": "^3.0.11"
+    "lumo-css-framework": "^3.0.11",
+    "@polymer/paper-ripple": "3.0.2"
   },
   "devDependencies": {
     "chokidar": "^3.5.0",
@@ -108,7 +109,12 @@
       "@vaadin/vaadin-lumo-styles": "1.6.0",
       "@vaadin/vaadin-material-styles": "1.3.2",
       "@vaadin/vaadin-rich-text-editor": "1.3.0",
-      "@vaadin/vaadin-avatar": "1.0.4"
+      "@vaadin/vaadin-avatar": "1.0.4",
+      "@polymer/paper-icon-button": "^3.0.2",
+      "@polymer/paper-button": "^3.0.1",
+      "@polymer/iron-iconset-svg": "^3.0.1",
+      "lit-html": "^1.1.2",
+      "@polymer/paper-ripple": "3.0.2"
     },
     "devDependencies": {
       "webpack-babel-multi-target-plugin": "2.3.3",
@@ -123,6 +129,6 @@
       "ts-loader": "8.0.12",
       "typescript": "4.0.3"
     },
-    "hash": "9b7fc60b5e9ca91d846e175fcce7ecdb2711b6af8b69a2e748c65b34a6ced518"
+    "hash": "fcf796a9fb1ba55f67f2cdc7f1f8a81be77e3f714e3e3b59fa28f16d1d580bf3"
   }
 }
