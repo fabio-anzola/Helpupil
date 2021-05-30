@@ -32,7 +32,6 @@ const queryDocuments = async (filter, options) => {
   for (let i = 0; i < documents.results.length; i++) {
     const element = (await documents.results[i]).toObject();
     element.price = priceTypes[element.type.toUpperCase()];
-    console.log(element)
     documents.results[i] = element;
   }
   return documents;
