@@ -6,18 +6,20 @@ import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -69,7 +71,47 @@ public class DocumentsView extends SecuredView {
         grid.addComponentColumn(item -> createRateButton());
         grid.addComponentColumn(item -> createBuyButton());
 
+        grid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
+
         return grid;
+    }
+
+    private void showDocumentDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label(document.getName());
+
+        Button confirmRate = new Button("Confirm");
+        Button buyButton = new Button("Buy");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        confirmRate.addClickListener(e -> {
+            //rate document()
+            Notification.show("You rated a document");
+        });
+
+        buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buyButton.addClickListener(e -> {
+            //buy document()
+            Notification.show("You purchased a document");
+        });
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+        });
+
+        dialogButtonLayout.add(confirmRate, buyButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
     }
 
     private Button createBuyButton() {
