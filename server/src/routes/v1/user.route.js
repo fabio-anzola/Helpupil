@@ -17,6 +17,10 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/public/:userId')
+  .get(auth(), validate(userValidation.getUser), userController.getPublicUser)
+
 module.exports = router;
 
 /**
