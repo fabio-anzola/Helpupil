@@ -7,8 +7,19 @@ div.documents-view {
   margin-left: auto;
   margin-right: auto;
   margin: 15px auto;
+
+  height: 100%;
+  height: -moz-available;          /* WebKit-based browsers will ignore this. */
+  height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  height: fill-available;
+
+  display: flex;
+  flex-direction: column;
 }
 
 vaadin-grid {
   margin-top: 15px;
+  margin-bottom: 15px;
+  flex-grow: 2;
+  border: none;
 }

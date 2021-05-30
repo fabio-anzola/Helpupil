@@ -11,6 +11,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -45,7 +46,8 @@ public class DocumentsView extends SecuredView {
     public DocumentsView() {
         addClassName("documents-view");
 
-        add(addDocument);
+        Div addDocumentDiv = new Div(addDocument);
+        add(addDocumentDiv);
 
         add(createDocumentGrid());
 
@@ -214,7 +216,6 @@ public class DocumentsView extends SecuredView {
         if (null == error) {
             return user.getBody().getName();
         } else {
-            System.out.println(error.getMessage());
             return id;
         }
     }
