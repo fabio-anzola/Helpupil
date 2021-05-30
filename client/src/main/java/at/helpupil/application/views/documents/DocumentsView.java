@@ -205,9 +205,9 @@ public class DocumentsView extends SecuredView {
     }
 
     private String resolveUserById(String id) {
-        HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
+        HttpResponse<UserPublicObj> user = Unirest.get(BASE_URL + "/users/public/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(UserObj.class);
+                .asObject(UserPublicObj.class);
 
         Error error = user.mapError(Error.class);
 
