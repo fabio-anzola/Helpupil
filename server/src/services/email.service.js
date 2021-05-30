@@ -34,8 +34,11 @@ const sendResetPasswordEmail = async (to, name, token) => {
   // replace this url with the link to the reset password page of your front-end app
   const resetPasswordUrl = `https://mail.helpupil.at/?type=reset&token=${token}`;
   const text = `Hi ${name},
-To reset your password, click on this link: ${resetPasswordUrl}
-If you did not request any password resets, then ignore this email.`;
+To reset your password, click on this link: 
+${resetPasswordUrl}
+
+If you did not request a password reset, then ignore this email.
+Your Helpupil Team`;
   await sendEmail(to, subject, text);
 };
 
