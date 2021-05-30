@@ -66,6 +66,7 @@ public class DocumentsView extends SecuredView {
         grid.removeColumnByKey("id");
         grid.setColumns("name", "type", "subject", "teacher", "rating", "user");
 
+        grid.addComponentColumn(item -> createRateButton());
         grid.addComponentColumn(item -> createBuyButton());
 
         return grid;
@@ -73,6 +74,10 @@ public class DocumentsView extends SecuredView {
 
     private Button createBuyButton() {
         return new Button("Buy", clickEvent -> Notification.show("You purchased a document"));
+    }
+
+    private Button createRateButton() {
+        return new Button("Rate", clickEvent -> Notification.show("You rated a document"));
     }
 
     private Documents getDocuments(int page) {
