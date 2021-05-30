@@ -28,7 +28,6 @@ const createDoc = async (documentBody) => {
  */
 const queryDocuments = async (filter, options) => {
   var documents = (await Doc.paginate(filter, options));
-  console.log(typeof documents);
   for (let i = 0; i < documents.results.length; i++) {
     const element = (await documents.results[i]).toObject();
     element.price = priceTypes[element.type.toUpperCase()];
