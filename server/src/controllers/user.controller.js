@@ -30,6 +30,7 @@ const getPublicUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
   res.send({
+    "id": user.id,
     "name": user.name,
   });
 });
