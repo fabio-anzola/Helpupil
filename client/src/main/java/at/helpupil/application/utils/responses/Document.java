@@ -10,9 +10,10 @@ public class Document {
     private String status;
     private String subject;
     private String teacher;
+    private int price;
     private String id;
 
-    public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, String id) {
+    public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, int price, String id) {
         this.reviewer = reviewer;
         this.name = name;
         this.type = type;
@@ -22,6 +23,7 @@ public class Document {
         this.status = status;
         this.subject = subject;
         this.teacher = teacher;
+        this.price = price;
         this.id = id;
     }
 
@@ -95,6 +97,14 @@ public class Document {
 
     public void setTeacher(String teacher) {
         this.teacher = teacher;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String getId() {

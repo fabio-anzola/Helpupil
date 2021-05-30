@@ -85,7 +85,7 @@ public class DocumentsView extends SecuredView {
         documentGrid.removeColumnByKey("file");
         documentGrid.removeColumnByKey("status");
         documentGrid.removeColumnByKey("id");
-        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user");
+        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
 
         documentGrid.addComponentColumn(item -> createRateButton());
         documentGrid.addComponentColumn(item -> createBuyButton());
@@ -210,8 +210,6 @@ public class DocumentsView extends SecuredView {
                 .asObject(UserObj.class);
 
         Error error = user.mapError(Error.class);
-
-        
 
         if (null == error) {
             return user.getBody().getName();
