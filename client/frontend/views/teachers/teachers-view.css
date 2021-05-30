@@ -2,16 +2,31 @@
   display: block;
 }
 
+
 div.teachers-view {
   width: 90%;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin: 15px auto;
+  margin-top: 15px;
+
+  height: 100%;
+  /* WebKit-based browsers will ignore this. */
+  height: -moz-available;
+  /* Mozilla-based browsers will ignore this. */
+  height: -webkit-fill-available;
+  height: fill-available;
+
+  display: flex;
+  flex-direction: column;
 }
 
 
-/* Teacher Layout */
+/* teacher Layout */
+div.teacher-layout-div {
+  flex-grow: 2;
+}
+
 vaadin-horizontal-layout.teacher-layout {
   width: 100%;
   display: flex;
@@ -21,7 +36,7 @@ vaadin-horizontal-layout.teacher-layout {
 }
 
 
-/* Subject Content Cards */
+/* teacher Content Cards */
 vaadin-horizontal-layout.teacher-layout content-card {
   user-select: none;
   width: 250px;
@@ -49,6 +64,7 @@ vaadin-horizontal-layout.paging-layout {
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-bottom: 15px;
 }
 
 vaadin-horizontal-layout.paging-layout label {
@@ -57,7 +73,7 @@ vaadin-horizontal-layout.paging-layout label {
 
 
 
-/* Add Teacher - Dialog */
+/* Add teacher - Dialog */
 vaadin-vertical-layout.dialog-layout label {
   width: 100%;
   text-align: center;
@@ -96,7 +112,7 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
     margin-right: auto;
   }
 
-  .teachers-view .addSubject-button {
+  .teachers-view .addteacher-button {
     display: none;
   }
 }

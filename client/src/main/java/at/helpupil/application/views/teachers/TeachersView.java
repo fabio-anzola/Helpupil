@@ -19,6 +19,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,7 +39,7 @@ public class TeachersView extends SecuredView {
 
     private Button addTeacher = new Button("Add New Teacher");
 
-    private HorizontalLayout teacherLayout = new HorizontalLayout();
+    private Div teacherLayoutDiv = new Div();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
     private int currentPage = 1;
@@ -54,7 +55,8 @@ public class TeachersView extends SecuredView {
 
         addTeacher.addClassName("addTeacher-button");
 
-        add(addTeacher);
+        Div addTeacherDiv = new Div(addTeacher);
+        add(addTeacherDiv);
         add(createTeacherCards(teacher));
         add(createPagingMenu(teacher.getTotalPages()));
 
@@ -137,15 +139,19 @@ public class TeachersView extends SecuredView {
     }
 
     private void updateTeacherPage() {
-        remove(teacherLayout);
+        remove(teacherLayoutDiv);
         remove(pagingMenuLayout);
-        teacherLayout = new HorizontalLayout();
+        teacherLayoutDiv = new Div();
         pagingMenuLayout = new HorizontalLayout();
         add(createTeacherCards(teacher));
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
     private Component createTeacherCards(Teachers teacher) {
+        teacherLayoutDiv = new Div();
+        teacherLayoutDiv.addClassName("teacher-layout-div");
+
+        HorizontalLayout teacherLayout = new HorizontalLayout();
         teacherLayout.getThemeList().remove("spacing");
         teacherLayout.addClassName("teacher-layout");
 
@@ -161,7 +167,9 @@ public class TeachersView extends SecuredView {
             });
         }
 
-        return teacherLayout;
+        teacherLayoutDiv.add(teacherLayout);
+
+        return teacherLayoutDiv;
     }
 
     private Component createPagingMenu(int totalPages) {
