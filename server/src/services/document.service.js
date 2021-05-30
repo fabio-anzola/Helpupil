@@ -1,11 +1,8 @@
 const httpStatus = require('http-status');
-const {
-  User
-} = require('../models');
+const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const {
-  Doc
-} = require('../models');
+const { Doc } = require('../models');
+const { priceTypes } = require('../config/documents');
 
 /**
  * Create a document in db
@@ -30,7 +27,14 @@ const createDoc = async (documentBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryDocuments = async (filter, options) => {
-  const documents = await Doc.paginate(filter, options);
+  var documents = (await Doc.paginate(filter, options));
+  console.log(typeof documents);
+  for (let i = 0; i < documents.results.length; i++) {
+    const element = (await documents.results[i]).toObject();
+    element.price = priceTypes[element.type.toUpperCase()];
+    console.log(element)
+    documents.results[i] = element;
+  }
   return documents;
 };
 
@@ -40,7 +44,9 @@ const queryDocuments = async (filter, options) => {
  * @returns {Promise<Document>}
  */
 const getDocumentById = async (id) => {
-  return Doc.findById(id);
+  const document = (await Doc.findById(id)).toObject();
+  document.price = priceTypes[document.type.toUpperCase()];
+  return document;
 };
 
 /**
@@ -49,9 +55,11 @@ const getDocumentById = async (id) => {
  * @returns {Promise<Document>}
  */
 const getDocumentByName = async (name) => {
-  return Doc.findOne({
+  const document = (await Doc.findOne({
     "file.filename": name
-  });
+  })).toObject();
+  document.price = priceTypes[document.type.toUpperCase()];
+  return document;
 };
 
 
