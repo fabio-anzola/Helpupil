@@ -2,12 +2,9 @@ package at.helpupil.application.views.documents;
 
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.responses.Document;
-import at.helpupil.application.utils.responses.Documents;
+import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
-import at.helpupil.application.utils.responses.Subjects;
 import at.helpupil.application.views.main.MainView;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
@@ -52,9 +49,14 @@ public class DocumentsView extends SecuredView {
     private Grid<Document> createDocumentGrid() {
         Grid<Document> grid = new Grid<>(Document.class);
 
-        List<Document> doc = new ArrayList<>(
-                Arrays.asList(documents.getResults())
-        );
+        List<Document> doc = new ArrayList<>();
+
+        for (Document document: documents.getResults()) {
+            document.setSubject(resolveSubjectById(document.getSubject()));
+            document.setTeacher(resolveTeacherById(document.getTeacher()));
+            document.setUser(resolveUserById(document.getUser()));
+            doc.add(document);
+        }
 
         grid.setItems(doc);
 
@@ -62,7 +64,7 @@ public class DocumentsView extends SecuredView {
         grid.removeColumnByKey("file");
         grid.removeColumnByKey("status");
         grid.removeColumnByKey("id");
-        grid.setColumns("name", "type", "user", "rating", "subject", "teacher");
+        grid.setColumns("name", "type", "subject", "teacher", "rating", "user");
 
         return grid;
     }
@@ -81,5 +83,47 @@ public class DocumentsView extends SecuredView {
             Notification.show(error.getMessage());
         }
         return null;
+    }
+
+    private String resolveSubjectById(String id) {
+        HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Subject.class);
+
+        Error error = subject.mapError(Error.class);
+
+        if (null == error) {
+            return subject.getBody().getShortname();
+        } else {
+            return id;
+        }
+    }
+
+    private String resolveTeacherById(String id) {
+        HttpResponse<Teacher> teacher = Unirest.get(BASE_URL + "/teacher/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Teacher.class);
+
+        Error error = teacher.mapError(Error.class);
+
+        if (null == error) {
+            return teacher.getBody().getShortname();
+        } else {
+            return id;
+        }
+    }
+
+    private String resolveUserById(String id) {
+        HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(UserObj.class);
+
+        Error error = user.mapError(Error.class);
+
+        if (null == error) {
+            return user.getBody().getName();
+        } else {
+            return id;
+        }
     }
 }
