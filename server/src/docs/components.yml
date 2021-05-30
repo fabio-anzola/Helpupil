@@ -51,6 +51,8 @@ components:
           type: string
         teacher:
           type: string
+        price:
+          type: number
       example:
         reviewer: [
           "607d93b3ab9fe96585327a8d",
@@ -73,6 +75,7 @@ components:
         status: pending
         subject: 60833a0fdefaa30582041ea7
         teacher: 608c81ec640bb32f5ce13552
+        price: 5
         
     User:
       type: object
