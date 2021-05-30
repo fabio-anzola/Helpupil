@@ -19,6 +19,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -38,7 +39,7 @@ public class SubjectsView extends SecuredView {
 
     private Button addSubject = new Button("Add New Subject");
 
-    private HorizontalLayout subjectLayout = new HorizontalLayout();
+    private Div subjectLayoutDiv = new Div();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
     private int currentPage = 1;
@@ -53,8 +54,9 @@ public class SubjectsView extends SecuredView {
         addClassName("subjects-view");
 
         addSubject.addClassName("addSubject-button");
+        Div addSubjectDiv = new Div(addSubject);
+        add(addSubjectDiv);
 
-        add(addSubject);
         add(createSubjectCards(subject));
         add(createPagingMenu(subject.getTotalPages()));
 
@@ -137,15 +139,19 @@ public class SubjectsView extends SecuredView {
     }
 
     private void updateSubjectPage() {
-        remove(subjectLayout);
+        remove(subjectLayoutDiv);
         remove(pagingMenuLayout);
-        subjectLayout = new HorizontalLayout();
+        subjectLayoutDiv = new Div();
         pagingMenuLayout = new HorizontalLayout();
         add(createSubjectCards(subject));
         add(createPagingMenu(subject.getTotalPages()));
     }
 
     private Component createSubjectCards(Subjects subject) {
+        subjectLayoutDiv = new Div();
+        subjectLayoutDiv.addClassName("subject-layout-div");
+
+        HorizontalLayout subjectLayout = new HorizontalLayout();
         subjectLayout.getThemeList().remove("spacing");
         subjectLayout.addClassName("subject-layout");
 
@@ -161,7 +167,9 @@ public class SubjectsView extends SecuredView {
             });
         }
 
-        return subjectLayout;
+        subjectLayoutDiv.add(subjectLayout);
+
+        return subjectLayoutDiv;
     }
 
     private Component createPagingMenu(int totalPages) {
