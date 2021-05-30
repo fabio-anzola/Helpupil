@@ -1,5 +1,12 @@
 components:
   schemas:
+    UserName:
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: fake name
     Document:
       type: object
       properties:
