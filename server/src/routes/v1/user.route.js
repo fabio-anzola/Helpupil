@@ -254,3 +254,33 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
+/**
+ * @swagger
+ * /users/public/{id}:
+ *   get:
+ *     summary: Get a users name
+ *     description: Logged in users can fetch all names
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/UserName'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
