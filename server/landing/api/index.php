@@ -123,8 +123,8 @@ if (isset($_GET['token'])) {
         <div class="centered-wrapper">
             <div>
                 <?php
-                if (isset($_GET['landingType']) && isset($_SESSION['token'])) {
-                    if ($_GET['landingType'] == "verify") {
+                if (isset($_GET['type']) && isset($_SESSION['token'])) {
+                    if ($_GET['type'] == "verify") {
                         echo "<h1>Email Verification</h1>";
 
                         $crl = curl_init();
@@ -152,7 +152,7 @@ if (isset($_GET['token'])) {
 
                         session_unset();
                         session_destroy();
-                    } else if ($_GET['landingType'] == "resetPassword" && isset($_SESSION['token'])) {
+                    } else if ($_GET['type'] == "resetPassword" && isset($_SESSION['token'])) {
                         echo '
                         <h1>Reset Password</h1><br>
                         <form action="' . $_SERVER['PHP_SELF'] . '" method="POST">
