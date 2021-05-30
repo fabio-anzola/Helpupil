@@ -26,8 +26,9 @@ const refreshTokens = catchAsync(async (req, res) => {
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
+  const user = await userService.getUserByEmail(req.body.email)
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.user.email, req.user.name, resetPasswordToken);
+  await emailService.sendResetPasswordEmail(user.email, user.name, resetPasswordToken);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
