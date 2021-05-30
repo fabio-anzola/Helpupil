@@ -5,6 +5,7 @@ import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.views.main.MainView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -31,6 +32,7 @@ public class DocumentsView extends SecuredView {
 
     private Button addDocument = new Button("Add New Document");
 
+    private Grid<Document> documentGrid = new Grid<>(Document.class);
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
     private int currentPage = 1;
@@ -46,34 +48,51 @@ public class DocumentsView extends SecuredView {
         add(addDocument);
 
         add(createDocumentGrid());
+
+        add(createPagingMenu(documents.getTotalPages()));
+
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                documents = getDocuments(currentPage - 1);
+                currentPage = documents.getPage();
+                updateSubjectPage();
+            }
+        });
+
+        nextPage.addClickListener(e -> {
+            if (currentPage < documents.getTotalPages()) {
+                documents = getDocuments(currentPage + 1);
+                currentPage = documents.getPage();
+                updateSubjectPage();
+            }
+        });
+
     }
 
     private Grid<Document> createDocumentGrid() {
-        Grid<Document> grid = new Grid<>(Document.class);
+        List<Document> documentsList = new ArrayList<>();
 
-        List<Document> doc = new ArrayList<>();
-
-        for (Document document: documents.getResults()) {
+        for (Document document : documents.getResults()) {
             document.setSubject(resolveSubjectById(document.getSubject()));
             document.setTeacher(resolveTeacherById(document.getTeacher()));
             document.setUser(resolveUserById(document.getUser()));
-            doc.add(document);
+            documentsList.add(document);
         }
 
-        grid.setItems(doc);
+        documentGrid.setItems(documentsList);
 
-        grid.removeColumnByKey("reviewer");
-        grid.removeColumnByKey("file");
-        grid.removeColumnByKey("status");
-        grid.removeColumnByKey("id");
-        grid.setColumns("name", "type", "subject", "teacher", "rating", "user");
+        documentGrid.removeColumnByKey("reviewer");
+        documentGrid.removeColumnByKey("file");
+        documentGrid.removeColumnByKey("status");
+        documentGrid.removeColumnByKey("id");
+        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user");
 
-        grid.addComponentColumn(item -> createRateButton());
-        grid.addComponentColumn(item -> createBuyButton());
+        documentGrid.addComponentColumn(item -> createRateButton());
+        documentGrid.addComponentColumn(item -> createBuyButton());
 
-        grid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
+        documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
-        return grid;
+        return documentGrid;
     }
 
     private void showDocumentDialog(Document document) {
@@ -120,6 +139,25 @@ public class DocumentsView extends SecuredView {
 
     private Button createRateButton() {
         return new Button("Rate", clickEvent -> Notification.show("You rated a document"));
+    }
+
+    private void updateSubjectPage() {
+        remove(documentGrid);
+        remove(pagingMenuLayout);
+        documentGrid = new Grid<>(Document.class);
+        pagingMenuLayout = new HorizontalLayout();
+        add(createDocumentGrid());
+        add(createPagingMenu(documents.getTotalPages()));
+    }
+
+    private Component createPagingMenu(int totalPages) {
+        pagingMenuLayout.addClassName("paging-layout");
+
+        currentPageText.setText(currentPage + " / " + totalPages);
+
+        pagingMenuLayout.add(previousPage, currentPageText, nextPage);
+
+        return pagingMenuLayout;
     }
 
     private Documents getDocuments(int page) {
@@ -173,9 +211,12 @@ public class DocumentsView extends SecuredView {
 
         Error error = user.mapError(Error.class);
 
+        
+
         if (null == error) {
             return user.getBody().getName();
         } else {
+            System.out.println(error.getMessage());
             return id;
         }
     }
