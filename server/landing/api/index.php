@@ -152,7 +152,7 @@ if (isset($_GET['token'])) {
 
                         session_unset();
                         session_destroy();
-                    } else if ($_GET['type'] == "resetPassword" && isset($_SESSION['token'])) {
+                    } else if ($_GET['type'] == "reset" && isset($_SESSION['token'])) {
                         echo '
                         <h1>Reset Password</h1><br>
                         <form action="' . $_SERVER['PHP_SELF'] . '" method="POST">
