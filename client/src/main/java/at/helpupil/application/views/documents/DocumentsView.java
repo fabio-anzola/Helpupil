@@ -89,7 +89,6 @@ public class DocumentsView extends SecuredView {
         documentGrid.removeColumnByKey("id");
         documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
 
-        documentGrid.addComponentColumn(item -> createRateButton());
         documentGrid.addComponentColumn(item -> createBuyButton());
 
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
@@ -137,10 +136,6 @@ public class DocumentsView extends SecuredView {
 
     private Button createBuyButton() {
         return new Button("Buy", clickEvent -> Notification.show("You purchased a document"));
-    }
-
-    private Button createRateButton() {
-        return new Button("Rate", clickEvent -> Notification.show("You rated a document"));
     }
 
     private void updateSubjectPage() {
