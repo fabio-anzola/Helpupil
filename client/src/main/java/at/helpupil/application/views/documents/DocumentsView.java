@@ -19,10 +19,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamRegistration;
+import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -178,6 +182,28 @@ public class DocumentsView extends SecuredView {
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asBytes()
                 .getBody();
+
+//        try {
+//            File pdf = File.createTempFile(null, ".pdf", null);
+//            FileOutputStream fos = new FileOutputStream(pdf);
+//            fos.write(bytes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        final StreamResource streamResource= new StreamResource("x.pdf", () -> new ByteArrayInputStream(bytes));
+        streamResource.setContentType("application/pdf");
+        streamResource.setCacheTime(0);
+
+        final StreamRegistration registration = UI.getCurrent()
+                .getSession()
+                .getResourceRegistry()
+                .registerResource(streamResource);
+
+        UI.getCurrent().getPage().open(
+                String.valueOf(registration.getResourceUri()), "_blank"
+        );
+
     }
 
     private Button createBuyButton(Document document) {
