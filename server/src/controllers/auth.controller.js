@@ -13,6 +13,8 @@ const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   if (!user.isEmailVerified) {
+    const verifyEmailToken = await tokenService.generateVerifyEmailToken(user);
+    await emailService.sendVerificationEmail(user.email, user.name, verifyEmailToken);
     throw new ApiError(httpStatus.FORBIDDEN, 'You must validate your email address first');
   }
   const tokens = await tokenService.generateAuthTokens(user);
