@@ -21,7 +21,7 @@ import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-import javax.print.Doc;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,7 +151,7 @@ public class DocumentsView extends SecuredView {
 
         buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buyButton.addClickListener(e -> {
-            Notification.show("You bought a document");
+            makeBuyRequest(document);
         });
 
         cancelButton.addClickListener(e -> {
@@ -164,6 +164,13 @@ public class DocumentsView extends SecuredView {
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private void makeBuyRequest(Document document) {
+        Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asFile("./file.pdf")
+                .getBody();
     }
 
     private Button createBuyButton(Document document) {
