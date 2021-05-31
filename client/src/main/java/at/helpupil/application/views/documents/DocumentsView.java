@@ -6,6 +6,7 @@ import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -22,7 +23,13 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -167,9 +174,9 @@ public class DocumentsView extends SecuredView {
     }
 
     private void makeBuyRequest(Document document) {
-        Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
+        byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asFile("./file.pdf")
+                .asBytes()
                 .getBody();
     }
 
