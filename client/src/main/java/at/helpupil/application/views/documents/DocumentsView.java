@@ -21,6 +21,7 @@ import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +90,7 @@ public class DocumentsView extends SecuredView {
         documentGrid.removeColumnByKey("id");
         documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
 
-        documentGrid.addComponentColumn(item -> createBuyButton());
+        documentGrid.addComponentColumn(this::createBuyButton);
 
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
@@ -118,8 +119,8 @@ public class DocumentsView extends SecuredView {
 
         buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buyButton.addClickListener(e -> {
-            //buy document()
-            Notification.show("You purchased a document");
+            //dialog.close();
+            showBuyDialog(document);
         });
 
         cancelButton.addClickListener(e -> {
@@ -134,8 +135,39 @@ public class DocumentsView extends SecuredView {
         dialog.open();
     }
 
-    private Button createBuyButton() {
-        return new Button("Buy", clickEvent -> Notification.show("You purchased a document"));
+    private void showBuyDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("25vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Purchase " + document.getName() + "?");
+
+        Button buyButton = new Button("Buy");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buyButton.addClickListener(e -> {
+            Notification.show("You bought a document");
+        });
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+        });
+
+        dialogButtonLayout.add(buyButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private Button createBuyButton(Document document) {
+        return new Button("Buy", clickEvent -> showBuyDialog(document));
     }
 
     private void updateSubjectPage() {
