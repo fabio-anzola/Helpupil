@@ -15,6 +15,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -178,11 +179,15 @@ public class DocumentsView extends SecuredView {
     }
 
     private void makeBuyRequest(Document document) {
+        if (!isBuyRequestAllowed(document)) {
+            return;
+        }
+
         byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asBytes()
                 .getBody();
-
+        
 
         final StreamResource streamResource= new StreamResource(document.getFile().getOriginalname(), () -> new ByteArrayInputStream(bytes));
         streamResource.setContentType(document.getFile().getMimetype());
@@ -196,7 +201,20 @@ public class DocumentsView extends SecuredView {
         UI.getCurrent().getPage().open(
                 String.valueOf(registration.getResourceUri()), "_blank"
         );
+    }
 
+    private boolean isBuyRequestAllowed(Document document) {
+        Error error = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Error.class)
+                .getBody();
+
+        if (null == error) {
+            return true;
+        } else {
+            Notification.show(error.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
     }
 
     private Button createBuyButton(Document document) {
