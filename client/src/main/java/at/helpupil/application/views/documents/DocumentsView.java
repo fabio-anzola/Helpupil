@@ -18,6 +18,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
@@ -74,6 +75,9 @@ public class DocumentsView extends SecuredView {
             }
         });
 
+        addDocument.addClickListener(e -> {
+            //showBuyDialog();
+        });
     }
 
     private Grid<Document> createDocumentGrid() {
@@ -99,6 +103,42 @@ public class DocumentsView extends SecuredView {
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
         return documentGrid;
+    }
+
+    private void showUploadDialog() {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Select<Teacher> teacherSelect = new Select<>();
+        Select<Subject> subjectSelect = new Select<>();
+        Select<?> typeSelect = new Select<>();
+
+        Label dialogHeading = new Label("Upload document");
+
+        Button confirmButton = new Button("Confirm");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        confirmButton.addClickListener(e -> {
+            Notification.show("You uploaded a document");
+        });
+
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+        });
+
+        dialogButtonLayout.add(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
     }
 
     private void showDocumentDialog(Document document) {
