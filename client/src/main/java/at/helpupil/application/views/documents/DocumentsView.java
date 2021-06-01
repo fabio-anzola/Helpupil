@@ -2,8 +2,8 @@ package at.helpupil.application.views.documents;
 
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
+import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -26,15 +26,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -187,7 +179,7 @@ public class DocumentsView extends SecuredView {
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asBytes()
                 .getBody();
-        
+
 
         final StreamResource streamResource= new StreamResource(document.getFile().getOriginalname(), () -> new ByteArrayInputStream(bytes));
         streamResource.setContentType(document.getFile().getMimetype());
