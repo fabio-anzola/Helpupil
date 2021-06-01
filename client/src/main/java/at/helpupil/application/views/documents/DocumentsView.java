@@ -183,16 +183,9 @@ public class DocumentsView extends SecuredView {
                 .asBytes()
                 .getBody();
 
-//        try {
-//            File pdf = File.createTempFile(null, ".pdf", null);
-//            FileOutputStream fos = new FileOutputStream(pdf);
-//            fos.write(bytes);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
-        final StreamResource streamResource= new StreamResource("x.pdf", () -> new ByteArrayInputStream(bytes));
-        streamResource.setContentType("application/pdf");
+        final StreamResource streamResource= new StreamResource(document.getFile().getOriginalname(), () -> new ByteArrayInputStream(bytes));
+        streamResource.setContentType(document.getFile().getMimetype());
         streamResource.setCacheTime(0);
 
         final StreamRegistration registration = UI.getCurrent()
