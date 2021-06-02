@@ -58,6 +58,7 @@ public class DocumentsView extends SecuredView {
     public DocumentsView() {
         addClassName("documents-view");
 
+        addDocument.addClassName("add-document");
         Div addDocumentDiv = new Div(addDocument);
         add(addDocumentDiv);
 

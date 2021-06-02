@@ -6,17 +6,17 @@ div.documents-view {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px;
 
   height: 100%;
-  /* WebKit-based browsers will ignore this. */
-  height: -moz-available;
-  /* Mozilla-based browsers will ignore this. */
   height: -webkit-fill-available;
   height: fill-available;
 
   display: flex;
   flex-direction: column;
+}
+
+vaadin-button.add-document {
+  margin-top: 15px;
 }
 
 vaadin-grid {
@@ -25,4 +25,3 @@ vaadin-grid {
   flex-grow: 2;
   border: none;
 }
-

@@ -53,7 +53,7 @@ public class SubjectsView extends SecuredView {
     public SubjectsView() {
         addClassName("subjects-view");
 
-        addSubject.addClassName("addSubject-button");
+        addSubject.addClassName("add-subject");
         Div addSubjectDiv = new Div(addSubject);
         add(addSubjectDiv);
 

@@ -53,10 +53,10 @@ public class TeachersView extends SecuredView {
     public TeachersView() {
         addClassName("teachers-view");
 
-        addTeacher.addClassName("addTeacher-button");
-
+        addTeacher.addClassName("add-teacher");
         Div addTeacherDiv = new Div(addTeacher);
         add(addTeacherDiv);
+
         add(createTeacherCards(teacher));
         add(createPagingMenu(teacher.getTotalPages()));
 

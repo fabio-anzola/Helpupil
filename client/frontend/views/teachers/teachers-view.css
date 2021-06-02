@@ -8,12 +8,8 @@ div.teachers-view {
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px;
 
   height: 100%;
-  /* WebKit-based browsers will ignore this. */
-  height: -moz-available;
-  /* Mozilla-based browsers will ignore this. */
   height: -webkit-fill-available;
   height: fill-available;
 
@@ -21,6 +17,9 @@ div.teachers-view {
   flex-direction: column;
 }
 
+vaadin-button.add-teacher {
+  margin-top: 15px;
+}
 
 /* teacher Layout */
 div.teacher-layout-div {
@@ -110,9 +109,5 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
   vaadin-horizontal-layout.teacher-layout content-card {
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .teachers-view .addteacher-button {
-    display: none;
   }
 }
