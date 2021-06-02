@@ -14,6 +14,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -155,12 +157,26 @@ public class DocumentsView extends SecuredView {
         Button buyButton = new Button("Buy");
         Button cancelButton = new Button("Cancel");
 
-        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
+        HorizontalLayout ratingLayout = new HorizontalLayout();
+        Div stars = new Div();
+        for (int i = 0; i < 5; i++) {
+            Icon star = new Icon(VaadinIcon.STAR_O);
+            star.addClickListener(e -> {
+                Notification.show("First");
+            });
+            stars.add(star);
+        }
+//        Icon star1 = new Icon(VaadinIcon.STAR_O);
         confirmRate.addClickListener(e -> {
             //rate document()
             Notification.show("You rated a document");
         });
+
+        ratingLayout.add(stars, confirmRate);
+
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buyButton.addClickListener(e -> {
@@ -172,9 +188,10 @@ public class DocumentsView extends SecuredView {
             dialog.close();
         });
 
-        dialogButtonLayout.add(confirmRate, buyButton, cancelButton);
+        dialogButtonLayout.add(buyButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialogLayout.add(dialogHeading, ratingLayout, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
@@ -222,7 +239,7 @@ public class DocumentsView extends SecuredView {
                 .getBody();
 
 
-        final StreamResource streamResource= new StreamResource(document.getFile().getOriginalname(), () -> new ByteArrayInputStream(bytes));
+        final StreamResource streamResource = new StreamResource(document.getFile().getOriginalname(), () -> new ByteArrayInputStream(bytes));
         streamResource.setContentType(document.getFile().getMimetype());
         streamResource.setCacheTime(0);
 
