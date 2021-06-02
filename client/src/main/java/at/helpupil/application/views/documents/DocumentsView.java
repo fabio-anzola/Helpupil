@@ -2,8 +2,8 @@ package at.helpupil.application.views.documents;
 
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
+import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -15,8 +15,10 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
@@ -25,15 +27,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -82,6 +76,9 @@ public class DocumentsView extends SecuredView {
             }
         });
 
+        addDocument.addClickListener(e -> {
+            //showBuyDialog();
+        });
     }
 
     private Grid<Document> createDocumentGrid() {
@@ -107,6 +104,42 @@ public class DocumentsView extends SecuredView {
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
         return documentGrid;
+    }
+
+    private void showUploadDialog() {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Select<Teacher> teacherSelect = new Select<>();
+        Select<Subject> subjectSelect = new Select<>();
+        Select<?> typeSelect = new Select<>();
+
+        Label dialogHeading = new Label("Upload document");
+
+        Button confirmButton = new Button("Confirm");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        confirmButton.addClickListener(e -> {
+            Notification.show("You uploaded a document");
+        });
+
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+        });
+
+        dialogButtonLayout.add(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
     }
 
     private void showDocumentDialog(Document document) {
@@ -179,6 +212,10 @@ public class DocumentsView extends SecuredView {
     }
 
     private void makeBuyRequest(Document document) {
+        if (!isBuyRequestAllowed(document)) {
+            return;
+        }
+
         byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asBytes()
@@ -197,7 +234,20 @@ public class DocumentsView extends SecuredView {
         UI.getCurrent().getPage().open(
                 String.valueOf(registration.getResourceUri()), "_blank"
         );
+    }
 
+    private boolean isBuyRequestAllowed(Document document) {
+        Error error = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Error.class)
+                .getBody();
+
+        if (null == error) {
+            return true;
+        } else {
+            Notification.show(error.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
     }
 
     private Button createBuyButton(Document document) {
