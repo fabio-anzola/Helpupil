@@ -2,6 +2,7 @@ package at.helpupil.application.views.documents;
 
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.StarObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.views.main.MainView;
@@ -30,6 +31,7 @@ import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -159,22 +161,16 @@ public class DocumentsView extends SecuredView {
 
 
         HorizontalLayout ratingLayout = new HorizontalLayout();
+
         Div stars = new Div();
-        for (int i = 0; i < 5; i++) {
-            Icon star = new Icon(VaadinIcon.STAR_O);
-            star.addClickListener(e -> {
-                Notification.show("First");
-            });
-            stars.add(star);
-        }
-//        Icon star1 = new Icon(VaadinIcon.STAR_O);
+        addStars(stars);
+
+        ratingLayout.add(stars, confirmRate);
+
         confirmRate.addClickListener(e -> {
             //rate document()
             Notification.show("You rated a document");
         });
-
-        ratingLayout.add(stars, confirmRate);
-
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
@@ -195,6 +191,31 @@ public class DocumentsView extends SecuredView {
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private void addStars(Div stars) {
+        /*for (int i = 0; i < 5; i++) {
+            Icon star = new Icon(VaadinIcon.STAR_O);
+            star.addClickListener(e -> {
+                Notification.show("First");
+            });
+            stars.add(star);
+        }*/
+//        Icon star1 = new Icon(VaadinIcon.STAR_O);
+        List<Icon> icons = new LinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            StarObj starObj = new StarObj(VaadinIcon.STAR_O, i);
+            starObj.addClickListener(e -> changeStars(stars, icons, starObj.getIndex()));
+            icons.add(starObj);
+            stars.add(starObj);
+        }
+    }
+
+    private void changeStars(Div stars, List<Icon> icons, int index) {
+        for (int i = 0; i <= index; i++) {
+            StarObj newStar = new StarObj(VaadinIcon.STAR, i);
+            stars.replace(icons.get(i), newStar);
+        }
     }
 
     private void showBuyDialog(Document document) {
