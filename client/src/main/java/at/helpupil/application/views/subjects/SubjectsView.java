@@ -12,14 +12,19 @@ import com.github.appreciated.card.label.PrimaryLabel;
 import com.github.appreciated.card.label.SecondaryLabel;
 import com.github.appreciated.card.label.TitleLabel;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
@@ -45,8 +50,33 @@ public class SubjectsView extends SecuredView {
     public SubjectsView() {
         addClassName("subjects-view");
 
+        add(createSearchBox());
         add(createSubjectCards(subject));
         add(createPagingMenu(subject.getTotalPages()));
+    }
+
+    private Component createSearchBox() {
+        Div searchDiv = new Div();
+        searchDiv.addClassName("search-div");
+
+        Div innerDiv = new Div();
+
+        TextField searchBox = new TextField();
+        searchBox.setPlaceholder("Search");
+        searchBox.setClearButtonVisible(true);
+        searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
+
+        Icon searchIcon = new Icon(VaadinIcon.SEARCH);
+        searchIcon.addClickListener(e -> {
+            Notification.show("Searched: " + searchBox.getValue());
+        });
+
+        innerDiv.add(searchBox, searchIcon);
+
+
+        searchDiv.add(innerDiv);
+
+        return searchDiv;
     }
 
     private void updateSubjectPage() {

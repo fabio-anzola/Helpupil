@@ -17,6 +17,18 @@ div.subjects-view {
   flex-direction: column;
 }
 
+/* Search Layout */
+div.search-div {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+div.search-div iron-icon {
+  margin-left: 15px;
+}
+
+
 /* Subject Layout */
 div.subject-layout-div {
   flex-grow: 2;
