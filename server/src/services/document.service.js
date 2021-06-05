@@ -50,6 +50,9 @@ const queryDocuments = async (filter, options) => {
 const getDocumentById = async (id) => {
   const document = (await Doc.findById(id)).toObject();
   document.price = priceTypes[document.type.toUpperCase()];
+  element.teacher_sn = (await teacherService.getTeacherById(element.teacher)).shortname;
+  element.subject_sn = (await subjectService.getSubjectById(element.subject)).shortname;
+  element.uname = (await userService.getUserById(element.user)).name;
   return document;
 };
 
