@@ -317,9 +317,6 @@ public class DocumentsView extends SecuredView {
             }
         });
 
-        Label currentPageText = new Label();
-        currentPageText.setText(currentPage + " / " + totalPages);
-
         Select<String> itemsPerPageSelect = new Select<>();
         itemsPerPageSelect.addClassName("paging-items-per-page-select");
         itemsPerPageSelect.setItems("10","15","25");
@@ -327,6 +324,9 @@ public class DocumentsView extends SecuredView {
         itemsPerPageSelect.addValueChangeListener(e -> {
             Notification.show("Items per Page: " + e.getValue());
         });
+
+        Label currentPageText = new Label();
+        currentPageText.setText(currentPage + " / " + totalPages);
 
 
         pagingMenuLayout.add(previousPage, currentPageText, itemsPerPageSelect, nextPage);

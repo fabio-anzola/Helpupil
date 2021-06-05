@@ -24,6 +24,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -45,11 +46,6 @@ public class SubjectsView extends SecuredView {
     private int currentPage = 1;
     private Subjects subject = getSubjects(currentPage);
 
-    private Button previousPage = new Button("Previous");
-    private Label currentPageText = new Label();
-    private Button nextPage = new Button("Next");
-
-
     public SubjectsView() {
         addClassName("subjects-view");
 
@@ -61,22 +57,6 @@ public class SubjectsView extends SecuredView {
         add(createPagingMenu(subject.getTotalPages()));
 
         addSubject.addClickListener(e -> showAddSubjectDialog());
-
-        previousPage.addClickListener(e -> {
-            if (currentPage > 1) {
-                subject = getSubjects(currentPage - 1);
-                currentPage = subject.getPage();
-                updateSubjectPage();
-            }
-        });
-
-        nextPage.addClickListener(e -> {
-            if (currentPage < subject.getTotalPages()) {
-                subject = getSubjects(currentPage + 1);
-                currentPage = subject.getPage();
-                updateSubjectPage();
-            }
-        });
     }
 
     private void showAddSubjectDialog() {
@@ -175,9 +155,38 @@ public class SubjectsView extends SecuredView {
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
+
+        Button previousPage = new Button("Previous");
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                subject = getSubjects(currentPage - 1);
+                currentPage = subject.getPage();
+                updateSubjectPage();
+            }
+        });
+
+        Button nextPage = new Button("Next");
+        nextPage.addClickListener(e -> {
+            if (currentPage < subject.getTotalPages()) {
+                subject = getSubjects(currentPage + 1);
+                currentPage = subject.getPage();
+                updateSubjectPage();
+            }
+        });
+
+        Select<String> itemsPerPageSelect = new Select<>();
+        itemsPerPageSelect.addClassName("paging-items-per-page-select");
+        itemsPerPageSelect.setItems("10","15","25");
+        itemsPerPageSelect.setValue("10");
+        itemsPerPageSelect.addValueChangeListener(e -> {
+            Notification.show("Items per Page: " + e.getValue());
+        });
+
+        Label currentPageText = new Label();
         currentPageText.setText(currentPage + " / " + totalPages);
 
-        pagingMenuLayout.add(previousPage, currentPageText, nextPage);
+
+        pagingMenuLayout.add(previousPage, currentPageText, itemsPerPageSelect, nextPage);
 
         return pagingMenuLayout;
     }
