@@ -33,6 +33,7 @@ import kong.unirest.Unirest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 
 import static at.helpupil.application.Application.BASE_URL;
 
@@ -44,6 +45,7 @@ public class SubjectsView extends SecuredView {
     private Div subjectLayoutDiv = new Div();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    private boolean searchState = false;
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private int currentPage = 1;
@@ -124,6 +126,32 @@ public class SubjectsView extends SecuredView {
         } while (pageIndex != pages);
 
         System.out.println(foundIds);
+
+        currentPage = 1;
+        int newPagesLimit = (int) Math.ceil((float) foundIds.size() / limit);
+        resetSubjectPage();
+        add(createSubjectCardsSearched(foundIds));
+        add(createPagingMenu(newPagesLimit));
+    }
+
+    private Div createSubjectCardsSearched(ArrayList<String> foundIds) {
+        subjectLayoutDiv = new Div();
+        subjectLayoutDiv.addClassName("subject-layout-div");
+
+        HorizontalLayout subjectLayout = new HorizontalLayout();
+        subjectLayout.getThemeList().remove("spacing");
+        subjectLayout.addClassName("subject-layout");
+
+        for (int i = 0; i < limit; i++) {
+            if (i < foundIds.size()) {
+                Card card = createSubjectCard(Objects.requireNonNull(resolveSubjectById(foundIds.get(i))));
+                subjectLayout.add(card);
+            }
+        }
+
+        subjectLayoutDiv.add(subjectLayout);
+
+        return subjectLayoutDiv;
     }
 
     private void updateSubjectPage() {
@@ -135,6 +163,13 @@ public class SubjectsView extends SecuredView {
         add(createPagingMenu(subject.getTotalPages()));
     }
 
+    private void resetSubjectPage() {
+        remove(subjectLayoutDiv);
+        remove(pagingMenuLayout);
+        subjectLayoutDiv = new Div();
+        pagingMenuLayout = new HorizontalLayout();
+    }
+
     private Component createSubjectCards(Subjects subject) {
         subjectLayoutDiv = new Div();
         subjectLayoutDiv.addClassName("subject-layout-div");
@@ -144,20 +179,25 @@ public class SubjectsView extends SecuredView {
         subjectLayout.addClassName("subject-layout");
 
         for (Subject result : subject.getResults()) {
-            Card card = new Card(
-                    new TitleLabel(result.getName()),
-                    new PrimaryLabel(result.getShortname()),
-                    new SecondaryLabel(result.getDescription())
-            );
+            Card card = createSubjectCard(result);
             subjectLayout.add(card);
-            card.addClickListener(e -> {
-                UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + result.getShortname() + "\"");
-            });
         }
 
         subjectLayoutDiv.add(subjectLayout);
 
         return subjectLayoutDiv;
+    }
+
+    private Card createSubjectCard(Subject subject) {
+        Card card = new Card(
+                new TitleLabel(subject.getName()),
+                new PrimaryLabel(subject.getShortname()),
+                new SecondaryLabel(subject.getDescription())
+        );
+        card.addClickListener(e -> {
+            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + subject.getShortname() + "\"");
+        });
+        return card;
     }
 
     private Component createPagingMenu(int totalPages) {
@@ -220,6 +260,20 @@ public class SubjectsView extends SecuredView {
             Notification.show(error.getMessage());
         }
         return null;
+    }
+
+    private Subject resolveSubjectById(String id) {
+        HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Subject.class);
+
+        Error error = subject.mapError(Error.class);
+
+        if (null == error) {
+            return subject.getBody();
+        } else {
+            return null;
+        }
     }
 
 }
