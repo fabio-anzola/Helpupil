@@ -25,3 +25,8 @@ vaadin-grid {
   flex-grow: 2;
   border: none;
 }
+
+.paging-items-per-page-select {
+  /* background-color: #f3f5f7; */
+  width: 90px;
+}

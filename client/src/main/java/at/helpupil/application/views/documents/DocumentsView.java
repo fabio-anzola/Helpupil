@@ -49,10 +49,6 @@ public class DocumentsView extends SecuredView {
     private int currentPage = 1;
     private Documents documents = getDocuments(currentPage);
 
-    private Button previousPage = new Button("Previous");
-    private Label currentPageText = new Label();
-    private Button nextPage = new Button("Next");
-
     public DocumentsView() {
         addClassName("documents-view");
 
@@ -63,22 +59,6 @@ public class DocumentsView extends SecuredView {
         add(createDocumentGrid());
 
         add(createPagingMenu(documents.getTotalPages()));
-
-        previousPage.addClickListener(e -> {
-            if (currentPage > 1) {
-                documents = getDocuments(currentPage - 1);
-                currentPage = documents.getPage();
-                updateSubjectPage();
-            }
-        });
-
-        nextPage.addClickListener(e -> {
-            if (currentPage < documents.getTotalPages()) {
-                documents = getDocuments(currentPage + 1);
-                currentPage = documents.getPage();
-                updateSubjectPage();
-            }
-        });
 
         addDocument.addClickListener(e -> {
             //showBuyDialog();
@@ -321,9 +301,38 @@ public class DocumentsView extends SecuredView {
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
+
+        Button previousPage = new Button("Previous");
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                documents = getDocuments(currentPage - 1);
+                currentPage = documents.getPage();
+                updateSubjectPage();
+            }
+        });
+
+        Button nextPage = new Button("Next");
+        nextPage.addClickListener(e -> {
+            if (currentPage < documents.getTotalPages()) {
+                documents = getDocuments(currentPage + 1);
+                currentPage = documents.getPage();
+                updateSubjectPage();
+            }
+        });
+
+        Label currentPageText = new Label();
         currentPageText.setText(currentPage + " / " + totalPages);
 
-        pagingMenuLayout.add(previousPage, currentPageText, nextPage);
+        Select<String> itemsPerPageSelect = new Select<>();
+        itemsPerPageSelect.addClassName("paging-items-per-page-select");
+        itemsPerPageSelect.setItems("10","15","25");
+        itemsPerPageSelect.setValue("10");
+        itemsPerPageSelect.addValueChangeListener(e -> {
+            Notification.show("Items per Page: " + e.getValue());
+        });
+
+
+        pagingMenuLayout.add(previousPage, currentPageText, itemsPerPageSelect, nextPage);
 
         return pagingMenuLayout;
     }
