@@ -15,8 +15,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -31,7 +29,6 @@ import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
