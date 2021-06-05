@@ -167,14 +167,7 @@ public class DocumentsView extends SecuredView {
         ratingLayout.add(stars, confirmRate);
 
         confirmRate.addClickListener(e -> {
-            int[] currentRate = new int[1];
-            stars.getChildren().forEach(n -> {
-                if (((StarObj) n).getState()) {
-                    currentRate[0]++;
-                }
-            });
-
-            Notification.show("You rated a document: " + currentRate[0]);
+            Notification.show("You rated a document: " + getCurrentRate(stars));
         });
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
@@ -196,6 +189,17 @@ public class DocumentsView extends SecuredView {
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private int getCurrentRate(Div starDiv) {
+        int[] currentRate = new int[1];
+        starDiv.getChildren().forEach(n -> {
+            if (((StarObj) n).getState()) {
+                currentRate[0]++;
+            }
+        });
+
+        return currentRate[0];
     }
 
     private void replaceStars(Div starDiv, int starIndex) {
