@@ -89,6 +89,9 @@ public class DocumentsView extends SecuredView {
         List<Document> documentsList = new ArrayList<>();
 
         for (Document document : documents.getResults()) {
+            if (document.getType().length() > 0) {
+                document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
+            }
             document.setSubject(resolveSubjectById(document.getSubject()));
             document.setTeacher(resolveTeacherById(document.getTeacher()));
             document.setUser(resolveUserById(document.getUser()));
