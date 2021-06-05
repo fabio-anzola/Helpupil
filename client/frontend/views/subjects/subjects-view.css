@@ -28,6 +28,10 @@ div.search-div iron-icon {
   margin-left: 15px;
 }
 
+div.search-div iron-icon:hover {
+  cursor: pointer;
+}
+
 
 /* Subject Layout */
 div.subject-layout-div {
