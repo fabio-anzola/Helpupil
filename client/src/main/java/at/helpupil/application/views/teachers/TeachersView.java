@@ -38,8 +38,6 @@ import static at.helpupil.application.Application.BASE_URL;
 @CssImport("./views/teachers/teachers-view.css")
 public class TeachersView extends SecuredView {
 
-    private Button addTeacher = new Button("Add New Teacher");
-
     private Div teacherLayoutDiv = new Div();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
@@ -49,73 +47,8 @@ public class TeachersView extends SecuredView {
     public TeachersView() {
         addClassName("teachers-view");
 
-        addTeacher.addClassName("add-teacher");
-        Div addTeacherDiv = new Div(addTeacher);
-        add(addTeacherDiv);
-
         add(createTeacherCards(teacher));
         add(createPagingMenu(teacher.getTotalPages()));
-
-        addTeacher.addClickListener(e -> showAddTeacherDialog());
-    }
-
-    private void showAddTeacherDialog() {
-        Dialog dialog = new Dialog();
-        dialog.setWidth("40vw");
-
-        VerticalLayout dialogLayout = new VerticalLayout();
-        dialogLayout.addClassName("dialog-layout");
-
-        Label dialogHeading = new Label("Add new Teacher");
-
-        TextField name = new TextField("Name");
-        TextField shortname = new TextField("Shortname");
-        TextField description = new TextField("Description");
-
-
-        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
-
-        Button confirmButton = new Button("Confirm");
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        confirmButton.addClickShortcut(Key.ENTER);
-        confirmButton.addClickListener(e -> {
-            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
-                makeTeacherCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
-                dialog.close();
-            } else {
-                Notification.show("Check your input");
-            }
-        });
-
-        Button cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
-
-        dialogButtonLayout.add(confirmButton, cancelButton);
-
-
-        dialogLayout.add(dialogHeading, name, shortname, description, dialogButtonLayout);
-
-
-        dialog.add(dialogLayout);
-        dialog.open();
-    }
-
-    private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
-        HttpResponse<Teacher> createTeacher = Unirest.post(BASE_URL + "/teacher")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .body(new TeacherObj(teacher, shortname, description))
-                .asObject(Teacher.class);
-
-        Error error = createTeacher.mapError(Error.class);
-
-        if (null == error) {
-            Notification.show(shortname + " successfully created");
-        } else {
-            Notification.show(error.getMessage());
-        }
     }
 
     private void updateTeacherPage() {

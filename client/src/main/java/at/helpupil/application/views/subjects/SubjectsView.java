@@ -38,8 +38,6 @@ import static at.helpupil.application.Application.BASE_URL;
 @CssImport("./views/subjects/subjects-view.css")
 public class SubjectsView extends SecuredView {
 
-    private Button addSubject = new Button("Add New Subject");
-
     private Div subjectLayoutDiv = new Div();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
@@ -49,73 +47,8 @@ public class SubjectsView extends SecuredView {
     public SubjectsView() {
         addClassName("subjects-view");
 
-        addSubject.addClassName("add-subject");
-        Div addSubjectDiv = new Div(addSubject);
-        add(addSubjectDiv);
-
         add(createSubjectCards(subject));
         add(createPagingMenu(subject.getTotalPages()));
-
-        addSubject.addClickListener(e -> showAddSubjectDialog());
-    }
-
-    private void showAddSubjectDialog() {
-        Dialog dialog = new Dialog();
-        dialog.setWidth("40vw");
-
-        VerticalLayout dialogLayout = new VerticalLayout();
-        dialogLayout.addClassName("dialog-layout");
-
-        Label dialogHeading = new Label("Add new Subject");
-
-        TextField name = new TextField("Name");
-        TextField shortname = new TextField("Shortname");
-        TextField description = new TextField("Description");
-
-
-        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
-
-        Button confirmButton = new Button("Confirm");
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        confirmButton.addClickShortcut(Key.ENTER);
-        confirmButton.addClickListener(e -> {
-            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
-                makeSubjectCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
-                dialog.close();
-            } else {
-                Notification.show("Check your input");
-            }
-        });
-
-        Button cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
-
-        dialogButtonLayout.add(confirmButton, cancelButton);
-
-
-        dialogLayout.add(dialogHeading, name, shortname, description, dialogButtonLayout);
-
-
-        dialog.add(dialogLayout);
-        dialog.open();
-    }
-
-    private void makeSubjectCreateRequest(String subject, String shortname, String description) {
-        HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .body(new SubjectObj(subject, shortname, description))
-                .asObject(Subject.class);
-
-        Error error = createSubject.mapError(Error.class);
-
-        if (null == error) {
-            Notification.show(shortname + " successfully created");
-        } else {
-            Notification.show(error.getMessage());
-        }
     }
 
     private void updateSubjectPage() {

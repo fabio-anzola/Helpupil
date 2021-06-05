@@ -17,10 +17,6 @@ div.teachers-view {
   flex-direction: column;
 }
 
-vaadin-button.add-teacher {
-  margin-top: 15px;
-}
-
 /* teacher Layout */
 div.teacher-layout-div {
   flex-grow: 2;

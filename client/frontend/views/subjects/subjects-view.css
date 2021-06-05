@@ -17,10 +17,6 @@ div.subjects-view {
   flex-direction: column;
 }
 
-vaadin-button.add-subject {
-  margin-top: 15px;
-}
-
 /* Subject Layout */
 div.subject-layout-div {
   flex-grow: 2;
