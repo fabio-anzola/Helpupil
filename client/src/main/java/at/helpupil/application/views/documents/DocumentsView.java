@@ -163,12 +163,18 @@ public class DocumentsView extends SecuredView {
         HorizontalLayout ratingLayout = new HorizontalLayout();
 
         Div stars = new Div();
-        replaceStars(stars, 2);
+        replaceStars(stars, 1);
         ratingLayout.add(stars, confirmRate);
 
         confirmRate.addClickListener(e -> {
-            //rate document()
-            Notification.show("You rated a document");
+            int[] currentRate = new int[1];
+            stars.getChildren().forEach(n -> {
+                if (((StarObj) n).getState()) {
+                    currentRate[0]++;
+                }
+            });
+
+            Notification.show("You rated a document: " + currentRate[0]);
         });
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
