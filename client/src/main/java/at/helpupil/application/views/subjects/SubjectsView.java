@@ -65,10 +65,16 @@ public class SubjectsView extends SecuredView {
         searchBox.setPlaceholder("Search");
         searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
+        searchBox.addKeyDownListener(Key.ESCAPE, e -> {
+            searchBox.blur();
+        });
+        searchBox.addKeyDownListener(Key.ENTER, e -> {
+            makeSearchRequest(searchBox.getValue());
+        });
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
         searchIcon.addClickListener(e -> {
-            Notification.show("Searched: " + searchBox.getValue());
+            makeSearchRequest(searchBox.getValue());
         });
 
         innerDiv.add(searchBox, searchIcon);
@@ -77,6 +83,10 @@ public class SubjectsView extends SecuredView {
         searchDiv.add(innerDiv);
 
         return searchDiv;
+    }
+
+    private void makeSearchRequest(String searchText) {
+        Notification.show("Searched: " + searchText);
     }
 
     private void updateSubjectPage() {
