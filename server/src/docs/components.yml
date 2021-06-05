@@ -93,7 +93,7 @@ components:
         price: 5
         teacher_sn: xyz
         subject_sn: xyz
-        name: Max Mustermann
+        uname: "Max Mustermann"
         
     User:
       type: object
