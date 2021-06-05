@@ -98,6 +98,14 @@ public class SubjectsView extends SecuredView {
             }
         });
 
+        Select<String> itemsPerPageSelect = new Select<>();
+        itemsPerPageSelect.addClassName("paging-items-per-page-select");
+        itemsPerPageSelect.setItems("10","15","25");
+        itemsPerPageSelect.setValue("10");
+        itemsPerPageSelect.addValueChangeListener(e -> {
+            Notification.show("Items per Page: " + e.getValue());
+        });
+
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
             if (currentPage < subject.getTotalPages()) {
@@ -107,19 +115,11 @@ public class SubjectsView extends SecuredView {
             }
         });
 
-        Select<String> itemsPerPageSelect = new Select<>();
-        itemsPerPageSelect.addClassName("paging-items-per-page-select");
-        itemsPerPageSelect.setItems("10","15","25");
-        itemsPerPageSelect.setValue("10");
-        itemsPerPageSelect.addValueChangeListener(e -> {
-            Notification.show("Items per Page: " + e.getValue());
-        });
-
         Label currentPageText = new Label();
         currentPageText.setText(currentPage + " / " + totalPages);
 
 
-        pagingMenuLayout.add(previousPage, currentPageText, itemsPerPageSelect, nextPage);
+        pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
 
         return pagingMenuLayout;
     }
