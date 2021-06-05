@@ -26,6 +26,8 @@ const get = {
 		name: Joi.string(),
 		type: Joi.string().valid(...Object.values(documentTypes)),
 		user: Joi.string().custom(objectId),
+		teacher: Joi.string().custom(objectId),
+		subject: Joi.string().custom(objectId),
 		sortBy: Joi.string(),
 		limit: Joi.number().integer(),
 		page: Joi.number().integer(),

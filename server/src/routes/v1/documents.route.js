@@ -134,6 +134,16 @@ module.exports = router;
  *           enum: [homework, exam, test, revision, script]
  *         description: Document type
  *       - in: query
+ *         name: teacher
+ *         schema:
+ *           type: string
+ *         description: Teacher object id
+ *       - in: query
+ *         name: subject
+ *         schema:
+ *           type: string
+ *         description: Subject object id
+ *       - in: query
  *         name: user
  *         schema:
  *           type: string

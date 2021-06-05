@@ -62,6 +62,12 @@ components:
           type: string
         price:
           type: number
+        teeacher_sn:
+          type: string
+        subject_sn:
+          type: string
+        uname:
+          type: string
       example:
         reviewer: [
           "607d93b3ab9fe96585327a8d",
@@ -85,6 +91,9 @@ components:
         subject: 60833a0fdefaa30582041ea7
         teacher: 608c81ec640bb32f5ce13552
         price: 5
+        teacher_sn: xyz
+        subject_sn: xyz
+        uname: "Max Mustermann"
         
     User:
       type: object

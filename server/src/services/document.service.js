@@ -3,6 +3,9 @@ const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { Doc } = require('../models');
 const { priceTypes } = require('../config/documents');
+const teacherService = require('./teacher.service.js');
+const subjectService = require('./subject.service.js');
+const userService  = require('./user.service.js');
 
 /**
  * Create a document in db
@@ -31,6 +34,9 @@ const queryDocuments = async (filter, options) => {
   for (let i = 0; i < documents.results.length; i++) {
     const element = (await documents.results[i]).toObject();
     element.price = priceTypes[element.type.toUpperCase()];
+    element.teacher_sn = (await teacherService.getTeacherById(element.teacher)).shortname;
+    element.subject_sn = (await subjectService.getSubjectById(element.subject)).shortname;
+    element.uname = (await userService.getUserById(element.user)).name;
     documents.results[i] = element;
   }
   return documents;
@@ -44,6 +50,9 @@ const queryDocuments = async (filter, options) => {
 const getDocumentById = async (id) => {
   const document = (await Doc.findById(id)).toObject();
   document.price = priceTypes[document.type.toUpperCase()];
+  document.teacher_sn = (await teacherService.getTeacherById(document.teacher)).shortname;
+  document.subject_sn = (await subjectService.getSubjectById(document.subject)).shortname;
+  document.uname = (await userService.getUserById(document.user)).name;
   return document;
 };
 
@@ -57,6 +66,9 @@ const getDocumentByName = async (name) => {
     "file.filename": name
   })).toObject();
   document.price = priceTypes[document.type.toUpperCase()];
+  document.teacher_sn = (await teacherService.getTeacherById(document.teacher)).shortname;
+  document.subject_sn = (await subjectService.getSubjectById(document.subject)).shortname;
+  document.uname = (await userService.getUserById(document.user)).name;
   return document;
 };
 
