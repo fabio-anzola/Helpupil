@@ -1,6 +1,7 @@
 package at.helpupil.application.utils;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
 
@@ -18,6 +19,11 @@ public class Auth {
         if (!SessionStorage.isNull()) {
             UI.getCurrent().getPage().executeJs("window.location = \"" + getURL() + "/documents\"");
         }
+    }
+
+    public static void redirectOnRegister() {
+        UI.getCurrent().getPage().executeJs("window.location = \"" + getURL() + "/login\"");
+        // Notification.show("Please check your inbox");
     }
 
     public static String getURL() {
