@@ -384,6 +384,36 @@ public class DocumentsView extends SecuredView implements HasAbsoluteUrlParamete
         return null;
     }
 
+    private String resolveSubjectByShortname(String shortname) {
+        HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("shortname", shortname)
+                .asObject(Subject.class);
+
+        Error error = subject.mapError(Error.class);
+
+        if (null == error) {
+            return subject.getBody().getId();
+        } else {
+            return shortname;
+        }
+    }
+
+    private String resolveTeacherByShortname(String shortname) {
+        HttpResponse<Teacher> teacher = Unirest.get(BASE_URL + "/teacher")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("shortname", shortname)
+                .asObject(Teacher.class);
+
+        Error error = teacher.mapError(Error.class);
+
+        if (null == error) {
+            return teacher.getBody().getId();
+        } else {
+            return shortname;
+        }
+    }
+
     private String resolveSubjectById(String id) {
         HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
