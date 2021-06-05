@@ -34,9 +34,9 @@ const queryDocuments = async (filter, options) => {
   for (let i = 0; i < documents.results.length; i++) {
     const element = (await documents.results[i]).toObject();
     element.price = priceTypes[element.type.toUpperCase()];
-    element.teacher_sn = teacherService.getTeacherById(element.teacher);
-    element.subject_sn = subjectService.getSubjectById(element.subject);
-    element.uname = userService.getUserById(element.user).name;
+    element.teacher_sn = (await teacherService.getTeacherById(element.teacher)).shortname;
+    element.subject_sn = (await subjectService.getSubjectById(element.subject)).shortname;
+    element.uname = (await userService.getUserById(element.user)).name;
     documents.results[i] = element;
   }
   return documents;
