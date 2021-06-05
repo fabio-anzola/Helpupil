@@ -11,7 +11,7 @@ public class Document {
     private String subject;
     private String teacher;
     private int price;
-    private String id;
+    private String _id;
 
     public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, int price, String id) {
         this.reviewer = reviewer;
@@ -24,7 +24,7 @@ public class Document {
         this.subject = subject;
         this.teacher = teacher;
         this.price = price;
-        this.id = id;
+        this._id = _id;
     }
 
     public String[] getReviewer() {
@@ -108,10 +108,10 @@ public class Document {
     }
 
     public String getId() {
-        return id;
+        return _id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this._id = id;
     }
 }

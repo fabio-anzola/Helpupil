@@ -106,7 +106,7 @@ public class DocumentsView extends SecuredView {
         documentGrid.removeColumnByKey("id");
         documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
 
-        documentGrid.addComponentColumn(this::createBuyButton);
+        documentGrid.addComponentColumn(this::createBuyOrShowButton);
 
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
@@ -159,7 +159,7 @@ public class DocumentsView extends SecuredView {
         Label dialogHeading = new Label(document.getName());
 
         Button confirmRate = new Button("Confirm");
-        Button buyButton = new Button("Buy");
+        Button buyOrShowButton = createBuyOrShowButton(document);
         Button cancelButton = new Button("Cancel");
 
 
@@ -175,17 +175,13 @@ public class DocumentsView extends SecuredView {
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
-        buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buyButton.addClickListener(e -> {
-            //dialog.close();
-            showBuyDialog(document);
-        });
+        buyOrShowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         cancelButton.addClickListener(e -> {
             dialog.close();
         });
 
-        dialogButtonLayout.add(buyButton, cancelButton);
+        dialogButtonLayout.add(buyOrShowButton, cancelButton);
 
 
         dialogLayout.add(dialogHeading, ratingLayout, dialogButtonLayout);
@@ -305,8 +301,12 @@ public class DocumentsView extends SecuredView {
         }
     }
 
-    private Button createBuyButton(Document document) {
-        return new Button("Buy", clickEvent -> showBuyDialog(document));
+    private Button createBuyOrShowButton(Document document) {
+        if (SessionStorage.get().getUser().getPurchasedDocuments().contains(document.getId())) {
+            return new Button("Show", clickEvent -> makeBuyRequest(document));
+        } else {
+            return new Button("Buy", clickEvent -> showBuyDialog(document));
+        }
     }
 
     private void updateSubjectPage() {
