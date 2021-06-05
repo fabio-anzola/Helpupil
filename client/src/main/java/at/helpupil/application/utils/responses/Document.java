@@ -13,7 +13,7 @@ public class Document {
     private int price;
     private String _id;
 
-    public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, int price, String id) {
+    public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, int price, String _id) {
         this.reviewer = reviewer;
         this.name = name;
         this.type = type;
@@ -111,7 +111,7 @@ public class Document {
         return _id;
     }
 
-    public void setId(String id) {
-        this._id = id;
+    public void setId(String _id) {
+        this._id = _id;
     }
 }

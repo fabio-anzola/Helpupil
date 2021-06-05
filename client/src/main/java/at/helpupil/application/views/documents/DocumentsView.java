@@ -147,7 +147,7 @@ public class DocumentsView extends SecuredView {
         ratingLayout.add(stars, confirmRate);
 
         confirmRate.addClickListener(e -> {
-            Notification.show("You rated a document: " + getCurrentRate(stars));
+            makeRatingRequest(document.getId(), getCurrentRate(stars));
         });
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
@@ -176,6 +176,24 @@ public class DocumentsView extends SecuredView {
         });
 
         return currentRate[0];
+    }
+
+    private void makeRatingRequest(String documentId, int rating) {
+        HttpResponse<Document> document = Unirest.patch(BASE_URL + "/rating/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("rating", rating)
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        System.out.println(documentId);
+
+        if (null == error) {
+            Notification.show("Rated document. Thank you!");
+            UI.getCurrent().getPage().reload();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private void replaceStars(Div starDiv, int starIndex) {
