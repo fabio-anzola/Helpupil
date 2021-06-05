@@ -3,7 +3,7 @@ const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { Doc } = require('../models');
 const { priceTypes } = require('../config/documents');
-const { teacherService, subjectService, userService } = require('../services');
+const { teacherService, subjectService, userService } = require('./');
 
 /**
  * Create a document in db
