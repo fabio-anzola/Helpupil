@@ -30,7 +30,9 @@ import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import static at.helpupil.application.Application.BASE_URL;
 
@@ -87,6 +89,41 @@ public class SubjectsView extends SecuredView {
 
     private void makeSearchRequest(String searchText) {
         Notification.show("Searched: " + searchText);
+
+        searchText = searchText.toLowerCase();
+        ArrayList<String> foundIds = new ArrayList<>();
+
+        int pageIndex = 0;
+        int pages = 1;
+        do {
+            pageIndex++;
+            HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
+                    .queryString("page", pageIndex)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Subjects.class);
+
+            Error error = subjects.mapError(Error.class);
+
+            if (null == error) {
+                if (pages < subjects.getBody().getTotalPages()) {
+                    pages = subjects.getBody().getTotalPages();
+                }
+
+                String finalSearchText = searchText;
+                Arrays.stream(subjects.getBody().getResults()).forEach(n -> {
+                    if (n.getShortname().toLowerCase().contains(finalSearchText)
+                            || n.getName().toLowerCase().contains(finalSearchText)
+                            || n.getDescription().toLowerCase().contains(finalSearchText)) {
+                        foundIds.add(n.getId());
+                    }
+                });
+            } else {
+                Notification.show(error.getMessage());
+                return;
+            }
+        } while (pageIndex != pages);
+
+        System.out.println(foundIds);
     }
 
     private void updateSubjectPage() {
