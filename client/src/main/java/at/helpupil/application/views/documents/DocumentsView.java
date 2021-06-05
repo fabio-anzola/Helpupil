@@ -29,6 +29,7 @@ import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -43,8 +44,10 @@ public class DocumentsView extends SecuredView {
     private Grid<Document> documentGrid = new Grid<>(Document.class);
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    private final int[] limits = new int[]{10, 15, 25};
+    private int limit = limits[0];
     private int currentPage = 1;
-    private Documents documents = getDocuments(currentPage);
+    private Documents documents = getDocuments(limit, currentPage);
 
     public DocumentsView() {
         addClassName("documents-view");
@@ -318,7 +321,7 @@ public class DocumentsView extends SecuredView {
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
-                documents = getDocuments(currentPage - 1);
+                documents = getDocuments(limit, currentPage - 1);
                 currentPage = documents.getPage();
                 updateSubjectPage();
             }
@@ -326,16 +329,22 @@ public class DocumentsView extends SecuredView {
 
         Select<String> itemsPerPageSelect = new Select<>();
         itemsPerPageSelect.addClassName("paging-items-per-page-select");
-        itemsPerPageSelect.setItems("10","15","25");
-        itemsPerPageSelect.setValue("10");
+        itemsPerPageSelect.setItems(Arrays.stream(limits)
+                .mapToObj(String::valueOf)
+                .toArray(String[]::new));
+        itemsPerPageSelect.setValue(String.valueOf(limit));
         itemsPerPageSelect.addValueChangeListener(e -> {
-            Notification.show("Items per Page: " + e.getValue());
+            limit = Integer.parseInt(e.getValue());
+            currentPage = 1;
+            documents = getDocuments(limit, currentPage);
+            currentPage = documents.getPage();
+            updateSubjectPage();
         });
 
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
             if (currentPage < documents.getTotalPages()) {
-                documents = getDocuments(currentPage + 1);
+                documents = getDocuments(limit, currentPage + 1);
                 currentPage = documents.getPage();
                 updateSubjectPage();
             }
@@ -350,8 +359,9 @@ public class DocumentsView extends SecuredView {
         return pagingMenuLayout;
     }
 
-    private Documents getDocuments(int page) {
+    private Documents getDocuments(int limit, int page) {
         HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/documents")
+                .queryString("limit", limit)
                 .queryString("page", page)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asObject(Documents.class);

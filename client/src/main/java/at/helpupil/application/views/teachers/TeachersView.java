@@ -3,7 +3,6 @@ package at.helpupil.application.views.teachers;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.requests.TeacherObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Teacher;
 import at.helpupil.application.utils.responses.Teachers;
@@ -13,23 +12,20 @@ import com.github.appreciated.card.label.PrimaryLabel;
 import com.github.appreciated.card.label.SecondaryLabel;
 import com.github.appreciated.card.label.TitleLabel;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+
+import java.util.Arrays;
 
 import static at.helpupil.application.Application.BASE_URL;
 
@@ -41,8 +37,10 @@ public class TeachersView extends SecuredView {
     private Div teacherLayoutDiv = new Div();
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    private final int[] limits = new int[]{10, 15, 25};
+    private int limit = limits[0];
     private int currentPage = 1;
-    private Teachers teacher = getTeachers(currentPage);
+    private Teachers teacher = getTeachers(limit, currentPage);
 
     public TeachersView() {
         addClassName("teachers-view");
@@ -92,7 +90,7 @@ public class TeachersView extends SecuredView {
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
-                teacher = getTeachers(currentPage - 1);
+                teacher = getTeachers(limit, currentPage - 1);
                 currentPage = teacher.getPage();
                 updateTeacherPage();
             }
@@ -100,16 +98,22 @@ public class TeachersView extends SecuredView {
 
         Select<String> itemsPerPageSelect = new Select<>();
         itemsPerPageSelect.addClassName("paging-items-per-page-select");
-        itemsPerPageSelect.setItems("10","15","25");
-        itemsPerPageSelect.setValue("10");
+        itemsPerPageSelect.setItems(Arrays.stream(limits)
+                .mapToObj(String::valueOf)
+                .toArray(String[]::new));
+        itemsPerPageSelect.setValue(String.valueOf(limit));
         itemsPerPageSelect.addValueChangeListener(e -> {
-            Notification.show("Items per Page: " + e.getValue());
+            limit = Integer.parseInt(e.getValue());
+            currentPage = 1;
+            teacher = getTeachers(limit, currentPage);
+            currentPage = teacher.getPage();
+            updateTeacherPage();
         });
 
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
             if (currentPage < teacher.getTotalPages()) {
-                teacher = getTeachers(currentPage + 1);
+                teacher = getTeachers(limit, currentPage + 1);
                 currentPage = teacher.getPage();
                 updateTeacherPage();
             }
@@ -124,8 +128,9 @@ public class TeachersView extends SecuredView {
         return pagingMenuLayout;
     }
 
-    private Teachers getTeachers(int page) {
+    private Teachers getTeachers(int limit, int page) {
         HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
+                .queryString("limit", limit)
                 .queryString("page", page)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asObject(Teachers.class);
