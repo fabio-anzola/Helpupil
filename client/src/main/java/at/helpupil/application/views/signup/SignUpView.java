@@ -10,6 +10,7 @@ import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -98,18 +99,17 @@ public class SignUpView extends OpenView {
         Error error = user.mapError(Error.class);
 
         if (null == error) {
-            SessionStorage.set(user.getBody());
-            Auth.redirectIfValid();
-            sendVerifyEmail();
+            sendVerifyEmail(user.getBody());
+            Auth.redirectOnRegister();
         } else {
             Notification.show(error.getMessage());
         }
     }
 
-    private void sendVerifyEmail() {
+    private void sendVerifyEmail(User user) {
         Unirest.post(BASE_URL + "/auth/send-verification-email")
-                .queryString("token", SessionStorage.get().getTokens().getAccess().getToken())
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("token", user.getTokens().getAccess().getToken())
+                .header("Authorization", "Bearer " + user.getTokens().getAccess().getToken())
                 .asEmpty();
     }
 }
