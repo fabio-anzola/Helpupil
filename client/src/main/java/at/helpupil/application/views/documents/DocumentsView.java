@@ -26,6 +26,7 @@ import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import org.vaadin.flow.helper.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -36,8 +37,10 @@ import static at.helpupil.application.Application.BASE_URL;
 
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
+@UrlParameterMapping(":type/:value")
+@IgnoreIfNotMatched
 @CssImport("./views/documents/documents-view.css")
-public class DocumentsView extends SecuredView {
+public class DocumentsView extends SecuredView implements HasAbsoluteUrlParameterMapping  {
 
     private Button addDocument = new Button("Add New Document");
 
@@ -48,6 +51,11 @@ public class DocumentsView extends SecuredView {
     private int limit = limits[0];
     private int currentPage = 1;
     private Documents documents = getDocuments(limit, currentPage);
+
+    @UrlParameter
+    public String type;
+    @UrlParameter
+    public String value;
 
     public DocumentsView() {
         addClassName("documents-view");
