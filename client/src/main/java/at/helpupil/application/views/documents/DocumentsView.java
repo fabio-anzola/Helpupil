@@ -163,8 +163,7 @@ public class DocumentsView extends SecuredView {
         HorizontalLayout ratingLayout = new HorizontalLayout();
 
         Div stars = new Div();
-        addStars(stars);
-
+        replaceStars(stars, 2);
         ratingLayout.add(stars, confirmRate);
 
         confirmRate.addClickListener(e -> {
@@ -193,29 +192,34 @@ public class DocumentsView extends SecuredView {
         dialog.open();
     }
 
-    private void addStars(Div stars) {
-        /*for (int i = 0; i < 5; i++) {
-            Icon star = new Icon(VaadinIcon.STAR_O);
-            star.addClickListener(e -> {
-                Notification.show("First");
-            });
-            stars.add(star);
-        }*/
-//        Icon star1 = new Icon(VaadinIcon.STAR_O);
-        List<Icon> icons = new LinkedList<>();
-        for (int i = 0; i < 5; i++) {
-            StarObj starObj = new StarObj(VaadinIcon.STAR_O, i);
-            starObj.addClickListener(e -> changeStars(stars, icons, starObj.getIndex()));
-            icons.add(starObj);
-            stars.add(starObj);
-        }
+    private void replaceStars(Div starDiv, int starIndex) {
+        starDiv.removeAll();
+        ArrayList<StarObj> starList = generateStars(starDiv, starIndex);
+        starList.forEach(starDiv::add);
     }
 
-    private void changeStars(Div stars, List<Icon> icons, int index) {
-        for (int i = 0; i <= index; i++) {
-            StarObj newStar = new StarObj(VaadinIcon.STAR, i);
-            stars.replace(icons.get(i), newStar);
+    private ArrayList<StarObj> generateStars(Div starDiv, int starIndex) {
+        ArrayList<StarObj> newStarList = new ArrayList<>();
+
+        for (int i = 0; i < starIndex; i++) {
+            StarObj filledStar = new StarObj(true);
+            int newIndex = i + 1;
+            filledStar.addClickListener(e -> {
+                replaceStars(starDiv, newIndex);
+            });
+            newStarList.add(filledStar);
         }
+
+        for (int i = starIndex; i < 5; i++) {
+            StarObj emptyStar = new StarObj(false);
+            int newIndex = i + 1;
+            emptyStar.addClickListener(e -> {
+                replaceStars(starDiv, newIndex);
+            });
+            newStarList.add(emptyStar);
+        }
+
+        return newStarList;
     }
 
     private void showBuyDialog(Document document) {

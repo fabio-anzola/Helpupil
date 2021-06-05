@@ -4,23 +4,14 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 
 public class StarObj extends Icon {
-    private int index;
+    private final boolean state;
 
-    public StarObj(VaadinIcon icon, int index) {
-        super(icon);
-        this.index = index;
+    public StarObj(boolean state) {
+        super(state ? VaadinIcon.STAR : VaadinIcon.STAR_O);
+        this.state = state;
     }
 
-    public StarObj(String icon, int index) {
-        super(icon);
-        this.index = index;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public boolean getState() {
+        return state;
     }
 }
