@@ -20,13 +20,11 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-import org.vaadin.flow.helper.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -37,10 +35,8 @@ import static at.helpupil.application.Application.BASE_URL;
 
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
-@UrlParameterMapping(":type/:value")
-@IgnoreIfNotMatched
 @CssImport("./views/documents/documents-view.css")
-public class DocumentsView extends SecuredView implements HasAbsoluteUrlParameterMapping  {
+public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
 
     private Button addDocument = new Button("Add New Document");
 
@@ -51,11 +47,6 @@ public class DocumentsView extends SecuredView implements HasAbsoluteUrlParamete
     private int limit = limits[0];
     private int currentPage = 1;
     private Documents documents = getDocuments(limit, currentPage);
-
-    @UrlParameter
-    public String type;
-    @UrlParameter
-    public String value;
 
     public DocumentsView() {
         addClassName("documents-view");
@@ -69,6 +60,10 @@ public class DocumentsView extends SecuredView implements HasAbsoluteUrlParamete
         add(createPagingMenu(documents.getTotalPages()));
 
         addDocument.addClickListener(e -> {
+//            System.out.println("type = " + type);
+//            System.out.println("value = " + value);
+//            documents = getDocuments(limit, currentPage);
+//            UI.getCurrent().getPage().reload();
             //showBuyDialog();
         });
     }
@@ -368,11 +363,33 @@ public class DocumentsView extends SecuredView implements HasAbsoluteUrlParamete
     }
 
     private Documents getDocuments(int limit, int page) {
-        HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/documents")
-                .queryString("limit", limit)
-                .queryString("page", page)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(Documents.class);
+        HttpResponse<Documents> documents = null;
+        if (null != null) {
+//        if (null != this.type && null != this.value) {
+//            String k = "";
+//            String v = "";
+//            if (this.type.equals("subject")) {
+//                k = "subject";
+//                v = resolveSubjectByShortname(this.value);
+//            }
+//            if (this.type.equals("subject")) {
+//                k = "teacher";
+//                v = resolveTeacherByShortname(this.value);
+//            }
+//
+//            documents = Unirest.get(BASE_URL + "/documents")
+//                    .queryString("limit", limit)
+//                    .queryString("page", page)
+//                    .queryString(k, v)
+//                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+//                    .asObject(Documents.class);
+        } else {
+            documents = Unirest.get(BASE_URL + "/documents")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Documents.class);
+        }
 
         Error error = documents.mapError(Error.class);
 
@@ -453,6 +470,15 @@ public class DocumentsView extends SecuredView implements HasAbsoluteUrlParamete
             return user.getBody().getName();
         } else {
             return id;
+        }
+    }
+
+    @Override
+    public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
+        if (s.isEmpty()) {
+            setText("Welcome anonymous.");
+        } else {
+            setText(String.format("Handling parameter %s.", s));
         }
     }
 }
