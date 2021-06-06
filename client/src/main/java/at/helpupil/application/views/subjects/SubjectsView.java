@@ -44,7 +44,7 @@ public class SubjectsView extends SecuredView {
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
     private boolean searchState = false;
-    private ArrayList<String> foundIds = new ArrayList<>();
+    private final ArrayList<String> foundIds = new ArrayList<>();
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private int currentPage = 1;
@@ -218,7 +218,6 @@ public class SubjectsView extends SecuredView {
     }
 
     private Subjects getSubjects(int limit, int page) {
-        System.out.println(searchState);
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Subject[] subjectAr = new Subject[itemsVisible];
@@ -227,7 +226,6 @@ public class SubjectsView extends SecuredView {
                 subjectAr[subjectArCounter] = resolveSubjectById(foundIds.get(i));
                 subjectArCounter++;
             }
-
             return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
         } else {
             HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
