@@ -309,7 +309,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
-    private void updateSubjectPage() {
+    private void updateDocumentPage() {
         remove(documentGrid);
         remove(pagingMenuLayout);
         documentGrid = new Grid<>(Document.class);
@@ -327,7 +327,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (currentPage > 1) {
                 documents = getDocuments(limit, currentPage - 1);
                 currentPage = documents.getPage();
-                updateSubjectPage();
+                updateDocumentPage();
             }
         });
 
@@ -342,7 +342,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             currentPage = 1;
             documents = getDocuments(limit, currentPage);
             currentPage = documents.getPage();
-            updateSubjectPage();
+            updateDocumentPage();
         });
 
         Button nextPage = new Button("Next");
@@ -350,7 +350,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (currentPage < documents.getTotalPages()) {
                 documents = getDocuments(limit, currentPage + 1);
                 currentPage = documents.getPage();
-                updateSubjectPage();
+                updateDocumentPage();
             }
         });
 
@@ -414,10 +414,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
         if (!s.isEmpty() && s.split("/").length == 2) {
             this.documents = getDocuments(this.limit, 1, s.split("/")[0], s.split("/")[1]);
-            System.err.println("Got parameters");
+            updateDocumentPage();
         } else {
             this.documents = getDocuments(this.limit, 1);
-            System.err.println("Got NO parameters");
+            updateDocumentPage();
         }
     }
 }
