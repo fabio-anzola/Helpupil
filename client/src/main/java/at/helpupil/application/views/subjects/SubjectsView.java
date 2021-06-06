@@ -32,8 +32,6 @@ import kong.unirest.Unirest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
-import java.util.Objects;
 
 import static at.helpupil.application.Application.BASE_URL;
 
@@ -46,6 +44,7 @@ public class SubjectsView extends SecuredView {
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
     private boolean searchState = false;
+    private ArrayList<String> foundIds = new ArrayList<>();
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private int currentPage = 1;
@@ -90,10 +89,8 @@ public class SubjectsView extends SecuredView {
     }
 
     private void makeSearchRequest(String searchText) {
-        Notification.show("Searched: " + searchText);
-
         searchText = searchText.toLowerCase();
-        ArrayList<String> foundIds = new ArrayList<>();
+        foundIds.clear();
 
         int pageIndex = 0;
         int pages = 1;
@@ -125,33 +122,10 @@ public class SubjectsView extends SecuredView {
             }
         } while (pageIndex != pages);
 
-        System.out.println(foundIds);
-
+        searchState = true;
         currentPage = 1;
-        int newPagesLimit = (int) Math.ceil((float) foundIds.size() / limit);
-        resetSubjectPage();
-        add(createSubjectCardsSearched(foundIds));
-        add(createPagingMenu(newPagesLimit));
-    }
-
-    private Div createSubjectCardsSearched(ArrayList<String> foundIds) {
-        subjectLayoutDiv = new Div();
-        subjectLayoutDiv.addClassName("subject-layout-div");
-
-        HorizontalLayout subjectLayout = new HorizontalLayout();
-        subjectLayout.getThemeList().remove("spacing");
-        subjectLayout.addClassName("subject-layout");
-
-        for (int i = 0; i < limit; i++) {
-            if (i < foundIds.size()) {
-                Card card = createSubjectCard(Objects.requireNonNull(resolveSubjectById(foundIds.get(i))));
-                subjectLayout.add(card);
-            }
-        }
-
-        subjectLayoutDiv.add(subjectLayout);
-
-        return subjectLayoutDiv;
+        subject = getSubjects(limit, currentPage);
+        updateSubjectPage();
     }
 
     private void updateSubjectPage() {
@@ -161,13 +135,6 @@ public class SubjectsView extends SecuredView {
         pagingMenuLayout = new HorizontalLayout();
         add(createSubjectCards(subject));
         add(createPagingMenu(subject.getTotalPages()));
-    }
-
-    private void resetSubjectPage() {
-        remove(subjectLayoutDiv);
-        remove(pagingMenuLayout);
-        subjectLayoutDiv = new Div();
-        pagingMenuLayout = new HorizontalLayout();
     }
 
     private Component createSubjectCards(Subjects subject) {
@@ -246,20 +213,33 @@ public class SubjectsView extends SecuredView {
     }
 
     private Subjects getSubjects(int limit, int page) {
-        HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
-                .queryString("limit", limit)
-                .queryString("page", page)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(Subjects.class);
+        if (searchState) {
+            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+            Subject[] subjectAr = new Subject[itemsVisible];
+            int subjectArCounter = 0;
+            for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
+                subjectAr[subjectArCounter] = resolveSubjectById(foundIds.get(i));
+                subjectArCounter++;
+            }
 
-        Error error = subjects.mapError(Error.class);
 
-        if (null == error) {
-            return subjects.getBody();
+            return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
         } else {
-            Notification.show(error.getMessage());
+            HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Subjects.class);
+
+            Error error = subjects.mapError(Error.class);
+
+            if (null == error) {
+                return subjects.getBody();
+            } else {
+                Notification.show(error.getMessage());
+            }
+            return null;
         }
-        return null;
     }
 
     private Subject resolveSubjectById(String id) {
