@@ -68,19 +68,24 @@ public class SubjectsView extends SecuredView {
         searchBox.setPlaceholder("Search");
         searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
-        searchBox.addKeyDownListener(Key.ESCAPE, e -> {
-            searchBox.blur();
-        });
-        searchBox.addKeyDownListener(Key.ENTER, e -> {
-            makeSearchRequest(searchBox.getValue());
-        });
+        searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
+        searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
-        searchIcon.addClickListener(e -> {
-            makeSearchRequest(searchBox.getValue());
+        searchIcon.addClickListener(e -> makeSearchRequest(searchBox.getValue()));
+
+        Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
+        exitSearchState.addClickListener(e -> {
+            if (searchState) {
+                searchBox.clear();
+                searchState = false;
+                currentPage = 1;
+                subject = getSubjects(limit, currentPage);
+                updateSubjectPage();
+            }
         });
 
-        innerDiv.add(searchBox, searchIcon);
+        innerDiv.add(searchBox, searchIcon, exitSearchState);
 
 
         searchDiv.add(innerDiv);
@@ -213,6 +218,7 @@ public class SubjectsView extends SecuredView {
     }
 
     private Subjects getSubjects(int limit, int page) {
+        System.out.println(searchState);
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Subject[] subjectAr = new Subject[itemsVisible];
@@ -221,7 +227,6 @@ public class SubjectsView extends SecuredView {
                 subjectAr[subjectArCounter] = resolveSubjectById(foundIds.get(i));
                 subjectArCounter++;
             }
-
 
             return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
         } else {
