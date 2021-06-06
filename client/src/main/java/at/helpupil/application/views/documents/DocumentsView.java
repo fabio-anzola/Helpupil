@@ -76,9 +76,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (document.getType().length() > 0) {
                 document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
             }
-            document.setSubject(resolveSubjectById(document.getSubject()));
-            document.setTeacher(resolveTeacherById(document.getTeacher()));
-            document.setUser(resolveUserById(document.getUser()));
+            document.setSubject(document.getSubject_sn());
+            document.setTeacher(document.getTeacher_sn());
+            document.setUser(document.getUname());
             documentsList.add(document);
         }
 
