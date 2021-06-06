@@ -1,9 +1,7 @@
 package at.helpupil.application.utils;
 
+import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
-import at.helpupil.application.utils.responses.Subject;
-import at.helpupil.application.utils.responses.Teacher;
-import at.helpupil.application.utils.responses.UserPublicObj;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -11,30 +9,30 @@ import static at.helpupil.application.Application.BASE_URL;
 
 public class Resolve {
     public static String resolveSubjectByShortname(String shortname) {
-        HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject")
+        HttpResponse<Subjects> subject = Unirest.get(BASE_URL + "/subject")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .queryString("shortname", shortname)
-                .asObject(Subject.class);
+                .asObject(Subjects.class);
 
         Error error = subject.mapError(Error.class);
 
         if (null == error) {
-            return subject.getBody().getId();
+            return subject.getBody().getResults()[0].getId();
         } else {
             return shortname;
         }
     }
 
     public static String resolveTeacherByShortname(String shortname) {
-        HttpResponse<Teacher> teacher = Unirest.get(BASE_URL + "/teacher")
+        HttpResponse<Teachers> teacher = Unirest.get(BASE_URL + "/teacher")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .queryString("shortname", shortname)
-                .asObject(Teacher.class);
+                .asObject(Teachers.class);
 
         Error error = teacher.mapError(Error.class);
 
         if (null == error) {
-            return teacher.getBody().getId();
+            return teacher.getBody().getResults()[0].getId();
         } else {
             return shortname;
         }
