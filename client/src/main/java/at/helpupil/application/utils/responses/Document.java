@@ -12,8 +12,11 @@ public class Document {
     private String teacher;
     private int price;
     private String _id;
+    private String uname;
+    private String subject_sn;
+    private String teacher_sn;
 
-    public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, int price, String _id) {
+    public Document(String[] reviewer, String name, String type, String user, double rating, File file, String status, String subject, String teacher, int price, String _id, String uname, String subject_sn, String teacher_sn) {
         this.reviewer = reviewer;
         this.name = name;
         this.type = type;
@@ -25,6 +28,9 @@ public class Document {
         this.teacher = teacher;
         this.price = price;
         this._id = _id;
+        this.uname = uname;
+        this.subject_sn = subject_sn;
+        this.teacher_sn = teacher_sn;
     }
 
     public String[] getReviewer() {
@@ -113,5 +119,29 @@ public class Document {
 
     public void setId(String _id) {
         this._id = _id;
+    }
+
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    public String getSubject_sn() {
+        return subject_sn;
+    }
+
+    public void setSubject_sn(String subject_sn) {
+        this.subject_sn = subject_sn;
+    }
+
+    public String getTeacher_sn() {
+        return teacher_sn;
+    }
+
+    public void setTeacher_sn(String teacher_sn) {
+        this.teacher_sn = teacher_sn;
     }
 }
