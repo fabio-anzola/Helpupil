@@ -379,12 +379,25 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                     .asObject(Documents.class);
         } else {
-            documents = Unirest.get(BASE_URL + "/documents")
-                    .queryString("limit", limit)
-                    .queryString("page", page)
-                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                    .asObject(Documents.class);
+            getDocuments(limit, page);
         }
+
+        Error error = documents.mapError(Error.class);
+
+        if (null == error) {
+            return documents.getBody();
+        } else {
+            Notification.show(error.getMessage());
+        }
+        return null;
+    }
+
+    private Documents getDocuments(int limit, int page) {
+        HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/documents")
+                .queryString("limit", limit)
+                .queryString("page", page)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Documents.class);
 
         Error error = documents.mapError(Error.class);
 
