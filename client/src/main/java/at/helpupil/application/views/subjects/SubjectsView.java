@@ -209,11 +209,7 @@ public class SubjectsView extends SecuredView {
         });
 
         Label currentPageText = new Label();
-        if (searchState && foundIds.size() == 0) {
-            currentPageText.setText(0 + " / " + 0);
-        } else {
-            currentPageText.setText(currentPage + " / " + totalPages);
-        }
+        currentPageText.setText(currentPage + " / " + totalPages);
 
 
         pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
@@ -230,6 +226,9 @@ public class SubjectsView extends SecuredView {
                 subjectAr[subjectArCounter] = resolveSubjectById(foundIds.get(i));
                 subjectArCounter++;
             }
+            if (subjectAr.length == 0) {
+                currentPage = 0;
+            }
             return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
         } else {
             HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
@@ -241,6 +240,9 @@ public class SubjectsView extends SecuredView {
             Error error = subjects.mapError(Error.class);
 
             if (null == error) {
+                if (subjects.getBody().getResults().length == 0) {
+                    currentPage = 0;
+                }
                 return subjects.getBody();
             } else {
                 Notification.show(error.getMessage());
