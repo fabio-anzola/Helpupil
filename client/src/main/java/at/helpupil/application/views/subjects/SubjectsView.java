@@ -209,7 +209,11 @@ public class SubjectsView extends SecuredView {
         });
 
         Label currentPageText = new Label();
-        currentPageText.setText(currentPage + " / " + totalPages);
+        if (searchState && foundIds.size() == 0) {
+            currentPageText.setText(0 + " / " + 0);
+        } else {
+            currentPageText.setText(currentPage + " / " + totalPages);
+        }
 
 
         pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
