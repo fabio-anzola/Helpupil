@@ -362,27 +362,22 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return pagingMenuLayout;
     }
 
-    private Documents getDocuments(int limit, int page) {
+    private Documents getDocuments(int limit, int page, String k, String v) {
         HttpResponse<Documents> documents = null;
-        if (null != null) {
-//        if (null != this.type && null != this.value) {
-//            String k = "";
-//            String v = "";
-//            if (this.type.equals("subject")) {
-//                k = "subject";
-//                v = resolveSubjectByShortname(this.value);
-//            }
-//            if (this.type.equals("subject")) {
-//                k = "teacher";
-//                v = resolveTeacherByShortname(this.value);
-//            }
-//
-//            documents = Unirest.get(BASE_URL + "/documents")
-//                    .queryString("limit", limit)
-//                    .queryString("page", page)
-//                    .queryString(k, v)
-//                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-//                    .asObject(Documents.class);
+        if (null != k && null != v) {
+            if (k.equals("subject")) {
+                v = resolveSubjectByShortname(v);
+            }
+            if (k.equals("teacher")) {
+                v = resolveTeacherByShortname(v);
+            }
+
+            documents = Unirest.get(BASE_URL + "/documents")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .queryString(k, v)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Documents.class);
         } else {
             documents = Unirest.get(BASE_URL + "/documents")
                     .queryString("limit", limit)
