@@ -132,7 +132,8 @@ public class SubjectsView extends SecuredView {
         if (null == error) {
             Notification.show(shortname + " successfully created");
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            makeSubjectCreateRequest(subject, shortname, description);
         }
     }
 
@@ -185,9 +186,9 @@ public class SubjectsView extends SecuredView {
         if (null == error) {
             return subjects.getBody();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            return getSubjects(page);
         }
-        return null;
     }
 
 }
