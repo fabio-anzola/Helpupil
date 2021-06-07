@@ -142,20 +142,21 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         Label dialogHeading = new Label(document.getName());
 
-        Button confirmRate = new Button("Confirm");
         Button buyOrShowButton = createBuyOrShowButton(document);
         Button cancelButton = new Button("Cancel");
 
 
         HorizontalLayout ratingLayout = new HorizontalLayout();
 
-        Div stars = new Div();
-        replaceStars(stars, 1);
-        ratingLayout.add(stars, confirmRate);
-
-        confirmRate.addClickListener(e -> {
-            makeRatingRequest(document.getId(), getCurrentRate(stars));
-        });
+        if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))) {
+            Div stars = new Div();
+            Button confirmRate = new Button("Confirm");
+            replaceStars(stars, 0);
+            ratingLayout.add(stars, confirmRate);
+            confirmRate.addClickListener(e -> {
+                makeRatingRequest(document.getId(), getCurrentRate(stars));
+            });
+        }
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
