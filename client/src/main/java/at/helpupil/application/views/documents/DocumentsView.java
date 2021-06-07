@@ -141,14 +141,15 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialogLayout.addClassName("dialog-layout");
 
         Label dialogHeading = new Label(document.getName());
+        dialogLayout.add(dialogHeading);
 
         Button buyOrShowButton = createBuyOrShowButton(document);
         Button cancelButton = new Button("Cancel");
 
 
-        HorizontalLayout ratingLayout = new HorizontalLayout();
 
         if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))) {
+            HorizontalLayout ratingLayout = new HorizontalLayout();
             Div stars = new Div();
             Button confirmRate = new Button("Confirm");
             replaceStars(stars, 0);
@@ -156,6 +157,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             confirmRate.addClickListener(e -> {
                 makeRatingRequest(document.getId(), getCurrentRate(stars));
             });
+            dialogLayout.add(ratingLayout);
         }
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
@@ -167,9 +169,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         });
 
         dialogButtonLayout.add(buyOrShowButton, cancelButton);
+        dialogLayout.add(dialogButtonLayout);
 
-
-        dialogLayout.add(dialogHeading, ratingLayout, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
