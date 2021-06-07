@@ -496,6 +496,21 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return null;
     }
 
+    private Types getTypes() {
+        HttpResponse<Types> types = Unirest.get(BASE_URL + "/documents/types")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Types.class);
+
+        Error error = types.mapError(Error.class);
+
+        if (null == error) {
+            return types.getBody();
+        } else {
+            Notification.show(error.getMessage());
+        }
+        return null;
+    }
+
     @Override
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
         if (!s.isEmpty() && s.split("/").length == 2) {
