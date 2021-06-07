@@ -1,3 +1,74 @@
 .documents-view {
   display: block;
 }
+
+div.documents-view {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+
+  height: 100%;
+  height: -webkit-fill-available;
+  height: fill-available;
+
+  display: flex;
+  flex-direction: column;
+}
+
+vaadin-button.add-document {
+  margin-top: 15px;
+}
+
+vaadin-grid {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  flex-grow: 2;
+  border: none;
+}
+
+/* Add teacher - Dialog */
+vaadin-vertical-layout.dialog-layout label {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16pt;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-text-field {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
+  width: 60%;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
+  flex-grow: 1;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Paging */
+.paging-items-per-page-select {
+  width: 90px;
+}

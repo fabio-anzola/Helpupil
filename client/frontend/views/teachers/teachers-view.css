@@ -2,16 +2,26 @@
   display: block;
 }
 
+
 div.teachers-view {
   width: 90%;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin: 15px auto;
+
+  height: 100%;
+  height: -webkit-fill-available;
+  height: fill-available;
+
+  display: flex;
+  flex-direction: column;
 }
 
+/* teacher Layout */
+div.teacher-layout-div {
+  flex-grow: 2;
+}
 
-/* Teacher Layout */
 vaadin-horizontal-layout.teacher-layout {
   width: 100%;
   display: flex;
@@ -21,7 +31,7 @@ vaadin-horizontal-layout.teacher-layout {
 }
 
 
-/* Subject Content Cards */
+/* teacher Content Cards */
 vaadin-horizontal-layout.teacher-layout content-card {
   user-select: none;
   width: 250px;
@@ -49,40 +59,11 @@ vaadin-horizontal-layout.paging-layout {
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-bottom: 15px;
 }
 
 vaadin-horizontal-layout.paging-layout label {
   align-self: center;
-}
-
-
-
-/* Add Teacher - Dialog */
-vaadin-vertical-layout.dialog-layout label {
-  width: 100%;
-  text-align: center;
-  font-weight: bold;
-  font-size: 16pt;
-}
-
-vaadin-vertical-layout.dialog-layout vaadin-text-field {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
-  width: 60%;
-  margin-top: 40px;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
-  flex-grow: 1;
 }
 
 
@@ -94,9 +75,5 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
   vaadin-horizontal-layout.teacher-layout content-card {
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .teachers-view .addSubject-button {
-    display: none;
   }
 }
