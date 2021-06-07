@@ -117,8 +117,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         subjectSelect.setItems(subjectMap.keySet());
         subjectSelect.setLabel("Subject");
 
-//      TODO Type types = getTypes();
-        typeSelect.setItems("homework", "script", "test", "exam");
+        Types types = getTypes();
+        Map<String, String> typeMap = new HashMap<>();
+        for (int i = 0; i < types.getFriendly_values().length; i++) {
+            typeMap.put(types.getFriendly_values()[i], types.getValues()[i]);
+        }
+        typeSelect.setItems(typeMap.keySet());
         typeSelect.setLabel("Type");
 
         MemoryBuffer buffer = new MemoryBuffer();
@@ -143,7 +147,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     && name.getValue().trim().isEmpty()) {
                 Notification.show("Check your input");
             }
-            makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeSelect.getValue(), teacherMap.get(teacherSelect.getValue()), buffer);
+            makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
         });
 
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
