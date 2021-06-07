@@ -6,7 +6,9 @@ const { moderatorService } = require('../services');
 
 const updateRating = catchAsync(async (req, res) => {
 	let document = await moderatorService.getDocumentById(req.params.documentId, req.body);
-
+    if (!document) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
+    }
     if (document.reviewer.includes(req.user._id)) {
         throw new ApiError(httpStatus.FORBIDDEN, 'You have already rated this document!');
     }
