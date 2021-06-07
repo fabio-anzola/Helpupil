@@ -1,5 +1,53 @@
 components:
   schemas:
+    DocumentTypes:
+      type: object
+      properties:
+        keys:
+          type: array
+          items: 
+            type: string
+        values:
+          type: array
+          items: 
+            type: string
+        friendly_values:
+          type: array
+          items: 
+            type: string
+        prices:
+          type: array
+          items: 
+            type: number
+      example:
+        keys: [
+          "HOMEWORK",
+          "EXAM",
+          "TEST",
+          "REVISION",
+          "SCRIPT"
+        ]
+        values: [
+          "homework",
+          "exam",
+          "test",
+          "revision",
+          "script"
+        ]
+        friendly_values: [
+          "Homework",
+          "Exam",
+          "Test",
+          "Revision",
+          "Script"
+        ]
+        prices: [
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
     UserName:
       type: object
       properties:

@@ -39,6 +39,7 @@
 
 - [x] POST /v1/documents - create a document
 - [x] GET /v1/documents - get all documents
+- [x] GET /v1/documents/types - get all document types
 - [x] GET /v1/documents/:documentId - get document
 - [x] DELETE /v1/documents/:documentId - delete a document
 

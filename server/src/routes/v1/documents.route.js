@@ -40,6 +40,10 @@ const upload = multer({
 });
 
 router
+  .route('/types')
+  .get(auth(), documentController.getDocumentTypes)
+
+router
   .route('/')
   .post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
@@ -243,6 +247,29 @@ module.exports = router;
  *     responses:
  *       "200":
  *         description: No content
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+/**
+ * @swagger
+ * /documents/types:
+ *   get:
+ *     summary: Get the doc types
+ *     description: Logged in users can get the types.
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/DocumentTypes'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
