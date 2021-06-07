@@ -49,6 +49,10 @@ router
   .get(auth(), validate(documentValidation.get), documentController.getDocument)
   .delete(auth(), documentController.deleteDocument);
 
+router
+  .route('/types')
+  .get(auth(), validate(documentValidation.getTypes), documentController.getDocumentTypes)
+
 module.exports = router;
 
 /**
