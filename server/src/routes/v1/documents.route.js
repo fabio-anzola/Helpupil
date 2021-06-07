@@ -254,3 +254,26 @@ module.exports = router;
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
+/**
+ * @swagger
+ * /documents/types:
+ *   get:
+ *     summary: Get the doc types
+ *     description: Logged in users can get the types.
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/DocumentTypes'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
