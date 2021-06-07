@@ -1,5 +1,6 @@
 package at.helpupil.application.utils;
 
+import at.helpupil.application.utils.responses.Tokens;
 import at.helpupil.application.utils.responses.User;
 import com.vaadin.flow.server.VaadinSession;
 
@@ -15,8 +16,8 @@ public class SessionStorage {
     }
 
 
-    public static void update(User value) {
-        set(value);
+    public static void update(Tokens value) {
+        get().setTokens(value);
     }
 
 
