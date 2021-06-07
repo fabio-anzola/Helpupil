@@ -154,6 +154,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             Button confirmRate = new Button("Confirm");
             confirmRate.addClickListener(e -> {
                 makeRatingRequest(document.getId(), getCurrentRate(stars));
+                dialog.close();
             });
             ratingLayout.add(stars, confirmRate);
             dialogLayout.add(ratingLayout);
@@ -197,7 +198,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         if (null == error) {
             Notification.show("Rated document. Thank you!");
-            UI.getCurrent().getPage().reload();
+
+            documents = getDocuments(limit, currentPage);
+            updateDocumentPage();
+//            UI.getCurrent().getPage().reload();
         } else {
             Notification.show(error.getMessage());
         }
