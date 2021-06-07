@@ -27,9 +27,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.*;
@@ -65,7 +63,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 //            System.out.println("value = " + value);
 //            documents = getDocuments(limit, currentPage);
 //            UI.getCurrent().getPage().reload();
-            //showBuyDialog();
+            showUploadDialog();
         });
     }
 
@@ -104,9 +102,25 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
 
-        Select<Teacher> teacherSelect = new Select<>();
-        Select<Subject> subjectSelect = new Select<>();
-        Select<?> typeSelect = new Select<>();
+        Select<String> teacherSelect = new Select<>();
+        Select<String> subjectSelect = new Select<>();
+        Select<String> typeSelect = new Select<>();
+
+        Teachers teachers = getTeachers();
+        Map<String, String> teacherMap = new HashMap<>();
+        Arrays.stream(teachers.getResults()).forEach(n -> teacherMap.put(n.getId(), n.getShortname()));
+        teacherSelect.setItems(teacherMap.values());
+        teacherSelect.setLabel("Teacher");
+
+        Subjects subjects = getSubjects();
+        Map<String, String> subjectMap = new HashMap<>();
+        Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getId(), n.getShortname()));
+        subjectSelect.setItems(subjectMap.values());
+        subjectSelect.setLabel("Subject");
+
+//      TODO Type types = getTypes();
+        typeSelect.setItems("homework", "script", "test", "exam");
+        typeSelect.setLabel("Type");
 
         Label dialogHeading = new Label("Upload document");
 
@@ -127,7 +141,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, dialogButtonLayout);
+        dialogLayout.add(dialogHeading, teacherSelect, subjectSelect, typeSelect, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
@@ -394,6 +408,36 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         if (null == error) {
             return documents.getBody();
+        } else {
+            Notification.show(error.getMessage());
+        }
+        return null;
+    }
+
+    private Teachers getTeachers() {
+        HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Teachers.class);
+
+        Error error = teachers.mapError(Error.class);
+
+        if (null == error) {
+            return teachers.getBody();
+        } else {
+            Notification.show(error.getMessage());
+        }
+        return null;
+    }
+
+    private Subjects getSubjects() {
+        HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Subjects.class);
+
+        Error error = subjects.mapError(Error.class);
+
+        if (null == error) {
+            return subjects.getBody();
         } else {
             Notification.show(error.getMessage());
         }
