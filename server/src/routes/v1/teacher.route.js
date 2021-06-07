@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
 	.route('/')
-	.post(auth(), validate(teacherValidation.createTeacher), teacherController.createTeacher)
+	.post(auth('manageTeacher'), validate(teacherValidation.createTeacher), teacherController.createTeacher)
 	.get(auth(), validate(teacherValidation.getTeachers), teacherController.getTeachers);
 
 router

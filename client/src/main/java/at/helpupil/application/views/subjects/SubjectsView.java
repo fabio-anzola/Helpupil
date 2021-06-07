@@ -127,10 +127,32 @@ public class SubjectsView extends SecuredView {
             }
         } while (pageIndex != pages);
 
+        client-document
         searchState = true;
         currentPage = 1;
         subject = getSubjects(limit, currentPage);
         updateSubjectPage();
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void makeSubjectCreateRequest(String subject, String shortname, String description) {
+        HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .body(new SubjectObj(subject, shortname, description))
+                .asObject(Subject.class);
+
+        Error error = createSubject.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show(shortname + " successfully created");
+        } else {
+            new Error(error.getCode(), error.getMessage());
+            makeSubjectCreateRequest(subject, shortname, description);
+        }
+
     }
 
     private void updateSubjectPage() {
@@ -245,9 +267,9 @@ public class SubjectsView extends SecuredView {
                 }
                 return subjects.getBody();
             } else {
-                Notification.show(error.getMessage());
+                new Error(error.getCode(), error.getMessage());
+                return getSubjects(page);
             }
-            return null;
         }
     }
 

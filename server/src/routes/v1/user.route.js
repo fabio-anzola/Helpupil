@@ -17,6 +17,10 @@ router
   .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
+router
+  .route('/public/:userId')
+  .get(auth(), validate(userValidation.getUser), userController.getPublicUser)
+
 module.exports = router;
 
 /**
@@ -243,6 +247,36 @@ module.exports = router;
  *     responses:
  *       "200":
  *         description: No content
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ */
+/**
+ * @swagger
+ * /users/public/{id}:
+ *   get:
+ *     summary: Get a users name
+ *     description: Logged in users can fetch all names
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User id
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/UserName'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

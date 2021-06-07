@@ -17,6 +17,7 @@
 - [x] GET /v1/users/:userId - get user
 - [x] PATCH /v1/users/:userId - update user
 - [x] DELETE /v1/users/:userId - delete user
+- [x] GET /v1/users/public/:userId - get name of user
 
 ## Subject Routes
 
@@ -38,6 +39,7 @@
 
 - [x] POST /v1/documents - create a document
 - [x] GET /v1/documents - get all documents
+- [x] GET /v1/documents/types - get all document types
 - [x] GET /v1/documents/:documentId - get document
 - [x] DELETE /v1/documents/:documentId - delete a document
 

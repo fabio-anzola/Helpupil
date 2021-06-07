@@ -126,10 +126,31 @@ public class TeachersView extends SecuredView {
             }
         } while (pageIndex != pages);
 
+
         searchState = true;
         currentPage = 1;
         teacher = getTeachers(limit, currentPage);
         updateTeacherPage();
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
+        HttpResponse<Teacher> createTeacher = Unirest.post(BASE_URL + "/teacher")
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .body(new TeacherObj(teacher, shortname, description))
+                .asObject(Teacher.class);
+
+        Error error = createTeacher.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show(shortname + " successfully created");
+        } else {
+            new Error(error.getCode(), error.getMessage());
+            makeTeacherCreateRequest(teacher, shortname, description);
+        }
     }
 
     private void updateTeacherPage() {
@@ -241,9 +262,9 @@ public class TeachersView extends SecuredView {
             if (null == error) {
                 return teachers.getBody();
             } else {
-                Notification.show(error.getMessage());
+                new Error(error.getCode(), error.getMessage());
+                return getTeachers(page);
             }
-            return null;
         }
     }
 
