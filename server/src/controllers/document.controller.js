@@ -59,6 +59,7 @@ const deleteDocument = catchAsync(async (req, res) => {
  const getDocumentTypes = (req, res) => {
 	let obj = {
 	  keys: Object.keys(documentTypes),
+	  values: Object.keys(documentTypes).map(k => documentTypes[k]),
 	};
 	res.send(obj);
 }
