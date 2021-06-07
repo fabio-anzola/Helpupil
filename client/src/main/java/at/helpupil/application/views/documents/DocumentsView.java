@@ -20,6 +20,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
@@ -122,6 +124,14 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         typeSelect.setItems("homework", "script", "test", "exam");
         typeSelect.setLabel("Type");
 
+        MemoryBuffer buffer = new MemoryBuffer();
+        Upload upload = new Upload(buffer);
+        upload.setMaxFiles(1);
+        upload.setDropLabel(new Label("Upload a 200MiB png, jpg or pdf file"));
+        upload.setAcceptedFileTypes("application/pdf", "image/png", "image/jpeg");
+        upload.setMaxFileSize(209715200);
+        upload.addFileRejectedListener(error -> Notification.show(error.getErrorMessage()));
+
         Label dialogHeading = new Label("Upload document");
 
         Button confirmButton = new Button("Confirm");
@@ -130,7 +140,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         confirmButton.addClickListener(e -> {
-            Notification.show("You uploaded a document");
+            //makeDocumentUploadRequest();
         });
 
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -190,6 +200,26 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private void makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
+        HttpResponse<String> response = Unirest.post(BASE_URL + "/document/")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .header("content-type", "multipart/form-data")
+                .field("name", "")
+                .field("subject", "")
+                .field("type", "")
+                .field("teacher", "")
+                .field("file", buffer.getInputStream(), "")
+                .asString();
+
+        Error error = response.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("");
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private int getCurrentRate(Div starDiv) {
