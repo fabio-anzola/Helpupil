@@ -132,7 +132,8 @@ public class TeachersView extends SecuredView {
         if (null == error) {
             Notification.show(shortname + " successfully created");
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            makeTeacherCreateRequest(teacher, shortname, description);
         }
     }
 
