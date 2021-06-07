@@ -40,6 +40,10 @@ const upload = multer({
 });
 
 router
+  .route('/types')
+  .get(auth(), documentController.getDocumentTypes)
+
+router
   .route('/')
   .post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
@@ -48,10 +52,6 @@ router
   .route('/:documentId')
   .get(auth(), validate(documentValidation.get), documentController.getDocument)
   .delete(auth(), documentController.deleteDocument);
-
-router
-  .route('/types')
-  .get(auth(), validate(documentValidation.getTypes), documentController.getDocumentTypes)
 
 module.exports = router;
 
