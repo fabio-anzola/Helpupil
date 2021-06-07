@@ -38,7 +38,7 @@ public class Resolve {
         }
     }
 
-    public static String resolveSubjectById(String id) {
+    public static Subject resolveSubjectById(String id) {
         HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asObject(Subject.class);
@@ -46,13 +46,13 @@ public class Resolve {
         Error error = subject.mapError(Error.class);
 
         if (null == error) {
-            return subject.getBody().getShortname();
+            return subject.getBody();
         } else {
-            return id;
+            return null;
         }
     }
 
-    public static String resolveTeacherById(String id) {
+    public static Teacher resolveTeacherById(String id) {
         HttpResponse<Teacher> teacher = Unirest.get(BASE_URL + "/teacher/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asObject(Teacher.class);
@@ -60,9 +60,9 @@ public class Resolve {
         Error error = teacher.mapError(Error.class);
 
         if (null == error) {
-            return teacher.getBody().getShortname();
+            return teacher.getBody();
         } else {
-            return id;
+            return null;
         }
     }
 

@@ -3,6 +3,7 @@ package at.helpupil.application.views.subjects;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.requests.SubjectObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Subject;
 import at.helpupil.application.utils.responses.Subjects;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static at.helpupil.application.Application.BASE_URL;
+import static at.helpupil.application.utils.Resolve.resolveSubjectById;
 
 @Route(value = "subjects", layout = MainView.class)
 @PageTitle("Subjects")
@@ -127,14 +129,10 @@ public class SubjectsView extends SecuredView {
             }
         } while (pageIndex != pages);
 
-        client-document
         searchState = true;
         currentPage = 1;
         subject = getSubjects(limit, currentPage);
         updateSubjectPage();
-
-        dialog.add(dialogLayout);
-        dialog.open();
     }
 
     private void makeSubjectCreateRequest(String subject, String shortname, String description) {
@@ -268,23 +266,8 @@ public class SubjectsView extends SecuredView {
                 return subjects.getBody();
             } else {
                 new Error(error.getCode(), error.getMessage());
-                return getSubjects(page);
+                return getSubjects(limit, page);
             }
         }
     }
-
-    private Subject resolveSubjectById(String id) {
-        HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject/" + id)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(Subject.class);
-
-        Error error = subject.mapError(Error.class);
-
-        if (null == error) {
-            return subject.getBody();
-        } else {
-            return null;
-        }
-    }
-
 }

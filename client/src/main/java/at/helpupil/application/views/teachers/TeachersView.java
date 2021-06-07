@@ -3,6 +3,7 @@ package at.helpupil.application.views.teachers;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.requests.TeacherObj;
 import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.views.main.MainView;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static at.helpupil.application.Application.BASE_URL;
+import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 
 @Route(value = "teachers", layout = MainView.class)
 @PageTitle("Teachers")
@@ -131,9 +133,6 @@ public class TeachersView extends SecuredView {
         currentPage = 1;
         teacher = getTeachers(limit, currentPage);
         updateTeacherPage();
-
-        dialog.add(dialogLayout);
-        dialog.open();
     }
 
     private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
@@ -263,23 +262,8 @@ public class TeachersView extends SecuredView {
                 return teachers.getBody();
             } else {
                 new Error(error.getCode(), error.getMessage());
-                return getTeachers(page);
+                return getTeachers(limit, page);
             }
         }
     }
-
-    private Teacher resolveTeacherById(String id) {
-        HttpResponse<Teacher> teacher = Unirest.get(BASE_URL + "/teacher/" + id)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(Teacher.class);
-
-        Error error = teacher.mapError(Error.class);
-
-        if (null == error) {
-            return teacher.getBody();
-        } else {
-            return null;
-        }
-    }
-
 }
