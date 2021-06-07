@@ -61,13 +61,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         add(createPagingMenu(documents.getTotalPages()));
 
-        addDocument.addClickListener(e -> {
-//            System.out.println("type = " + type);
-//            System.out.println("value = " + value);
-//            documents = getDocuments(limit, currentPage);
-//            UI.getCurrent().getPage().reload();
-            showUploadDialog();
-        });
+        addDocument.addClickListener(e -> showUploadDialog());
     }
 
     private Grid<Document> createDocumentGrid() {
@@ -144,9 +138,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         confirmButton.addClickListener(e -> {
             if (teacherSelect.getValue().trim().isEmpty()
-            && subjectSelect.getValue().trim().isEmpty()
-            && typeSelect.getValue().trim().isEmpty()
-            && name.getValue().trim().isEmpty()) Notification.show("Check your input");
+                    && subjectSelect.getValue().trim().isEmpty()
+                    && typeSelect.getValue().trim().isEmpty()
+                    && name.getValue().trim().isEmpty()) {
+                Notification.show("Check your input");
+            }
             makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeSelect.getValue(), teacherMap.get(teacherSelect.getValue()), buffer);
         });
 
@@ -310,13 +306,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buyButton.addClickListener(e -> {
-            makeBuyRequest(document);
-        });
+        buyButton.addClickListener(e -> makeBuyRequest(document));
 
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(buyButton, cancelButton);
 
