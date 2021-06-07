@@ -185,9 +185,9 @@ public class TeachersView extends SecuredView {
         if (null == error) {
             return teachers.getBody();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            return getTeachers(page);
         }
-        return null;
     }
 
 }
