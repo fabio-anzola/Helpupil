@@ -149,6 +149,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))) {
             HorizontalLayout ratingLayout = new HorizontalLayout();
+            ratingLayout.addClassName("rating-layout");
             Div stars = new Div();
             replaceStars(stars, 0);
             Button confirmRate = new Button("Confirm");
