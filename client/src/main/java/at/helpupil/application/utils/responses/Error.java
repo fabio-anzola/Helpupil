@@ -17,6 +17,7 @@ public class Error {
     public Error(float code, String message) {
         this.code = code;
         this.message = message;
+        checkForRefresh();
     }
 
     private void checkForRefresh() {
@@ -26,7 +27,7 @@ public class Error {
     }
 
     private void refreshToken() {
-        HttpResponse<Tokens> token = Unirest.post(BASE_URL + "/auth/login")
+        HttpResponse<Tokens> token = Unirest.post(BASE_URL + "/auth/refresh-tokens")
                 .contentType("application/json")
                 .body(new RefreshObj(SessionStorage.get().getTokens().getRefresh().getToken()))
                 .asObject(Tokens.class);
@@ -34,8 +35,7 @@ public class Error {
         Error error = token.mapError(Error.class);
 
         if (null == error) {
-            System.out.println(token.getBody().getAccess().getExpires());
-            Auth.redirectIfValid();
+            SessionStorage.update(token.getBody());
         } else {
             Notification.show(error.getMessage());
         }
