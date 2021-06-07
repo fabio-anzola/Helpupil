@@ -20,6 +20,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.router.*;
@@ -28,7 +29,7 @@ import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-import java.io.ByteArrayInputStream;
+import java.io.*;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -104,20 +105,22 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
 
+        TextField name = new TextField("Name");
+
         Select<String> teacherSelect = new Select<>();
         Select<String> subjectSelect = new Select<>();
         Select<String> typeSelect = new Select<>();
 
         Teachers teachers = getTeachers();
         Map<String, String> teacherMap = new HashMap<>();
-        Arrays.stream(teachers.getResults()).forEach(n -> teacherMap.put(n.getId(), n.getShortname()));
-        teacherSelect.setItems(teacherMap.values());
+        Arrays.stream(teachers.getResults()).forEach(n -> teacherMap.put(n.getShortname(), n.getId()));
+        teacherSelect.setItems(teacherMap.keySet());
         teacherSelect.setLabel("Teacher");
 
         Subjects subjects = getSubjects();
         Map<String, String> subjectMap = new HashMap<>();
-        Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getId(), n.getShortname()));
-        subjectSelect.setItems(subjectMap.values());
+        Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getShortname(), n.getId()));
+        subjectSelect.setItems(subjectMap.keySet());
         subjectSelect.setLabel("Subject");
 
 //      TODO Type types = getTypes();
@@ -140,7 +143,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         confirmButton.addClickListener(e -> {
-            //makeDocumentUploadRequest();
+            if (teacherSelect.getValue().trim().isEmpty()
+            && subjectSelect.getValue().trim().isEmpty()
+            && typeSelect.getValue().trim().isEmpty()
+            && name.getValue().trim().isEmpty()) Notification.show("Check your input");
+            makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeSelect.getValue(), teacherMap.get(teacherSelect.getValue()), buffer);
         });
 
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -151,7 +158,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, teacherSelect, subjectSelect, typeSelect, dialogButtonLayout);
+        dialogLayout.add(dialogHeading, name, teacherSelect, subjectSelect, typeSelect, upload, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
@@ -203,14 +210,20 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     }
 
     private void makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
-        HttpResponse<String> response = Unirest.post(BASE_URL + "/document/")
+        byte[] bytes = null;
+        try {
+            bytes = buffer.getInputStream().readAllBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        HttpResponse<String> response = Unirest.post(BASE_URL + "/documents")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .header("content-type", "multipart/form-data")
-                .field("name", "")
-                .field("subject", "")
-                .field("type", "")
-                .field("teacher", "")
-                .field("file", buffer.getInputStream(), "")
+                .field("name", name)
+                .field("type", type)
+                .field("file", bytes, "file.tmp")
+                .field("subject", subject)
+                .field("teacher", teacher)
                 .asString();
 
         Error error = response.mapError(Error.class);
