@@ -61,6 +61,7 @@ const deleteDocument = catchAsync(async (req, res) => {
 	  keys: Object.keys(documentTypes),
 	  values: Object.keys(documentTypes).map(k => documentTypes[k]),
 		friendly_values: Object.keys(documentTypes).map(k => documentTypes[k].charAt(0).toUpperCase() + documentTypes[k].slice(1)),
+	  prices: Object.keys(priceTypes).map(k => priceTypes[k]),
 	};
 	res.send(obj);
 }
