@@ -3,7 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { documentService } = require('../services');
-const { statusTypes } = require('../config/documents');
+const {  documentTypes, priceTypes, statusTypes } = require('../config/documents');
 
 const createDocument = catchAsync(async (req, res) => {
 	const obj = {
@@ -52,9 +52,21 @@ const deleteDocument = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+/**
+ * Get document-types
+ * @returns {Promise<Object>}
+ */
+ const getDocumentTypes = (req, res) => {
+	let obj = {
+	  keys: Object.keys(documentTypes),
+	};
+	res.send(obj);
+}
+
 module.exports = {
 	createDocument,
 	getDocuments,
 	getDocument,
 	deleteDocument,
+	getDocumentTypes,
 };
