@@ -27,9 +27,19 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
+import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import java.io.*;
+import java.io.File;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -127,10 +137,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
-        upload.setMaxFiles(1);
-        upload.setDropLabel(new Label("Upload a 200MiB png, jpg or pdf file"));
-        upload.setAcceptedFileTypes("application/pdf", "image/png", "image/jpeg");
-        upload.setMaxFileSize(209715200);
+        upload.setMaxFileSize(200 * 1_000_000);
         upload.addFileRejectedListener(error -> Notification.show(error.getErrorMessage()));
 
         Label dialogHeading = new Label("Upload document");
@@ -217,21 +224,27 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             e.printStackTrace();
         }
 
-        HttpResponse<String> response = Unirest.post(BASE_URL + "/documents")
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .field("name", name)
-                .field("type", type)
-                .field("file", bytes, "file.tmp")
-                .field("subject", subject)
-                .field("teacher", teacher)
-                .asString();
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        entityBuilder.addBinaryBody("file", bytes);
+        entityBuilder.addTextBody("name", name);
+        entityBuilder.addTextBody("teacher", teacher);
+        entityBuilder.addTextBody("subject", subject);
+        entityBuilder.addTextBody("type", type);
 
-        Error error = response.mapError(Error.class);
+        HttpEntity multiPartHttpEntity = entityBuilder.build();
+        RequestBuilder reqBuilder = RequestBuilder.post(BASE_URL + "/documents");
+        reqBuilder.addHeader("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken());
+        reqBuilder.setEntity(multiPartHttpEntity);
 
-        if (null == error) {
-            Notification.show("");
-        } else {
-            Notification.show(error.getMessage());
+        HttpUriRequest multipartRequest = reqBuilder.build();
+        try {
+            org.apache.http.HttpResponse httpResponse = httpClient.execute(multipartRequest);
+            System.out.println(EntityUtils.toString(httpResponse.getEntity()));
+            System.out.println(httpResponse.getStatusLine());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
