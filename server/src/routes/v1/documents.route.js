@@ -71,9 +71,9 @@ module.exports = router;
 
 /**
  * @swagger
- * /documents:
+ * /documents/file:
  *   post:
- *     summary: Create a document
+ *     summary: Create a document via a file upload
  *     description: Only logged in users can create documents.
  *     tags: [Documents]
  *     security:
@@ -94,6 +94,61 @@ module.exports = router;
  *               file:
  *                 type: string
  *                 format: binary
+ *                 description: document
+ *               name:
+ *                 type: string
+ *                 description: Name of document
+ *               type:
+ *                 type: string
+ *                 enum: [homework, exam, test, revision, script]
+ *                 description: Type of document
+ *               subject:
+ *                 type: string
+ *                 description: ObjectId of subject
+ *               teacher:
+ *                 type: string
+ *                 description: ObjectId of teacher
+ *             example:
+ *               file: <example.pdf>
+ *               name: example_homework
+ *               type: homework
+ *               subject: 60833a0fdefaa30582041ea7
+ *               teacher: 608c81ec640bb32f5ce13552
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Document'
+ *       "400":
+ *         $ref: '#/components/responses/FieldNotFilled'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ * 
+ * /documents/base64:
+ *   post:
+ *     summary: Create a document via a base64 encoded stream
+ *     description: Only logged in users can create documents.
+ *     tags: [Documents]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *               - name
+ *               - type
+ *               - subject
+ *               - teacher
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: base64 encoded binary
  *                 description: document
  *               name:
  *                 type: string
