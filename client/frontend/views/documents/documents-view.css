@@ -16,17 +16,18 @@ div.documents-view {
 }
 
 /* Search Layout */
-div.search-div {
+div.search-div-doc {
   margin-top: 15px;
+  width: 95%;
   display: flex;
   justify-content: flex-end;
 }
 
-div.search-div iron-icon {
+div.search-div-doc iron-icon {
   margin-left: 15px;
 }
 
-div.search-div iron-icon:hover {
+div.search-div-doc iron-icon:hover {
   cursor: pointer;
 }
 

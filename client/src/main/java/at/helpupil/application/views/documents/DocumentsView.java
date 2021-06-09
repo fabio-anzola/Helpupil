@@ -85,7 +85,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     private Component createSearchBox() {
         Div searchDiv = new Div();
-        searchDiv.addClassName("search-div");
+        searchDiv.addClassName("search-div-doc");
 
         Div innerDiv = new Div();
 
