@@ -27,12 +27,10 @@ const createDocumentBase64 = catchAsync(async (req, res) => {
 	const file_ending = req.file.originalname.split('.').pop();
 	const hash = crypto.createHash("sha256").update(contents, "base64", "utf-8");
 	const name = hash.digest("hex") + '.' + file_ending;
-	console.log("content/" + name);
 	fs.writeFile("content/" + name, req.file.buffer, 'base64', function (err,data) {
 		if (err) {
-			return console.log(err);
+			throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Sorry we were not able to store this file');
 		}
-		console.log(data);
 	});
 	const fileObj = {
 		fieldnmae: req.file
