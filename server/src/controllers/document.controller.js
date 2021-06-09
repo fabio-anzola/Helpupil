@@ -1,3 +1,6 @@
+const fs = require('fs');
+const crypto = require("crypto");
+const mime = require('mime-types')
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
@@ -12,6 +15,41 @@ const createDocument = catchAsync(async (req, res) => {
 		user: req.user._id, 
 		rating: 0, file: 
 		req.file, status: statusTypes.PENDING, 
+		reviewer: [], 
+		subject: req.body.subject,
+		teacher: req.body.teacher,
+	};
+	const document = await documentService.createDoc(obj);
+	res.status(httpStatus.CREATED).send(obj);
+});
+
+const createDocumentBase64 = catchAsync(async (req, res) => {
+	const contents = req.file.originalname + ' @ ' + req._startTime + ' BY ' + req.user._id;
+	const file_ending = req.file.originalname.split('.').pop();
+	const hash = crypto.createHash("sha256").update(contents, "base64", "utf-8");
+	const name = hash.digest("hex") + '.' + file_ending;
+	fs.writeFile("content/" + name, req.file.buffer, 'base64', function (err,data) {
+		if (err) {
+			throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Sorry we were not able to store this file');
+		}
+	});
+	const fileObj = {
+		fieldname: req.file.fieldname,
+		originalname: req.file.originalname,
+		encoding: req.file.encoding,
+		mimetype: mime.lookup(file_ending),
+		destination: "content",
+		filename: name,
+		path: "content/" + name,
+		size: req.file.size,
+	};
+	const obj = {
+		name: req.body.name, 
+		type: req.body.type, 
+		user: req.user._id, 
+		rating: 0,
+		file: fileObj, 
+		status: statusTypes.PENDING, 
 		reviewer: [], 
 		subject: req.body.subject,
 		teacher: req.body.teacher,
@@ -72,4 +110,5 @@ module.exports = {
 	getDocument,
 	deleteDocument,
 	getDocumentTypes,
+	createDocumentBase64,
 };
