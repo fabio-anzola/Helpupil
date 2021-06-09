@@ -1,5 +1,6 @@
 const fs = require('fs');
 const crypto = require("crypto");
+const mime = require('mime-types')
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
@@ -33,14 +34,21 @@ const createDocumentBase64 = catchAsync(async (req, res) => {
 		}
 	});
 	const fileObj = {
-		fieldnmae: req.file
+		fieldname: req.file.fieldname,
+		originalname: req.file.originalname,
+		encoding: req.file.encoding,
+		mimetype: mime.lookup(file_ending),
+		destination: "content",
+		filename: name,
+		path: "content/" + name,
+		size: req.file.size,
 	};
 	const obj = {
 		name: req.body.name, 
 		type: req.body.type, 
 		user: req.user._id, 
-		rating: 0, file: 
-		req.file, 
+		rating: 0,
+		file: fileObj, 
 		status: statusTypes.PENDING, 
 		reviewer: [], 
 		subject: req.body.subject,
