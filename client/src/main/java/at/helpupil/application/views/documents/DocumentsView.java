@@ -60,6 +60,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Grid<Document> documentGrid = new Grid<>(Document.class);
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    private String[] filter;
     private boolean searchState = false;
     private final ArrayList<String> foundIds = new ArrayList<>();
     private final int[] limits = new int[]{10, 15, 25};
@@ -105,7 +106,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                 searchBox.clear();
                 searchState = false;
                 currentPage = 1;
-                documents = getDocuments(currentPage);
+                String[] resolvedFilter = resolveFilter();
+                documents = getDocuments(currentPage, resolvedFilter[0], resolvedFilter[1]);
                 updateDocumentPage();
             }
         });
@@ -118,18 +120,45 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return searchDiv;
     }
 
+    private String[] resolveFilter() {
+        String k = filter[0];
+        String v = filter[1];
+
+        if (null != k && null != v) {
+            if (k.equals("subject")) {
+                v = resolveSubjectByShortname(v);
+            }
+            if (k.equals("teacher")) {
+                v = resolveTeacherByShortname(v);
+            }
+        }
+        return new String[]{k, v};
+    }
+
     private void makeSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
+
+        String[] resolvedFilter = resolveFilter();
 
         int pageIndex = 0;
         int pages = 1;
         do {
             pageIndex++;
-            HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/documents")
-                    .queryString("page", pageIndex)
-                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                    .asObject(Documents.class);
+            HttpResponse<Documents> documents;
+
+            if (filter == null) {
+                documents = Unirest.get(BASE_URL + "/documents")
+                        .queryString("page", pageIndex)
+                        .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                        .asObject(Documents.class);
+            } else {
+                documents = Unirest.get(BASE_URL + "/documents")
+                        .queryString("page", pageIndex)
+                        .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                        .queryString(resolvedFilter[0], resolvedFilter[1])
+                        .asObject(Documents.class);
+            }
 
             Error error = documents.mapError(Error.class);
 
@@ -519,24 +548,17 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return pagingMenuLayout;
     }
 
-    private Documents getDocuments(int limit, int page, String k, String v) {
+    private Documents getDocuments(int limit, String k, String v) {
         HttpResponse<Documents> documents = null;
         if (null != k && null != v) {
-            if (k.equals("subject")) {
-                v = resolveSubjectByShortname(v);
-            }
-            if (k.equals("teacher")) {
-                v = resolveTeacherByShortname(v);
-            }
-
             documents = Unirest.get(BASE_URL + "/documents")
                     .queryString("limit", limit)
-                    .queryString("page", page)
+                    .queryString("page", currentPage)
                     .queryString(k, v)
                     .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                     .asObject(Documents.class);
         } else {
-            getDocuments(page);
+            getDocuments(currentPage);
         }
 
         Error error = documents.mapError(Error.class);
@@ -628,7 +650,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     @Override
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
         if (!s.isEmpty() && s.split("/").length == 2) {
-            this.documents = getDocuments(this.limit, 1, s.split("/")[0], s.split("/")[1]);
+            filter = s.split("/");
+            currentPage = 1;
+            String[] resolvedFilter = resolveFilter();
+            this.documents = getDocuments(this.limit, resolvedFilter[0], resolvedFilter[1]);
             updateDocumentPage();
         } else {
             this.documents = getDocuments(1);
