@@ -45,9 +45,15 @@ router
 
 router
   .route('/')
-  .post(auth(), multer().single('file'), validate(documentValidation.createBase64),documentController.createDocument)
-  //.post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
+
+router
+  .route('/file/')
+  .post(auth(), upload.single('file'), validate(documentValidation.createFile), documentController.createDocument)
+
+router
+  .route('/base64/')
+  .post(auth(), multer().single('file'), validate(documentValidation.createBase64),documentController.createDocument)
 
 router
   .route('/:documentId')
