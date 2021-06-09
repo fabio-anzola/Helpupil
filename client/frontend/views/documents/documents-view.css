@@ -22,13 +22,17 @@ div.top-div-doc {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 div.top-div-doc div.add-document-div {
-  width: 50%;
   padding: 0 15px;
-  display: flex;
-  justify-content: flex-end;
+
+  position: absolute;
+  width: -moz-available;
+  width: -webkit-fill-available;
 }
 
 div.top-div-doc iron-icon {
@@ -103,6 +107,9 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div 
   }
 
   div.top-div-doc div.add-document-div {
+    position: unset;
+    width: unset;
+    display: flex;
     justify-content: center;
     width: unset;
   }
@@ -112,4 +119,3 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div 
   }
 
 }
-
