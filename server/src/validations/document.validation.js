@@ -32,7 +32,7 @@ const createBase64 = {
 		fieldname: Joi.string().required(),
 		originalname: Joi.string().required(),
 		encoding: Joi.string().required(),
-		mimetype: Joi.string().valid(...documentMimes),
+		mimetype: Joi.string().required(),
 		buffer: Joi.object().required(),
 		size: Joi.number().required(),
 	}).required(),
