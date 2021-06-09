@@ -45,7 +45,8 @@ router
 
 router
   .route('/')
-  .post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
+  .post(auth(), multer().single('file'), validate(documentValidation.createBase64), documentController.createDocument)
+  //.post(auth(), upload.single('file'), validate(documentValidation.create), documentController.createDocument)
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
 
 router
