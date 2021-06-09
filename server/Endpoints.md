@@ -37,7 +37,8 @@
 
 ## Document Routes
 
-- [x] POST /v1/documents - create a document
+- [x] POST /v1/documents/file - create a document via file upload
+- [x] POST /v1/documents/base64 - create a document via base64 stream
 - [x] GET /v1/documents - get all documents
 - [x] GET /v1/documents/types - get all document types
 - [x] GET /v1/documents/:documentId - get document
