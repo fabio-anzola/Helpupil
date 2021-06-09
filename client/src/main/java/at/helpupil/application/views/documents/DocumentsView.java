@@ -139,7 +139,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         searchText = searchText.toLowerCase();
         foundIds.clear();
 
-        String[] resolvedFilter = resolveFilter();
+        String[] resolvedFilter = new String[2];
+        if (filter != null) {
+            resolvedFilter = resolveFilter();
+        }
 
         int pageIndex = 0;
         int pages = 1;
