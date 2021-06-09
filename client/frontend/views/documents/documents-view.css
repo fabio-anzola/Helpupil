@@ -16,25 +16,30 @@ div.documents-view {
 }
 
 /* Search Layout */
-div.search-div-doc {
+div.top-div-doc {
   margin-top: 15px;
   width: 95%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+div.top-div-doc div.add-document-div {
+  width: 50%;
+  padding: 0 15px;
   display: flex;
   justify-content: flex-end;
 }
 
-div.search-div-doc iron-icon {
+div.top-div-doc iron-icon {
   margin-left: 15px;
 }
 
-div.search-div-doc iron-icon:hover {
+div.top-div-doc iron-icon:hover {
   cursor: pointer;
 }
 
 
-vaadin-button.add-document {
-  margin-top: 15px;
-}
 
 vaadin-grid {
   margin-top: 15px;
@@ -89,3 +94,22 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div 
 .paging-items-per-page-select {
   width: 90px;
 }
+
+
+@media only screen and (max-width: 900px) {
+  div.top-div-doc {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  div.top-div-doc div.add-document-div {
+    justify-content: center;
+    width: unset;
+  }
+
+  div.top-div-doc div.search-inner-div {
+    margin-top: 10px;
+  }
+
+}
+

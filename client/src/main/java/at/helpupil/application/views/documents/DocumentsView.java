@@ -54,9 +54,6 @@ import static at.helpupil.application.utils.Resolve.*;
 @PageTitle("Documents")
 @CssImport("./views/documents/documents-view.css")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
-
-    private Button addDocument = new Button("Add New Document");
-
     private Grid<Document> documentGrid = new Grid<>(Document.class);
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
@@ -71,24 +68,28 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     public DocumentsView() {
         addClassName("documents-view");
 
-        add(createSearchBox());
-
-        addDocument.addClassName("add-document");
-        Div addDocumentDiv = new Div(addDocument);
-        add(addDocumentDiv);
-
+        add(createTopDiv());
         add(createDocumentGrid());
-
         add(createPagingMenu(documents.getTotalPages()));
-
-        addDocument.addClickListener(e -> showUploadDialog());
     }
 
-    private Component createSearchBox() {
-        Div searchDiv = new Div();
-        searchDiv.addClassName("search-div-doc");
+    private Component createTopDiv() {
+        Div topDiv = new Div();
+        topDiv.addClassName("top-div-doc");
+
+
+        Div emptyDiv = new Div();
+
+
+        Button addDocument = new Button("Add New Document");
+        addDocument.addClassName("add-document");
+        Div addDocumentDiv = new Div(addDocument);
+        addDocumentDiv.addClassName("add-document-div");
+        addDocument.addClickListener(e -> showUploadDialog());
+
 
         Div innerDiv = new Div();
+        innerDiv.addClassName("search-inner-div");
 
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
@@ -115,9 +116,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         innerDiv.add(searchBox, searchIcon, exitSearchState);
 
 
-        searchDiv.add(innerDiv);
-
-        return searchDiv;
+        topDiv.add(emptyDiv, addDocumentDiv, innerDiv);
+        return topDiv;
     }
 
     private String[] resolveFilter() {
