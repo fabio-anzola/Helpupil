@@ -223,10 +223,10 @@ public class TeachersView extends SecuredView {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Teacher[] teacherAr = new Teacher[itemsVisible];
-            int subjectArCounter = 0;
+            int teacherArCounter = 0;
             for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
-                teacherAr[subjectArCounter] = resolveTeacherById(foundIds.get(i));
-                subjectArCounter++;
+                teacherAr[teacherArCounter] = resolveTeacherById(foundIds.get(i));
+                teacherArCounter++;
             }
             if (teacherAr.length == 0) {
                 currentPage = 0;
