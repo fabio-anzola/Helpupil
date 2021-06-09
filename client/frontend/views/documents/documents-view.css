@@ -95,6 +95,16 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div 
   margin-bottom: auto;
 }
 
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron-icon {
+  flex-grow: unset;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron-icon:hover {
+  cursor: pointer;
+}
+
 /* Paging */
 .paging-items-per-page-select {
   width: 90px;
