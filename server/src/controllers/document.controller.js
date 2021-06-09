@@ -1,3 +1,4 @@
+const fs = require('fs');
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
@@ -6,6 +7,7 @@ const { documentService } = require('../services');
 const {  documentTypes, priceTypes, statusTypes } = require('../config/documents');
 
 const createDocument = catchAsync(async (req, res) => {
+	fs.writeFile("xyz.pdf", req.file.buffer, 'base64', () => {console.log("Hurray")});
 	const obj = {
 		name: req.body.name, 
 		type: req.body.type, 
