@@ -53,7 +53,7 @@ router
 
 router
   .route('/base64/')
-  .post(auth(), multer().single('file'), validate(documentValidation.createBase64),documentController.createDocument)
+  .post(auth(), multer().single('file'), validate(documentValidation.createBase64),documentController.createDocumentBase64)
 
 router
   .route('/:documentId')
