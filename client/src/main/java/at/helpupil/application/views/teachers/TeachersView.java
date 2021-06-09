@@ -86,7 +86,7 @@ public class TeachersView extends SecuredView {
             }
         });
 
-        innerDiv.add(searchBox, searchIcon, exitSearchState);
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
 
 
         searchDiv.add(innerDiv);

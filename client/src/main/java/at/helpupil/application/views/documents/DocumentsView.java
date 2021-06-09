@@ -113,7 +113,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             }
         });
 
-        innerDiv.add(searchBox, searchIcon, exitSearchState);
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
 
 
         topDiv.add(emptyDiv, addDocumentDiv, innerDiv);
