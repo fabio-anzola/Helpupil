@@ -2,7 +2,7 @@ const Joi = require('joi');
 const { documentTypes, documentMimes } = require('../config/documents');
 const { objectId } = require('./custom.validation');
 
-const create = {
+const createFile = {
 	body: Joi.object().keys({
 		name: Joi.string().required(),
 		type: Joi.string().valid(...Object.values(documentTypes)).required(),
@@ -21,6 +21,23 @@ const create = {
 	}).required(),
 };
 
+const createBase64 = {
+	body: Joi.object().keys({
+		name: Joi.string().required(),
+		type: Joi.string().valid(...Object.values(documentTypes)).required(),
+		subject: Joi.string().custom(objectId).required(),
+		teacher: Joi.string().custom(objectId).required(),
+	}),
+	file: Joi.object({
+		fieldname: Joi.string().required(),
+		originalname: Joi.string().required(),
+		encoding: Joi.string().required(),
+		mimetype: Joi.string().valid(...documentMimes),
+		buffer: Joi.object().required(),
+		size: Joi.number().required(),
+	}).required(),
+};
+
 const get = {
 	query: Joi.object().keys({
 		name: Joi.string(),
@@ -35,6 +52,7 @@ const get = {
 };
 
 module.exports = {
-  create,
+  createFile,
+	createBase64,
   get,
 };
