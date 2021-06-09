@@ -5,6 +5,7 @@ import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.StarObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
+import at.helpupil.application.utils.responses.File;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -44,7 +45,6 @@ import org.apache.http.util.EntityUtils;
 
 import javax.print.Doc;
 import java.io.*;
-import java.io.File;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -332,34 +332,21 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     }
 
     private void makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
-        byte[] bytes = null;
-        try {
-            bytes = buffer.getInputStream().readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        MultipartBody body = Unirest.post(BASE_URL + "/documents/base64/")
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .field("name", name)
+                .field("type", type)
+                .field("subject", subject)
+                .field("teacher", teacher)
+                .field("file", buffer.getInputStream(), buffer.getFileName());
+        HttpResponse<at.helpupil.application.utils.responses.File> files = body.asObject(File.class);
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
-        entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        entityBuilder.addBinaryBody("file", bytes);
-        entityBuilder.addTextBody("name", name);
-        entityBuilder.addTextBody("teacher", teacher);
-        entityBuilder.addTextBody("subject", subject);
-        entityBuilder.addTextBody("type", type);
+        Error error = files.mapError(Error.class);
 
-        HttpEntity multiPartHttpEntity = entityBuilder.build();
-        RequestBuilder reqBuilder = RequestBuilder.post(BASE_URL + "/documents");
-        reqBuilder.addHeader("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken());
-        reqBuilder.setEntity(multiPartHttpEntity);
-
-        HttpUriRequest multipartRequest = reqBuilder.build();
-        try {
-            org.apache.http.HttpResponse httpResponse = httpClient.execute(multipartRequest);
-            System.out.println(EntityUtils.toString(httpResponse.getEntity()));
-            System.out.println(httpResponse.getStatusLine());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (null == error) {
+            Notification.show("Thanks for uploading. Your document will be reviewed shortly.");
+        } else {
+            Notification.show(error.getMessage());
         }
     }
 
