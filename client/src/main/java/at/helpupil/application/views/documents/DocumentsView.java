@@ -168,8 +168,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     }
                 });
             } else {
-                Notification.show(error.getMessage());
-                return;
+                new Error(error.getCode(), error.getMessage());
             }
         } while (pageIndex != pages);
 
@@ -339,8 +338,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             Notification.show("Thanks for uploading. Your document will be reviewed shortly.");
             return 0;
         } else {
-            Notification.show(error.getMessage());
-            return 1;
+            new Error(error.getCode(), error.getMessage());
+            return makeDocumentUploadRequest(name, subject, type, teacher, buffer);
         }
     }
 
@@ -369,7 +368,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             documents = getDocuments(currentPage);
             updateDocumentPage();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            makeRatingRequest(documentId, rating);
         }
     }
 
@@ -437,6 +437,13 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .asBytes()
+                .ifFailure(e -> {
+                    Error error = e.mapError(Error.class);
+                    if (null != error) {
+                        new Error(error.getCode(), error.getMessage());
+                        makeBuyRequest(document);
+                    }
+                })
                 .getBody();
 
 
@@ -468,7 +475,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             SessionStorage.update(user.getBody());
             updateDocumentPage();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            fetchUserData(id);
         }
     }
 
@@ -481,8 +489,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             return true;
         } else {
-            Notification.show(error.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
-            return false;
+            new Error(error.getCode(), error.getMessage());
+            return isBuyRequestAllowed(document);
         }
     }
 
@@ -556,7 +564,14 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     .queryString("page", currentPage)
                     .queryString(k, v)
                     .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                    .asObject(Documents.class);
+                    .asObject(Documents.class)
+                    .ifFailure(e -> {
+                        Error error = e.mapError(Error.class);
+                        if (null != error) {
+                            new Error(error.getCode(), error.getMessage());
+                            getDocuments(limit, k, v);
+                        }
+                    });
         } else {
             getDocuments(currentPage);
         }
@@ -566,9 +581,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             return documents.getBody();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            return getDocuments(limit, k, v);
         }
-        return null;
     }
 
     private Teachers getTeachers() {
@@ -582,9 +597,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             return teachers.getBody();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            return getTeachers();
         }
-        return null;
     }
 
     private Subjects getSubjects() {
@@ -598,9 +613,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             return subjects.getBody();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            return getSubjects();
         }
-        return null;
     }
 
     private Documents getDocuments(int page) {
@@ -628,9 +643,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (null == error) {
                 return documents.getBody();
             } else {
-                Notification.show(error.getMessage());
+                new Error(error.getCode(), error.getMessage());
+                return getDocuments(page);
             }
-            return null;
         }
     }
 
@@ -645,9 +660,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             return types.getBody();
         } else {
-            Notification.show(error.getMessage());
+            new Error(error.getCode(), error.getMessage());
+            return getTypes();
         }
-        return null;
     }
 
     @Override
