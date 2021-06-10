@@ -45,6 +45,11 @@ const deleteUser = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const topUsers = catchAsync(async (req, res) => {
+  const result = await userService.queryTopUsers();
+  res.send(result);
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -52,4 +57,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getPublicUser,
+  topUsers,
 };
