@@ -48,6 +48,7 @@ const deleteUser = catchAsync(async (req, res) => {
 const topUsers = catchAsync(async (req, res) => {
   const filter = { isEmailVerified: true };
   const options = { sortBy: 'wallet:desc' };
+  const resu = pick( await userService.queryUsers(filter, options), ['results']);
   
   res.send(result);
 });
