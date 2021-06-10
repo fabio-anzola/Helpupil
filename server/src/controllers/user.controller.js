@@ -49,7 +49,11 @@ const topUsers = catchAsync(async (req, res) => {
   const filter = { isEmailVerified: true };
   const options = { sortBy: 'wallet:desc' };
   const resu = pick( await userService.queryUsers(filter, options), ['results']);
-  
+  let result = {results: []};
+  for (let i = 0; i < resu.results.length; i++) {
+    const element = { name: resu.results[i].name, wallet: resu.results[i].wallet };
+    (result.results).push(element);
+  }
   res.send(result);
 });
 
