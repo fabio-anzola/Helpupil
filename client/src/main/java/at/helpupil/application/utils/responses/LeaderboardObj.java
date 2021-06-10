@@ -1,20 +1,20 @@
 package at.helpupil.application.utils.responses;
 
 public class LeaderboardObj {
-    private String username;
+    private String name;
     private int wallet;
 
-    public LeaderboardObj(String username, int wallet) {
-        this.username = username;
+    public LeaderboardObj(String name, int wallet) {
+        this.name = name;
         this.wallet = wallet;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getWallet() {
