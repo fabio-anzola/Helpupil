@@ -414,7 +414,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buyButton.addClickListener(e -> makeBuyRequest(document));
+        buyButton.addClickListener(e -> {
+            makeBuyRequest(document);
+            dialog.close();
+        });
 
         cancelButton.addClickListener(e -> dialog.close());
 
