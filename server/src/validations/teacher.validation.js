@@ -5,7 +5,7 @@ const createTeacher = {
 	body: Joi.object().keys({
 		name: Joi.string().required(),
 		shortname: Joi.string().required(),
-		description: Joi.string(),
+		description: Joi.string().allow(null, ''),
 	}),
 };
 
