@@ -18,6 +18,10 @@ router
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
+  .route('/public/leaderboard')
+  .get(auth(), userController.topUsers);
+
+router
   .route('/public/:userId')
   .get(auth(), validate(userValidation.getUser), userController.getPublicUser)
 
@@ -277,6 +281,27 @@ module.exports = router;
  *           application/json:
  *             schema:
  *                $ref: '#/components/schemas/UserName'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ *       "403":
+ *         $ref: '#/components/responses/Forbidden'
+ *       "404":
+ *         $ref: '#/components/responses/NotFound'
+ * 
+ * /users/public/leaderboard:
+ *   get:
+ *     summary: Get top 10 users based on their wallet
+ *     description: Returns the top 10 users based on their wallet (must be logged in)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/TopUsers'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":

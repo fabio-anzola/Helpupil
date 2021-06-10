@@ -155,12 +155,46 @@ components:
           type: string
         role:
           type: string
-          enum: [user, admin]
+          enum: [user, moderator, admin]
+        isEmailVerified:
+          type: boolean
+        wallet:
+          type: number
+        purchasedDocuments:
+          type: array
+          items:
+            type: string
       example:
         id: 5ebac534954b54139806c112
         email: fake@example.com
         name: fake name
         role: user
+        isEmailVerified: true
+        wallet: 1000
+        purchasedDocuments: [
+          "607d93b3ab9fe96585327a8d",
+          "6077fdad1d54bb0c4fd573f2",
+          "60795e84cb8cce353c356658"
+        ]
+    
+    TopUsers:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+      example:
+        results: [
+          {
+          "name": "Max Mustermann",
+          "wallet": 1000
+          },
+          {
+          "name": "Max Verstappen",
+          "wallet": 999
+          },
+        ]
 
     Token:
       type: object
