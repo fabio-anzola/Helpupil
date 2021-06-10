@@ -168,6 +168,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     }
                 });
             } else {
+                pageIndex--;
                 new Error(error.getCode(), error.getMessage());
             }
         } while (pageIndex != pages);
@@ -231,6 +232,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getShortname(), n.getId()));
         subjectSelect.setItems(subjectMap.keySet());
         subjectSelect.setLabel("Subject");
+
+
 
         Types types = getTypes();
         Map<String, String> typeMap = new HashMap<>();

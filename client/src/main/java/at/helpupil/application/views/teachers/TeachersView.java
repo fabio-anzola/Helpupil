@@ -123,6 +123,7 @@ public class TeachersView extends SecuredView {
                     }
                 });
             } else {
+                pageIndex--;
                 new Error(error.getCode(), error.getMessage());
             }
         } while (pageIndex != pages);
