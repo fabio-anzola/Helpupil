@@ -5,6 +5,7 @@ import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.requests.RefreshObj;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -37,7 +38,7 @@ public class Error {
         if (null == error) {
             SessionStorage.update(token.getBody());
         } else {
-            Notification.show(error.getMessage());
+            Notification.show(error.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);;
         }
     }
 
