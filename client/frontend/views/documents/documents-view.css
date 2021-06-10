@@ -15,9 +15,36 @@ div.documents-view {
   flex-direction: column;
 }
 
-vaadin-button.add-document {
+/* Search Layout */
+div.top-div-doc {
   margin-top: 15px;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+div.top-div-doc div.add-document-div {
+  padding: 0 15px;
+
+  position: absolute;
+  width: -moz-available;
+  width: -webkit-fill-available;
+}
+
+div.top-div-doc iron-icon {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+div.top-div-doc iron-icon:hover {
+  cursor: pointer;
+}
+
+
 
 vaadin-grid {
   margin-top: 15px;
@@ -34,10 +61,13 @@ vaadin-vertical-layout.dialog-layout label {
   font-size: 16pt;
 }
 
-vaadin-vertical-layout.dialog-layout vaadin-text-field {
+vaadin-vertical-layout.dialog-layout vaadin-text-field,
+vaadin-vertical-layout.dialog-layout vaadin-select,
+vaadin-vertical-layout.dialog-layout vaadin-upload {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 10px;
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
@@ -68,7 +98,38 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div 
   margin-bottom: auto;
 }
 
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron-icon {
+  flex-grow: unset;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron-icon:hover {
+  cursor: pointer;
+}
+
 /* Paging */
 .paging-items-per-page-select {
   width: 90px;
+}
+
+
+@media only screen and (max-width: 900px) {
+  div.top-div-doc {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  div.top-div-doc div.add-document-div {
+    position: unset;
+    width: unset;
+    display: flex;
+    justify-content: center;
+    width: unset;
+  }
+
+  div.top-div-doc div.search-inner-div {
+    margin-top: 10px;
+  }
+
 }

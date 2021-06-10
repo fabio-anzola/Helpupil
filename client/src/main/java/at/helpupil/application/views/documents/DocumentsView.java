@@ -5,8 +5,11 @@ import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.StarObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
+import at.helpupil.application.utils.responses.File;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,6 +18,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -27,6 +32,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
+import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
 
 import java.io.*;
@@ -39,29 +45,139 @@ import static at.helpupil.application.utils.Resolve.*;
 @PageTitle("Documents")
 @CssImport("./views/documents/documents-view.css")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
-
-    private Button addDocument = new Button("Add New Document");
-
     private Grid<Document> documentGrid = new Grid<>(Document.class);
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    private String[] filter;
+    private boolean searchState = false;
+    private final ArrayList<String> foundIds = new ArrayList<>();
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private int currentPage = 1;
-    private Documents documents = getDocuments(limit, currentPage);
+    private Documents documents = getDocuments(currentPage);
 
     public DocumentsView() {
         addClassName("documents-view");
 
+        add(createTopDiv());
+        add(createDocumentGrid());
+        add(createPagingMenu(documents.getTotalPages()));
+    }
+
+    private Component createTopDiv() {
+        Div topDiv = new Div();
+        topDiv.addClassName("top-div-doc");
+
+
+        Div emptyDiv = new Div();
+
+
+        Button addDocument = new Button("Add New Document");
         addDocument.addClassName("add-document");
         Div addDocumentDiv = new Div(addDocument);
-        add(addDocumentDiv);
-
-        add(createDocumentGrid());
-
-        add(createPagingMenu(documents.getTotalPages()));
-
+        addDocumentDiv.addClassName("add-document-div");
         addDocument.addClickListener(e -> showUploadDialog());
+
+
+        Div innerDiv = new Div();
+        innerDiv.addClassName("search-inner-div");
+
+        TextField searchBox = new TextField();
+        searchBox.setPlaceholder("Search");
+        searchBox.setClearButtonVisible(true);
+        searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
+        searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
+        searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));
+
+        Icon searchIcon = new Icon(VaadinIcon.SEARCH);
+        searchIcon.addClickListener(e -> makeSearchRequest(searchBox.getValue()));
+
+        Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
+        exitSearchState.addClickListener(e -> {
+            if (searchState) {
+                searchBox.clear();
+                searchState = false;
+                currentPage = 1;
+                String[] resolvedFilter = resolveFilter();
+                documents = getDocuments(currentPage, resolvedFilter[0], resolvedFilter[1]);
+                updateDocumentPage();
+            }
+        });
+
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
+
+
+        topDiv.add(emptyDiv, addDocumentDiv, innerDiv);
+        return topDiv;
+    }
+
+    private String[] resolveFilter() {
+        String k = filter[0];
+        String v = filter[1];
+
+        if (null != k && null != v) {
+            if (k.equals("subject")) {
+                v = resolveSubjectByShortname(v);
+            }
+            if (k.equals("teacher")) {
+                v = resolveTeacherByShortname(v);
+            }
+        }
+        return new String[]{k, v};
+    }
+
+    private void makeSearchRequest(String searchText) {
+        searchText = searchText.toLowerCase();
+        foundIds.clear();
+
+        String[] resolvedFilter = new String[2];
+        if (filter != null) {
+            resolvedFilter = resolveFilter();
+        }
+
+        int pageIndex = 0;
+        int pages = 1;
+        do {
+            pageIndex++;
+            HttpResponse<Documents> documents;
+
+            if (filter == null) {
+                documents = Unirest.get(BASE_URL + "/documents")
+                        .queryString("page", pageIndex)
+                        .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                        .asObject(Documents.class);
+            } else {
+                documents = Unirest.get(BASE_URL + "/documents")
+                        .queryString("page", pageIndex)
+                        .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                        .queryString(resolvedFilter[0], resolvedFilter[1])
+                        .asObject(Documents.class);
+            }
+
+            Error error = documents.mapError(Error.class);
+
+            if (null == error) {
+                if (pages < documents.getBody().getTotalPages()) {
+                    pages = documents.getBody().getTotalPages();
+                }
+
+                String finalSearchText = searchText;
+                Arrays.stream(documents.getBody().getResults()).forEach(n -> {
+                    if (n.getName().toLowerCase().contains(finalSearchText)) {
+                        foundIds.add(n.getId());
+                    }
+                });
+            } else {
+                Notification.show(error.getMessage());
+                return;
+            }
+        } while (pageIndex != pages);
+
+
+        searchState = true;
+        currentPage = 1;
+        documents = getDocuments(currentPage);
+        updateDocumentPage();
     }
 
     private Grid<Document> createDocumentGrid() {
@@ -127,10 +243,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
+        upload.setMaxFileSize(200 * 1_000_000);
         upload.setMaxFiles(1);
-        upload.setDropLabel(new Label("Upload a 200MiB png, jpg or pdf file"));
-        upload.setAcceptedFileTypes("application/pdf", "image/png", "image/jpeg");
-        upload.setMaxFileSize(209715200);
+        upload.setAcceptedFileTypes("application/pdf", "image/jpeg", "image/png");
         upload.addFileRejectedListener(error -> Notification.show(error.getErrorMessage()));
 
         Label dialogHeading = new Label("Upload document");
@@ -147,14 +262,15 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     && name.getValue().trim().isEmpty()) {
                 Notification.show("Check your input");
             }
-            makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
+            int code = makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
+            if (code == 0) {
+                dialog.close();
+            }
         });
 
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
@@ -197,9 +313,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         buyOrShowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(buyOrShowButton, cancelButton);
         dialogLayout.add(dialogButtonLayout);
@@ -209,29 +323,24 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
-    private void makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
-        byte[] bytes = null;
-        try {
-            bytes = buffer.getInputStream().readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        HttpResponse<String> response = Unirest.post(BASE_URL + "/documents")
+    private int makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
+        MultipartBody body = Unirest.post(BASE_URL + "/documents/base64/")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .field("name", name)
                 .field("type", type)
-                .field("file", bytes, "file.tmp")
                 .field("subject", subject)
                 .field("teacher", teacher)
-                .asString();
+                .field("file", buffer.getInputStream(), buffer.getFileName());
+        HttpResponse<at.helpupil.application.utils.responses.File> files = body.asObject(File.class);
 
-        Error error = response.mapError(Error.class);
+        Error error = files.mapError(Error.class);
 
         if (null == error) {
-            Notification.show("");
+            Notification.show("Thanks for uploading. Your document will be reviewed shortly.");
+            return 0;
         } else {
             Notification.show(error.getMessage());
+            return 1;
         }
     }
 
@@ -257,9 +366,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Rated document. Thank you!");
 
-            documents = getDocuments(limit, currentPage);
+            documents = getDocuments(currentPage);
             updateDocumentPage();
-//            UI.getCurrent().getPage().reload();
         } else {
             Notification.show(error.getMessage());
         }
@@ -277,18 +385,14 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         for (int i = 0; i < starIndex; i++) {
             StarObj filledStar = new StarObj(true);
             int newIndex = i + 1;
-            filledStar.addClickListener(e -> {
-                replaceStars(starDiv, newIndex);
-            });
+            filledStar.addClickListener(e -> replaceStars(starDiv, newIndex));
             newStarList.add(filledStar);
         }
 
         for (int i = starIndex; i < 5; i++) {
             StarObj emptyStar = new StarObj(false);
             int newIndex = i + 1;
-            emptyStar.addClickListener(e -> {
-                replaceStars(starDiv, newIndex);
-            });
+            emptyStar.addClickListener(e -> replaceStars(starDiv, newIndex));
             newStarList.add(emptyStar);
         }
 
@@ -310,7 +414,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         buyButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buyButton.addClickListener(e -> makeBuyRequest(document));
+        buyButton.addClickListener(e -> {
+            makeBuyRequest(document);
+            dialog.close();
+        });
 
         cancelButton.addClickListener(e -> dialog.close());
 
@@ -345,6 +452,24 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         UI.getCurrent().getPage().open(
                 String.valueOf(registration.getResourceUri()), "_blank"
         );
+
+        // update user obj - purchase documents
+        fetchUserData(SessionStorage.get().getUser().getId());
+    }
+
+    private void fetchUserData(String id) {
+        HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(UserObj.class);
+
+        Error error = user.mapError(Error.class);
+
+        if (null == error) {
+            SessionStorage.update(user.getBody());
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private boolean isBuyRequestAllowed(Document document) {
@@ -385,7 +510,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
-                documents = getDocuments(limit, currentPage - 1);
+                documents = getDocuments(currentPage - 1);
                 currentPage = documents.getPage();
                 updateDocumentPage();
             }
@@ -400,7 +525,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         itemsPerPageSelect.addValueChangeListener(e -> {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
-            documents = getDocuments(limit, currentPage);
+            documents = getDocuments(currentPage);
             currentPage = documents.getPage();
             updateDocumentPage();
         });
@@ -408,7 +533,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
             if (currentPage < documents.getTotalPages()) {
-                documents = getDocuments(limit, currentPage + 1);
+                documents = getDocuments(currentPage + 1);
                 currentPage = documents.getPage();
                 updateDocumentPage();
             }
@@ -423,24 +548,17 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return pagingMenuLayout;
     }
 
-    private Documents getDocuments(int limit, int page, String k, String v) {
+    private Documents getDocuments(int limit, String k, String v) {
         HttpResponse<Documents> documents = null;
         if (null != k && null != v) {
-            if (k.equals("subject")) {
-                v = resolveSubjectByShortname(v);
-            }
-            if (k.equals("teacher")) {
-                v = resolveTeacherByShortname(v);
-            }
-
             documents = Unirest.get(BASE_URL + "/documents")
                     .queryString("limit", limit)
-                    .queryString("page", page)
+                    .queryString("page", currentPage)
                     .queryString(k, v)
                     .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                     .asObject(Documents.class);
         } else {
-            getDocuments(limit, page);
+            getDocuments(currentPage);
         }
 
         Error error = documents.mapError(Error.class);
@@ -456,6 +574,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Teachers getTeachers() {
         HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("limit", Integer.MAX_VALUE)
                 .asObject(Teachers.class);
 
         Error error = teachers.mapError(Error.class);
@@ -471,6 +590,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Subjects getSubjects() {
         HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("limit", Integer.MAX_VALUE)
                 .asObject(Subjects.class);
 
         Error error = subjects.mapError(Error.class);
@@ -483,26 +603,41 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return null;
     }
 
-    private Documents getDocuments(int limit, int page) {
-        HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/documents")
-                .queryString("limit", limit)
-                .queryString("page", page)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(Documents.class);
-
-        Error error = documents.mapError(Error.class);
-
-        if (null == error) {
-            return documents.getBody();
+    private Documents getDocuments(int page) {
+        if (searchState) {
+            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+            Document[] documentAr = new Document[itemsVisible];
+            int documentArCounter = 0;
+            for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
+                documentAr[documentArCounter] = resolveDocumentById(foundIds.get(i));
+                documentArCounter++;
+            }
+            if (documentAr.length == 0) {
+                currentPage = 0;
+            }
+            return new Documents(documentAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
         } else {
-            Notification.show(error.getMessage());
+            HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/documents")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Documents.class);
+
+            Error error = documents.mapError(Error.class);
+
+            if (null == error) {
+                return documents.getBody();
+            } else {
+                Notification.show(error.getMessage());
+            }
+            return null;
         }
-        return null;
     }
 
     private Types getTypes() {
         HttpResponse<Types> types = Unirest.get(BASE_URL + "/documents/types")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("limit", Integer.MAX_VALUE)
                 .asObject(Types.class);
 
         Error error = types.mapError(Error.class);
@@ -518,11 +653,13 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     @Override
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
         if (!s.isEmpty() && s.split("/").length == 2) {
-            this.documents = getDocuments(this.limit, 1, s.split("/")[0], s.split("/")[1]);
-            updateDocumentPage();
+            filter = s.split("/");
+            currentPage = 1;
+            String[] resolvedFilter = resolveFilter();
+            this.documents = getDocuments(this.limit, resolvedFilter[0], resolvedFilter[1]);
         } else {
-            this.documents = getDocuments(this.limit, 1);
-            updateDocumentPage();
+            this.documents = getDocuments(1);
         }
+        updateDocumentPage();
     }
 }

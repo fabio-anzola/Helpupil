@@ -26,6 +26,7 @@ div.search-div {
 
 div.search-div iron-icon {
   margin-left: 15px;
+  margin-right: 15px;
 }
 
 div.search-div iron-icon:hover {
@@ -83,7 +84,7 @@ vaadin-horizontal-layout.paging-layout label {
 }
 
 
-@media only screen and (max-width: 1023px) {
+@media only screen and (max-width: 900px) {
   div.subjects-view {
     width: 100%;
   }
@@ -91,5 +92,9 @@ vaadin-horizontal-layout.paging-layout label {
   vaadin-horizontal-layout.subject-layout content-card {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  div.search-div {
+    justify-content: center;
   }
 }

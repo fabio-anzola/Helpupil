@@ -27,7 +27,7 @@ vaadin-horizontal-layout.button-layout * {
   flex-grow: 1;
 }
 
-@media only screen and (max-width: 1023px) {
+@media only screen and (max-width: 900px) {
   div.sign-up-view {
     width: 65%;
   }

@@ -3,7 +3,6 @@ package at.helpupil.application.views.subjects;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.requests.SubjectObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Subject;
 import at.helpupil.application.utils.responses.Subjects;
@@ -50,13 +49,13 @@ public class SubjectsView extends SecuredView {
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private int currentPage = 1;
-    private Subjects subject = getSubjects(limit, currentPage);
+    private Subjects subject = getSubjects(currentPage);
 
     public SubjectsView() {
         addClassName("subjects-view");
 
         add(createSearchBox());
-        add(createSubjectCards(subject));
+        add(createSubjectCards());
         add(createPagingMenu(subject.getTotalPages()));
     }
 
@@ -82,12 +81,12 @@ public class SubjectsView extends SecuredView {
                 searchBox.clear();
                 searchState = false;
                 currentPage = 1;
-                subject = getSubjects(limit, currentPage);
+                subject = getSubjects(currentPage);
                 updateSubjectPage();
             }
         });
 
-        innerDiv.add(searchBox, searchIcon, exitSearchState);
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
 
 
         searchDiv.add(innerDiv);
@@ -131,26 +130,8 @@ public class SubjectsView extends SecuredView {
 
         searchState = true;
         currentPage = 1;
-        subject = getSubjects(limit, currentPage);
+        subject = getSubjects(currentPage);
         updateSubjectPage();
-    }
-
-    private void makeSubjectCreateRequest(String subject, String shortname, String description) {
-        HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .body(new SubjectObj(subject, shortname, description))
-                .asObject(Subject.class);
-
-        Error error = createSubject.mapError(Error.class);
-
-        if (null == error) {
-            Notification.show(shortname + " successfully created");
-        } else {
-            new Error(error.getCode(), error.getMessage());
-            makeSubjectCreateRequest(subject, shortname, description);
-        }
-
     }
 
     private void updateSubjectPage() {
@@ -158,11 +139,11 @@ public class SubjectsView extends SecuredView {
         remove(pagingMenuLayout);
         subjectLayoutDiv = new Div();
         pagingMenuLayout = new HorizontalLayout();
-        add(createSubjectCards(subject));
+        add(createSubjectCards());
         add(createPagingMenu(subject.getTotalPages()));
     }
 
-    private Component createSubjectCards(Subjects subject) {
+    private Component createSubjectCards() {
         subjectLayoutDiv = new Div();
         subjectLayoutDiv.addClassName("subject-layout-div");
 
@@ -180,14 +161,14 @@ public class SubjectsView extends SecuredView {
         return subjectLayoutDiv;
     }
 
-    private Card createSubjectCard(Subject subject) {
+    private Card createSubjectCard(Subject oneSubject) {
         Card card = new Card(
-                new TitleLabel(subject.getName()),
-                new PrimaryLabel(subject.getShortname()),
-                new SecondaryLabel(subject.getDescription())
+                new TitleLabel(oneSubject.getName()),
+                new PrimaryLabel(oneSubject.getShortname()),
+                new SecondaryLabel(oneSubject.getDescription())
         );
         card.addClickListener(e -> {
-            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + subject.getShortname() + "\"");
+            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + oneSubject.getShortname() + "\"");
         });
         return card;
     }
@@ -199,7 +180,7 @@ public class SubjectsView extends SecuredView {
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
-                subject = getSubjects(limit, currentPage - 1);
+                subject = getSubjects(currentPage - 1);
                 currentPage = subject.getPage();
                 updateSubjectPage();
             }
@@ -214,7 +195,7 @@ public class SubjectsView extends SecuredView {
         itemsPerPageSelect.addValueChangeListener(e -> {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
-            subject = getSubjects(limit, currentPage);
+            subject = getSubjects(currentPage);
             currentPage = subject.getPage();
             updateSubjectPage();
         });
@@ -222,7 +203,7 @@ public class SubjectsView extends SecuredView {
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
             if (currentPage < subject.getTotalPages()) {
-                subject = getSubjects(limit, currentPage + 1);
+                subject = getSubjects(currentPage + 1);
                 currentPage = subject.getPage();
                 updateSubjectPage();
             }
@@ -237,7 +218,7 @@ public class SubjectsView extends SecuredView {
         return pagingMenuLayout;
     }
 
-    private Subjects getSubjects(int limit, int page) {
+    private Subjects getSubjects(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Subject[] subjectAr = new Subject[itemsVisible];
@@ -266,7 +247,7 @@ public class SubjectsView extends SecuredView {
                 return subjects.getBody();
             } else {
                 new Error(error.getCode(), error.getMessage());
-                return getSubjects(limit, page);
+                return getSubjects(page);
             }
         }
     }

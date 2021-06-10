@@ -17,6 +17,22 @@ div.teachers-view {
   flex-direction: column;
 }
 
+/* Search Layout */
+div.search-div {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+div.search-div iron-icon {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+div.search-div iron-icon:hover {
+  cursor: pointer;
+}
+
 /* teacher Layout */
 div.teacher-layout-div {
   flex-grow: 2;
@@ -67,7 +83,7 @@ vaadin-horizontal-layout.paging-layout label {
 }
 
 
-@media only screen and (max-width: 1023px) {
+@media only screen and (max-width: 900px) {
   div.teachers-view {
     width: 100%;
   }
@@ -75,5 +91,9 @@ vaadin-horizontal-layout.paging-layout label {
   vaadin-horizontal-layout.teacher-layout content-card {
     margin-left: auto;
     margin-right: auto;
+  }
+
+  div.search-div {
+    justify-content: center;
   }
 }

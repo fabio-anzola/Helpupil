@@ -79,4 +79,18 @@ public class Resolve {
             return id;
         }
     }
+
+    public static Document resolveDocumentById(String id) {
+        HttpResponse<Document> document = Unirest.get(BASE_URL + "/documents/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            return document.getBody();
+        } else {
+            return null;
+        }
+    }
 }

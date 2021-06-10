@@ -3,9 +3,9 @@ package at.helpupil.application.views.teachers;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.requests.TeacherObj;
-import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
+import at.helpupil.application.utils.responses.Teacher;
+import at.helpupil.application.utils.responses.Teachers;
 import at.helpupil.application.views.main.MainView;
 import com.github.appreciated.card.Card;
 import com.github.appreciated.card.label.PrimaryLabel;
@@ -49,13 +49,13 @@ public class TeachersView extends SecuredView {
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private int currentPage = 1;
-    private Teachers teacher = getTeachers(limit, currentPage);
+    private Teachers teacher = getTeachers(currentPage);
 
     public TeachersView() {
         addClassName("teachers-view");
 
         add(createSearchBox());
-        add(createTeacherCards(teacher));
+        add(createTeacherCards());
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
@@ -81,12 +81,12 @@ public class TeachersView extends SecuredView {
                 searchBox.clear();
                 searchState = false;
                 currentPage = 1;
-                teacher = getTeachers(limit, currentPage);
+                teacher = getTeachers(currentPage);
                 updateTeacherPage();
             }
         });
 
-        innerDiv.add(searchBox, searchIcon, exitSearchState);
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
 
 
         searchDiv.add(innerDiv);
@@ -131,25 +131,8 @@ public class TeachersView extends SecuredView {
 
         searchState = true;
         currentPage = 1;
-        teacher = getTeachers(limit, currentPage);
+        teacher = getTeachers(currentPage);
         updateTeacherPage();
-    }
-
-    private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
-        HttpResponse<Teacher> createTeacher = Unirest.post(BASE_URL + "/teacher")
-                .contentType("application/json")
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .body(new TeacherObj(teacher, shortname, description))
-                .asObject(Teacher.class);
-
-        Error error = createTeacher.mapError(Error.class);
-
-        if (null == error) {
-            Notification.show(shortname + " successfully created");
-        } else {
-            new Error(error.getCode(), error.getMessage());
-            makeTeacherCreateRequest(teacher, shortname, description);
-        }
     }
 
     private void updateTeacherPage() {
@@ -157,11 +140,11 @@ public class TeachersView extends SecuredView {
         remove(pagingMenuLayout);
         teacherLayoutDiv = new Div();
         pagingMenuLayout = new HorizontalLayout();
-        add(createTeacherCards(teacher));
+        add(createTeacherCards());
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
-    private Component createTeacherCards(Teachers teacher) {
+    private Component createTeacherCards() {
         teacherLayoutDiv = new Div();
         teacherLayoutDiv.addClassName("teacher-layout-div");
 
@@ -179,14 +162,14 @@ public class TeachersView extends SecuredView {
         return teacherLayoutDiv;
     }
 
-    private Card createTeacherCard(Teacher teacher) {
+    private Card createTeacherCard(Teacher oneTeacher) {
         Card card = new Card(
-                new TitleLabel(teacher.getName()),
-                new PrimaryLabel(teacher.getShortname()),
-                new SecondaryLabel(teacher.getDescription())
+                new TitleLabel(oneTeacher.getName()),
+                new PrimaryLabel(oneTeacher.getShortname()),
+                new SecondaryLabel(oneTeacher.getDescription())
         );
         card.addClickListener(e -> {
-            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/teacher/" + teacher.getShortname() + "\"");
+            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/teacher/" + oneTeacher.getShortname() + "\"");
         });
         return card;
     }
@@ -198,7 +181,7 @@ public class TeachersView extends SecuredView {
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
-                teacher = getTeachers(limit, currentPage - 1);
+                teacher = getTeachers(currentPage - 1);
                 currentPage = teacher.getPage();
                 updateTeacherPage();
             }
@@ -213,7 +196,7 @@ public class TeachersView extends SecuredView {
         itemsPerPageSelect.addValueChangeListener(e -> {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
-            teacher = getTeachers(limit, currentPage);
+            teacher = getTeachers(currentPage);
             currentPage = teacher.getPage();
             updateTeacherPage();
         });
@@ -221,7 +204,7 @@ public class TeachersView extends SecuredView {
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
             if (currentPage < teacher.getTotalPages()) {
-                teacher = getTeachers(limit, currentPage + 1);
+                teacher = getTeachers(currentPage + 1);
                 currentPage = teacher.getPage();
                 updateTeacherPage();
             }
@@ -236,14 +219,14 @@ public class TeachersView extends SecuredView {
         return pagingMenuLayout;
     }
 
-    private Teachers getTeachers(int limit, int page) {
+    private Teachers getTeachers(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Teacher[] teacherAr = new Teacher[itemsVisible];
-            int subjectArCounter = 0;
+            int teacherArCounter = 0;
             for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
-                teacherAr[subjectArCounter] = resolveTeacherById(foundIds.get(i));
-                subjectArCounter++;
+                teacherAr[teacherArCounter] = resolveTeacherById(foundIds.get(i));
+                teacherArCounter++;
             }
             if (teacherAr.length == 0) {
                 currentPage = 0;
@@ -262,7 +245,7 @@ public class TeachersView extends SecuredView {
                 return teachers.getBody();
             } else {
                 new Error(error.getCode(), error.getMessage());
-                return getTeachers(limit, page);
+                return getTeachers(page);
             }
         }
     }

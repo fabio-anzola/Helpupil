@@ -3,6 +3,7 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.views.about.AboutView;
 import at.helpupil.application.views.documents.DocumentsView;
+import at.helpupil.application.views.leaderboard.LeaderboardView;
 import at.helpupil.application.views.login.LoginView;
 import at.helpupil.application.views.moderator.ModeratorView;
 import at.helpupil.application.views.signup.SignUpView;
@@ -101,6 +102,7 @@ public class MainView extends AppLayout {
                 createTab("Teachers", TeachersView.class),
                 createTab("Subjects", SubjectsView.class),
                 createTab("Moderator", ModeratorView.class),
+                createTab("Leaderboard", LeaderboardView.class),
                 createTab("About", AboutView.class)};
     }
 
