@@ -18,6 +18,10 @@ router
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
+  .route('/public/leatherboard')
+  .get(auth(), userController.topUsers);
+
+router
   .route('/public/:userId')
   .get(auth(), validate(userValidation.getUser), userController.getPublicUser)
 
