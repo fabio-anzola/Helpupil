@@ -269,7 +269,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     && name.getValue().trim().isEmpty()) {
                 Notification.show("Check your input");
             }
-            makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
+            int code = makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
+            if (code == 0) {
+                dialog.close();
+            }
         });
 
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -331,7 +334,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
-    private void makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
+    private int makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
         MultipartBody body = Unirest.post(BASE_URL + "/documents/base64/")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .field("name", name)
@@ -345,8 +348,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         if (null == error) {
             Notification.show("Thanks for uploading. Your document will be reviewed shortly.");
+            return 0;
         } else {
             Notification.show(error.getMessage());
+            return 1;
         }
     }
 
