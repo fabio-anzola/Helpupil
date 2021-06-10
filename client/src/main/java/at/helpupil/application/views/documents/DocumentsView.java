@@ -587,6 +587,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Teachers getTeachers() {
         HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("limit", Integer.MAX_VALUE)
                 .asObject(Teachers.class);
 
         Error error = teachers.mapError(Error.class);
@@ -602,6 +603,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Subjects getSubjects() {
         HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("limit", Integer.MAX_VALUE)
                 .asObject(Subjects.class);
 
         Error error = subjects.mapError(Error.class);
@@ -648,6 +650,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Types getTypes() {
         HttpResponse<Types> types = Unirest.get(BASE_URL + "/documents/types")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("limit", Integer.MAX_VALUE)
                 .asObject(Types.class);
 
         Error error = types.mapError(Error.class);
