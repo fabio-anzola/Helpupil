@@ -1,3 +1,18 @@
 .leaderboard-view {
   display: block;
 }
+
+div.leaderboard-view {
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+@media only screen and (max-width: 900px) {
+  div.leaderboard-view {
+    width: 100%;
+  }
+}
