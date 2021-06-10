@@ -176,6 +176,25 @@ components:
           "6077fdad1d54bb0c4fd573f2",
           "60795e84cb8cce353c356658"
         ]
+    
+    TopUsers:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+      example:
+        results: [
+          {
+          "name": "Max Mustermann",
+          "wallet": 1000
+          },
+          {
+          "name": "Max Verstappen",
+          "wallet": 999
+          },
+        ]
 
     Token:
       type: object
