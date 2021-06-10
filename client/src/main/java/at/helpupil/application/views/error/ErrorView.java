@@ -7,6 +7,7 @@ import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -17,18 +18,23 @@ import javax.servlet.http.HttpServletResponse;
 
 @Route(value = "error", layout = MainView.class)
 @PageTitle("404 Page")
-@CssImport("./views/moderator/moderator-view.css")
+@CssImport("./views/error/error-view.css")
 public class ErrorView extends OpenView {
     public ErrorView() {
+        addClassName("error-view");
+
+
         Div errorDiv = new Div();
         errorDiv.addClassName("error-div");
 
         H1 errorHeading = new H1("404 Page not found");
 
-        Button button = new Button("Back to login");
-        button.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/login\""));
+        Button loginRedirectButton = new Button("Back to login");
+        loginRedirectButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        loginRedirectButton.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/login\""));
 
-        errorDiv.add(errorHeading, button);
+        errorDiv.add(errorHeading, loginRedirectButton);
+
 
         add(errorDiv);
     }
