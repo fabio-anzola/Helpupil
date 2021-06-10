@@ -181,6 +181,7 @@ module.exports = router;
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *
+ * /documents:
  *   get:
  *     summary: Get all documents
  *     description: Only logged in users can retrieve all documents.
