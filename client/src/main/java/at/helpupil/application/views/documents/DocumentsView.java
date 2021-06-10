@@ -465,6 +465,24 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         UI.getCurrent().getPage().open(
                 String.valueOf(registration.getResourceUri()), "_blank"
         );
+
+        // update user obj - purchase documents
+        fetchUserData(SessionStorage.get().getUser().getId());
+    }
+
+    private void fetchUserData(String id) {
+        HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(UserObj.class);
+
+        Error error = user.mapError(Error.class);
+
+        if (null == error) {
+            SessionStorage.update(user.getBody());
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private boolean isBuyRequestAllowed(Document document) {
