@@ -1,8 +1,8 @@
 package at.helpupil.application.utils.responses;
 
 public class LeaderboardObj {
-    String username;
-    int wallet;
+    private String username;
+    private int wallet;
 
     public LeaderboardObj(String username, int wallet) {
         this.username = username;
