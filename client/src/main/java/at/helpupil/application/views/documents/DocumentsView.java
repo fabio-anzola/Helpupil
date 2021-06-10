@@ -672,10 +672,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             currentPage = 1;
             String[] resolvedFilter = resolveFilter();
             this.documents = getDocuments(this.limit, resolvedFilter[0], resolvedFilter[1]);
-            updateDocumentPage();
         } else {
             this.documents = getDocuments(1);
-            updateDocumentPage();
         }
+        updateDocumentPage();
     }
 }
