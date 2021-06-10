@@ -253,6 +253,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         MemoryBuffer buffer = new MemoryBuffer();
         Upload upload = new Upload(buffer);
         upload.setMaxFileSize(200 * 1_000_000);
+        upload.setMaxFiles(1);
+        upload.setAcceptedFileTypes("application/pdf", "image/jpeg", "image/png");
         upload.addFileRejectedListener(error -> Notification.show(error.getErrorMessage()));
 
         Label dialogHeading = new Label("Upload document");
