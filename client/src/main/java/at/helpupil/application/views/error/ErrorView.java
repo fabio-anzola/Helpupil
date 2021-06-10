@@ -9,6 +9,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.*;
 
@@ -22,14 +23,14 @@ public class ErrorView extends OpenView {
         Div errorDiv = new Div();
         errorDiv.addClassName("error-div");
 
-        Span span = new Span();
-        Text text = new Text("404 Page not found");
-        span.add(text);
+        H1 errorHeading = new H1("404 Page not found");
 
         Button button = new Button("Back to login");
         button.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/login\""));
 
-        add(button);
+        errorDiv.add(errorHeading, button);
+
+        add(errorDiv);
     }
 }
 
