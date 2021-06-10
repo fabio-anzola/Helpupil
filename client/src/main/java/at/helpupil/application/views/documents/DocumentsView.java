@@ -34,16 +34,7 @@ import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
-import javax.print.Doc;
 import java.io.*;
 import java.util.*;
 
@@ -279,9 +270,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
@@ -324,9 +313,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         buyOrShowButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(buyOrShowButton, cancelButton);
         dialogLayout.add(dialogButtonLayout);
@@ -381,7 +368,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
             documents = getDocuments(currentPage);
             updateDocumentPage();
-//            UI.getCurrent().getPage().reload();
         } else {
             Notification.show(error.getMessage());
         }
@@ -399,18 +385,14 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         for (int i = 0; i < starIndex; i++) {
             StarObj filledStar = new StarObj(true);
             int newIndex = i + 1;
-            filledStar.addClickListener(e -> {
-                replaceStars(starDiv, newIndex);
-            });
+            filledStar.addClickListener(e -> replaceStars(starDiv, newIndex));
             newStarList.add(filledStar);
         }
 
         for (int i = starIndex; i < 5; i++) {
             StarObj emptyStar = new StarObj(false);
             int newIndex = i + 1;
-            emptyStar.addClickListener(e -> {
-                replaceStars(starDiv, newIndex);
-            });
+            emptyStar.addClickListener(e -> replaceStars(starDiv, newIndex));
             newStarList.add(emptyStar);
         }
 
