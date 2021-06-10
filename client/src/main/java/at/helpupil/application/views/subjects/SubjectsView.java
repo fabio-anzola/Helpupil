@@ -123,8 +123,8 @@ public class SubjectsView extends SecuredView {
                     }
                 });
             } else {
-                Notification.show(error.getMessage());
-                return;
+                pageIndex--;
+                new Error(error.getCode(), error.getMessage());
             }
         } while (pageIndex != pages);
 
