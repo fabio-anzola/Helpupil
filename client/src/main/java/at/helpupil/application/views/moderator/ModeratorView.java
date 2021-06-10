@@ -69,7 +69,7 @@ public class ModeratorView extends SecuredView {
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickShortcut(Key.ENTER);
         confirmButton.addClickListener(e -> {
-            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
+            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty()) {
                 makeTeacherCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
                 dialog.close();
             } else {
@@ -129,7 +129,7 @@ public class ModeratorView extends SecuredView {
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickShortcut(Key.ENTER);
         confirmButton.addClickListener(e -> {
-            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
+            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty()) {
                 makeSubjectCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
                 dialog.close();
             } else {
