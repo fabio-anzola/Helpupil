@@ -18,6 +18,7 @@
 - [x] PATCH /v1/users/:userId - update user
 - [x] DELETE /v1/users/:userId - delete user
 - [x] GET /v1/users/public/:userId - get name of user
+- [x] GET /v1/users/public/leaderboard - get the leaderboard
 
 ## Subject Routes
 
