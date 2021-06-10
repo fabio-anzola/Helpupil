@@ -18,7 +18,7 @@ router
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 router
-  .route('/public/leatherboard')
+  .route('/public/leaderboard')
   .get(auth(), userController.topUsers);
 
 router
