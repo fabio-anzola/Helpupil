@@ -34,12 +34,15 @@ public class LeaderboardView extends SecuredView {
     public LeaderboardView() {
         addClassName("leaderboard-view");
 
+
         List<LeaderboardObj> leaderboardObjList = new ArrayList<>(Arrays.asList(leaderboardObjs.getResults()));
-        List<Integer> place = Stream.iterate(1, n -> n+1)
-                .limit(leaderboardObjList.size() - 1)
-                .collect(Collectors.toList());
-        
+        for (int i = 0; i < leaderboardObjList.size(); i++) {
+            leaderboardObjList.get(i).setPlace(i+1);
+        }
+
         topUserGrid.setColumns("place", "name", "wallet");
+        topUserGrid.setItems(leaderboardObjList);
+
 
         add(topUserGrid);
     }

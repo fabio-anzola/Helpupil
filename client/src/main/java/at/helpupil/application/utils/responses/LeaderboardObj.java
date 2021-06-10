@@ -3,6 +3,7 @@ package at.helpupil.application.utils.responses;
 public class LeaderboardObj {
     private String name;
     private int wallet;
+    private int place;
 
     public LeaderboardObj(String name, int wallet) {
         this.name = name;
@@ -23,5 +24,13 @@ public class LeaderboardObj {
 
     public void setWallet(int wallet) {
         this.wallet = wallet;
+    }
+
+    public int getPlace() {
+        return place;
+    }
+
+    public void setPlace(int place) {
+        this.place = place;
     }
 }
