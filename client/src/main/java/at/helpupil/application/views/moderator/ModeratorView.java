@@ -219,14 +219,17 @@ public class ModeratorView extends SecuredView {
         descriptionField.setValue(teacher.getDescription());
 
 
-        Button confirmButton = new Button("Confirm");
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-//        confirmButton.addClickListener(e -> );
+        Button updateButton = new Button("Update");
+        updateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        updateButton.addClickListener(e -> {
+            makeTeacherUpdateRequest(teacher.getId(), nameField.getValue(), shortnameField.getValue(), descriptionField.getValue());
+            dialog.close();
+        });
         Button cancelButton = new Button("Cancel");
         cancelButton.addClickListener(e -> dialog.close());
 
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
-        dialogButtonLayout.add(confirmButton, cancelButton);
+        dialogButtonLayout.add(updateButton, cancelButton);
 
 
         dialogLayout.add(nameField, shortnameField, descriptionField, dialogButtonLayout);
@@ -389,7 +392,7 @@ public class ModeratorView extends SecuredView {
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickShortcut(Key.ENTER);
         confirmButton.addClickListener(e -> {
-            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty() && !description.getValue().trim().isEmpty()) {
+            if (!name.getValue().trim().isEmpty() && !shortname.getValue().trim().isEmpty()) {
                 makeTeacherCreateRequest(name.getValue(), shortname.getValue(), description.getValue());
                 dialog.close();
             } else {
@@ -421,6 +424,27 @@ public class ModeratorView extends SecuredView {
 
         if (null == error) {
             Notification.show(shortname + " successfully created");
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
+
+    private void makeTeacherUpdateRequest(String teacherId, String name, String shortname, String description) {
+        HttpResponse<Teacher> teacher = Unirest.patch(BASE_URL + "/teacher/" + teacherId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .contentType("application/json")
+                .body(new TeacherObj(name, shortname, description))
+                .asObject(Teacher.class);
+
+        Error error = teacher.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Teacher has been updated!");
+            teachers = getTeachers(currentPage);
+            if (teachers.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateTeacherPage();
         } else {
             Notification.show(error.getMessage());
         }
