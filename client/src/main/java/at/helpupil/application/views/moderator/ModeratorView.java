@@ -212,8 +212,11 @@ public class ModeratorView extends SecuredView {
 
 
         TextField nameField = new TextField("Name");
+        nameField.setValue(teacher.getName());
         TextField shortnameField = new TextField("Shortname");
+        shortnameField.setValue(teacher.getShortname());
         TextField descriptionField = new TextField("Description");
+        descriptionField.setValue(teacher.getDescription());
 
 
         Button confirmButton = new Button("Confirm");
