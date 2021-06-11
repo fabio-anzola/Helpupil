@@ -53,6 +53,11 @@ module.exports = router;
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: query
+ *         name: message
+ *         schema:
+ *           type: string
+ *         description: THe message to the user
  *       - in: path
  *         name: id
  *         required: true
