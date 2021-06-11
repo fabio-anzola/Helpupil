@@ -9,7 +9,6 @@ const downloadDocument = catchAsync(async (req, res) => {
   if (!file) {
     throw new ApiError(httpStatus.NOT_FOUND, 'File not found');
   }
-  console.log(req.user)
   if (file.status != "approved") {
     if (req.user.role != "admin" && req.user.role != "moderator") {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'File not approved');
