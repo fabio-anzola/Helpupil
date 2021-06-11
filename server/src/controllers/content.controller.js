@@ -6,15 +6,15 @@ const { priceTypes } = require('../config/documents');
 
 const downloadDocument = catchAsync(async (req, res) => {
   const file = "content/" + req.params.documentName;
-  if (!file) {
+  const document = await documentService.getDocumentByName(req.params.documentName);
+  if (!document) {
     throw new ApiError(httpStatus.NOT_FOUND, 'File not found');
   }
-  if (file.status != "approved") {
+  if (document.status != "approved") {
     if (req.user.role != "admin" && req.user.role != "moderator") {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'File not approved');
     }
   }
-  const document = await documentService.getDocumentByName(req.params.documentName);
 	const user = await userService.getUserById(req.user._id);
 	if (!user.purchasedDocuments.includes(document._id)) {
     if (req.user.role != "admin" && req.user.role != "moderator") {
@@ -24,6 +24,7 @@ const downloadDocument = catchAsync(async (req, res) => {
     await userService.updateUserById(user._id, user);
 	}
   originalname = document.file.originalname;
+  await userService.addCoins(document.user, 1);
   res.download(file, originalname);
 });
 
