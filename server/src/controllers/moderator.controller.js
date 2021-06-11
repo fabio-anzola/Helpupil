@@ -14,7 +14,8 @@ const getDocuments = catchAsync(async (req, res) => {
 });
 
 const approve = catchAsync(async (req, res) => {
-	if (req.status == statusTypes.APPROVED) {
+	const doc = await documentService.getDocumentById(req.params.id);
+	if (doc.status == statusTypes.APPROVED) {
 		throw new ApiError(httpStatus.FORBIDDEN, 'Document already approved');
 	}
 	req.body.status = statusTypes.APPROVED;
