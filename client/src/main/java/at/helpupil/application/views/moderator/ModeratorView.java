@@ -45,7 +45,7 @@ public class ModeratorView extends SecuredView {
     private int currentPage = 1;
     private Grid<Document> documentGrid = new Grid<>(Document.class);
     private Documents documents = getPendingDocuments(currentPage);
-    private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
+    private HorizontalLayout pagingMenuLayout;
     private boolean searchState = false;
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
@@ -65,7 +65,7 @@ public class ModeratorView extends SecuredView {
         tabs.setFlexGrowForEnclosedTabs(1);
 
         documentPage.add(createDocumentGrid());
-        documentPage.add(createPagingMenu(documents.getTotalPages()));
+        documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
 
         Div teacherPage = new Div();
         teacherPage.setVisible(false);
@@ -257,7 +257,8 @@ public class ModeratorView extends SecuredView {
         }
     }
 
-    private Component createPagingMenu(int totalPages) {
+    private Component createDocumentPagingMenu(int totalPages) {
+        pagingMenuLayout = new HorizontalLayout();
         pagingMenuLayout.addClassName("paging-layout");
 
 
@@ -308,6 +309,6 @@ public class ModeratorView extends SecuredView {
         documentGrid = new Grid<>(Document.class);
         pagingMenuLayout = new HorizontalLayout();
         documentPage.add(createDocumentGrid());
-        documentPage.add(createPagingMenu(documents.getTotalPages()));
+        documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
     }
 }
