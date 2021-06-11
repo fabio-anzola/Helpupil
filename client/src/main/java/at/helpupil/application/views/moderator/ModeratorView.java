@@ -120,7 +120,48 @@ public class ModeratorView extends SecuredView {
         documentGrid.removeColumnByKey("id");
         documentGrid.setColumns("name", "type", "subject", "teacher", "user", "price");
 
+        documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
+
         return documentGrid;
+    }
+
+    private void showDocumentDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label(document.getName());
+        dialogLayout.add(dialogHeading);
+
+
+        TextField declineMessage = new TextField("Decline Message");
+        declineMessage.addClassName("decline-text-field");
+
+        Button approveButton = new Button("Approve");
+        approveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+
+        Button declineButton = new Button("Decline");
+        declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+
+        HorizontalLayout approveDeclineButtonLayout = new HorizontalLayout();
+        approveDeclineButtonLayout.add(approveButton, declineButton);
+
+
+        Button showButton = new Button("Show");
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> dialog.close());
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+        dialogButtonLayout.add(showButton, cancelButton);
+
+
+        dialogLayout.add(declineMessage, approveDeclineButtonLayout, dialogButtonLayout);
+
+
+        dialog.add(dialogLayout);
+        dialog.open();
     }
 
     private Documents getPendingDocuments(int page) {
