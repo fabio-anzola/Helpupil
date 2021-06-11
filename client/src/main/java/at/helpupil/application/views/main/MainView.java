@@ -109,11 +109,19 @@ public class MainView extends AppLayout {
                     createTab("About", AboutView.class)
             };
         }
+        if (SessionStorage.get().getUser().getRole().equals("moderator")) {
+            return new Tab[]{
+                    createTab("Documents", DocumentsView.class),
+                    createTab("Teachers", TeachersView.class),
+                    createTab("Subjects", SubjectsView.class),
+                    createTab("Moderator", ModeratorView.class),
+                    createTab("Leaderboard", LeaderboardView.class),
+                    createTab("About", AboutView.class)};
+        }
         return new Tab[]{
                 createTab("Documents", DocumentsView.class),
                 createTab("Teachers", TeachersView.class),
                 createTab("Subjects", SubjectsView.class),
-                createTab("Moderator", ModeratorView.class),
                 createTab("Leaderboard", LeaderboardView.class),
                 createTab("About", AboutView.class)};
     }
