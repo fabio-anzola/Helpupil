@@ -4,9 +4,8 @@ import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.requests.SubjectObj;
 import at.helpupil.application.utils.requests.TeacherObj;
+import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
-import at.helpupil.application.utils.responses.Subject;
-import at.helpupil.application.utils.responses.Teacher;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -15,6 +14,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
@@ -28,10 +28,14 @@ import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
+import javax.print.Doc;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static at.helpupil.application.Application.BASE_URL;
+import static at.helpupil.application.utils.Resolve.resolveDocumentById;
 
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
@@ -40,6 +44,11 @@ public class ModeratorView extends SecuredView {
 
     private Button addTeacher = new Button("Add New Teacher");
     private Button addSubject = new Button("Add New Subject");
+    private int currentDocumentPage = 1;
+    private boolean searchState = false;
+    private final int[] limits = new int[]{10, 15, 25};
+    private int limit = limits[0];
+    private final ArrayList<String> foundIds = new ArrayList<>();
 
     public ModeratorView() {
         addClassName("moderator-view");
@@ -60,6 +69,7 @@ public class ModeratorView extends SecuredView {
 
         Div documentPage = new Div();
         documentPage.setText("Documents");
+        Grid<Document> documentGrid = createDocumentGrid();
 
         Div teacherPage = new Div();
         teacherPage.setText("Teachers");
@@ -85,6 +95,62 @@ public class ModeratorView extends SecuredView {
         });
 
         add(tabs, pages);
+    }
+
+    private Grid<Document> createDocumentGrid() {
+        Documents documents = getPendingDocuments(currentDocumentPage);
+        List<Document> documentList = new ArrayList<>();
+        Grid<Document> documentGrid = new Grid<>();
+
+        for (Document document: documents.getResults()) {
+            if (document.getType().length() > 0) {
+                document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
+            }
+            document.setSubject(document.getSubject_sn());
+            document.setTeacher(document.getTeacher_sn());
+            document.setUser(document.getUname());
+            documentList.add(document);
+        }
+
+        documentGrid.setItems(documentList);
+        documentGrid.removeColumnByKey("reviewer");
+        documentGrid.removeColumnByKey("file");
+        documentGrid.removeColumnByKey("status");
+        documentGrid.removeColumnByKey("id");
+        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
+
+        return null;
+    }
+
+    private Documents getPendingDocuments(int page) {
+        if (searchState) {
+            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+            Document[] documentAr = new Document[itemsVisible];
+            int documentArCounter = 0;
+            for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
+                documentAr[documentArCounter] = resolveDocumentById(foundIds.get(i));
+                documentArCounter++;
+            }
+            if (documentAr.length == 0) {
+                currentDocumentPage = 0;
+            }
+            return new Documents(documentAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
+        } else {
+            HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/mod/pending")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Documents.class);
+
+            Error error = documents.mapError(Error.class);
+
+            if (null == error) {
+                return documents.getBody();
+            } else {
+                Notification.show(error.getMessage());
+            }
+            return null;
+        }
     }
 
     private void showAddTeacherDialog() {
