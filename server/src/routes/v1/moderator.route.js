@@ -24,7 +24,7 @@ module.exports = router;
 /**
  * @swagger
  * /mod/pending:
- *   patch:
+ *   get:
  *     summary: List all pending documents
  *     description: Only moderators can list pending documents.
  *     tags: [Moderator]
@@ -46,7 +46,7 @@ module.exports = router;
 /**
  * @swagger
  * /mod/approve/{id}:
- *   get:
+ *   patch:
  *     summary: Approve a document
  *     description: Only moderators can approve a document.
  *     tags: [Moderator]
@@ -82,7 +82,7 @@ module.exports = router;
 /**
  * @swagger
  * /mod/decline/{id}:
- *   get:
+ *   patch:
  *     summary: Decline a document
  *     description: Only moderators can decline a document.
  *     tags: [Moderator]
