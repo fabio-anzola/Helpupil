@@ -49,7 +49,8 @@ public class ModeratorView extends SecuredView {
     private Grid<Teacher> teacherGrid = new Grid<>(Teacher.class);
     private Documents documents = getPendingDocuments(currentPage);
     private Teachers teachers = getTeachers(currentPage);
-    private HorizontalLayout pagingMenuLayout;
+    private HorizontalLayout documentPagingMenuLayout;
+    private HorizontalLayout teacherPagingMenuLayout;
     private boolean searchState = false;
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
@@ -401,8 +402,9 @@ public class ModeratorView extends SecuredView {
     }
 
     private Component createDocumentPagingMenu(int totalPages) {
-        pagingMenuLayout = new HorizontalLayout();
-        pagingMenuLayout.addClassName("paging-layout");
+//        pagingMenuLayout = new HorizontalLayout();
+        documentPagingMenuLayout = new HorizontalLayout();
+        documentPagingMenuLayout.addClassName("paging-layout");
 
 
         Button previousPage = new Button("Previous");
@@ -449,14 +451,14 @@ public class ModeratorView extends SecuredView {
         currentPageText.setText(currentPage + " / " + totalPages);
 
 
-        pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
+        documentPagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
 
-        return pagingMenuLayout;
+        return documentPagingMenuLayout;
     }
 
     private Component createTeacherPagingMenu(int totalPages) {
-        pagingMenuLayout = new HorizontalLayout();
-        pagingMenuLayout.addClassName("paging-layout");
+        teacherPagingMenuLayout = new HorizontalLayout();
+        teacherPagingMenuLayout.addClassName("paging-layout");
 
 
         Button previousPage = new Button("Previous");
@@ -503,25 +505,25 @@ public class ModeratorView extends SecuredView {
         currentPageText.setText(currentPage + " / " + totalPages);
 
 
-        pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
+        teacherPagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
 
-        return pagingMenuLayout;
+        return teacherPagingMenuLayout;
     }
 
     private void updateDocumentPage() {
         documentPage.remove(documentGrid);
-        documentPage.remove(pagingMenuLayout);
+        documentPage.remove(documentPagingMenuLayout);
         documentGrid = new Grid<>(Document.class);
-        pagingMenuLayout = new HorizontalLayout();
+        documentPagingMenuLayout = new HorizontalLayout();
         documentPage.add(createDocumentGrid());
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
     }
 
     private void updateTeacherPage() {
         teacherPage.remove(teacherGrid);
-        teacherPage.remove(pagingMenuLayout);
+        teacherPage.remove(teacherPagingMenuLayout);
         teacherGrid = new Grid<>(Teacher.class);
-        pagingMenuLayout = new HorizontalLayout();
+        teacherPagingMenuLayout = new HorizontalLayout();
         teacherPage.add(createTeacherGrid());
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
     }
