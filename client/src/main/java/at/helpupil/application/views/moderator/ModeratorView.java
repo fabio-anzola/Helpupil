@@ -147,7 +147,7 @@ public class ModeratorView extends SecuredView {
         teacherGrid.removeColumnByKey("id");
         teacherGrid.setColumns("name", "shortname", "description");
 
-//        teacherGrid.addItemClickListener(item -> showTeacherDialog(item.getItem()));
+        teacherGrid.addItemClickListener(item -> showTeacherDialog(item.getItem()));
 
         return teacherGrid;
     }
@@ -194,6 +194,39 @@ public class ModeratorView extends SecuredView {
 
 
         dialogLayout.add(declineMessage, approveDeclineButtonLayout, dialogButtonLayout);
+
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void showTeacherDialog(Teacher teacher) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label(teacher.getName());
+        dialogLayout.add(dialogHeading);
+
+
+        TextField nameField = new TextField("Name");
+        TextField shortnameField = new TextField("Shortname");
+        TextField descriptionField = new TextField("Description");
+
+
+        Button confirmButton = new Button("Confirm");
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//        confirmButton.addClickListener(e -> );
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> dialog.close());
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+        dialogButtonLayout.add(confirmButton, cancelButton);
+
+
+        dialogLayout.add(nameField, shortnameField, descriptionField, dialogButtonLayout);
 
 
         dialog.add(dialogLayout);
