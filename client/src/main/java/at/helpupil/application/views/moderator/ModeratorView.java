@@ -8,6 +8,7 @@ import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Subject;
 import at.helpupil.application.utils.responses.Teacher;
 import at.helpupil.application.views.main.MainView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -19,11 +20,16 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static at.helpupil.application.Application.BASE_URL;
 
@@ -40,13 +46,45 @@ public class ModeratorView extends SecuredView {
 
         addTeacher.addClassName("add-teacher");
         Div addTeacherDiv = new Div(addTeacher);
-        add(addTeacherDiv);
         addTeacher.addClickListener(e -> showAddTeacherDialog());
 
         addSubject.addClassName("add-subject");
         Div addSubjectDiv = new Div(addSubject);
-        add(addSubjectDiv);
         addSubject.addClickListener(e -> showAddSubjectDialog());
+
+        Tab documentTab = new Tab("Documents");
+        Tab teacherTab = new Tab("Teachers");
+        Tab subjectTab = new Tab("Subjects");
+        Tabs tabs = new Tabs(documentTab, teacherTab, subjectTab);
+        tabs.setFlexGrowForEnclosedTabs(1);
+
+        Div documentPage = new Div();
+        documentPage.setText("Documents");
+
+        Div teacherPage = new Div();
+        teacherPage.setText("Teachers");
+        teacherPage.setVisible(false);
+        teacherPage.add(addTeacherDiv);
+
+        Div subjectPage = new Div();
+        subjectPage.setText("Subjects");
+        subjectPage.setVisible(false);
+        subjectPage.add(addSubjectDiv);
+
+        Map<Tab, Component> tabsToPages = new HashMap<>();
+        tabsToPages.put(documentTab, documentPage);
+        tabsToPages.put(teacherTab, teacherPage);
+        tabsToPages.put(subjectTab, subjectPage);
+
+        Div pages = new Div(documentPage, teacherPage, subjectPage);
+
+        tabs.addSelectedChangeListener(e -> {
+            tabsToPages.values().forEach(page -> page.setVisible(false));
+            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
+            selectedPage.setVisible(true);
+        });
+
+        add(tabs, pages);
     }
 
     private void showAddTeacherDialog() {
