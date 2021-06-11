@@ -263,8 +263,8 @@ public class ModeratorView extends SecuredView {
 
         Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
         exitSearchState.addClickListener(e -> {
+            searchBox.clear();
             if (searchState) {
-                searchBox.clear();
                 searchState = false;
                 currentPage = 1;
                 teachers = getTeachers(currentPage);
