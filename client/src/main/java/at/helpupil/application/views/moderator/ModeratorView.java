@@ -151,6 +151,10 @@ public class ModeratorView extends SecuredView {
         approveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         Button declineButton = new Button("Decline");
+        declineButton.addClickListener(e -> {
+            dialog.close();
+            makeDeclineRequest(document.getId(), declineMessage.getValue());
+        });
         declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 
         HorizontalLayout approveDeclineButtonLayout = new HorizontalLayout();
@@ -182,6 +186,23 @@ public class ModeratorView extends SecuredView {
 
         if (null == error) {
             Notification.show("Document has been approved!");
+            documents = getPendingDocuments(currentPage);
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
+
+    private void makeDeclineRequest(String documentId, String declineMessage) {
+        HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/decline/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("message", declineMessage)
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Document has been declined!");
             documents = getPendingDocuments(currentPage);
             updateDocumentPage();
         } else {
