@@ -3,6 +3,7 @@ package at.helpupil.application.views.teachers;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Teacher;
 import at.helpupil.application.utils.responses.Teachers;
@@ -52,6 +53,8 @@ public class TeachersView extends SecuredView {
     private Teachers teacher = getTeachers(currentPage);
 
     public TeachersView() {
+        ThemeHelper.onLoad();
+
         addClassName("teachers-view");
 
         add(createSearchBox());

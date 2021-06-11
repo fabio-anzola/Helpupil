@@ -2,6 +2,7 @@ package at.helpupil.application.views.moderator;
 
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.requests.SubjectObj;
 import at.helpupil.application.utils.requests.TeacherObj;
 import at.helpupil.application.utils.responses.*;
@@ -65,6 +66,8 @@ public class ModeratorView extends SecuredView {
     private Div subjectPage = new Div();
 
     public ModeratorView() {
+        ThemeHelper.onLoad();
+
         addClassName("moderator-view");
 
         if (documents.getTotalResults() == 0) {

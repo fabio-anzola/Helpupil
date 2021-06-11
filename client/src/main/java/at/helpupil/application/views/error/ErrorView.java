@@ -2,6 +2,7 @@ package at.helpupil.application.views.error;
 
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 @CssImport("./views/error/error-view.css")
 public class ErrorView extends OpenView {
     public ErrorView() {
+        ThemeHelper.onLoad();
+
         addClassName("error-view");
 
 

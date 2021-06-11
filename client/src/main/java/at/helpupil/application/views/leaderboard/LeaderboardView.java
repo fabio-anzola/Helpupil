@@ -2,6 +2,7 @@ package at.helpupil.application.views.leaderboard;
 
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.responses.Document;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.LeaderboardObj;
@@ -32,6 +33,8 @@ public class LeaderboardView extends SecuredView {
     private LeaderboardObjs leaderboardObjs = makeLeaderboardRequest();
 
     public LeaderboardView() {
+        ThemeHelper.onLoad();
+
         addClassName("leaderboard-view");
 
 
