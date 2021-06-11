@@ -29,10 +29,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import javax.print.Doc;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.resolveDocumentById;
@@ -61,6 +58,7 @@ public class ModeratorView extends SecuredView {
         Div addSubjectDiv = new Div(addSubject);
         addSubject.addClickListener(e -> showAddSubjectDialog());
 
+
         Tab documentTab = new Tab("Documents");
         Tab teacherTab = new Tab("Teachers");
         Tab subjectTab = new Tab("Subjects");
@@ -68,16 +66,13 @@ public class ModeratorView extends SecuredView {
         tabs.setFlexGrowForEnclosedTabs(1);
 
         Div documentPage = new Div();
-        documentPage.setText("Documents");
-        Grid<Document> documentGrid = createDocumentGrid();
+        documentPage.add(createDocumentGrid());
 
         Div teacherPage = new Div();
-        teacherPage.setText("Teachers");
         teacherPage.setVisible(false);
         teacherPage.add(addTeacherDiv);
 
         Div subjectPage = new Div();
-        subjectPage.setText("Subjects");
         subjectPage.setVisible(false);
         subjectPage.add(addSubjectDiv);
 
@@ -100,15 +95,15 @@ public class ModeratorView extends SecuredView {
     private Grid<Document> createDocumentGrid() {
         Documents documents = getPendingDocuments(currentDocumentPage);
         List<Document> documentList = new ArrayList<>();
-        Grid<Document> documentGrid = new Grid<>();
+        Grid<Document> documentGrid = new Grid<>(Document.class);
 
-        for (Document document: documents.getResults()) {
-            if (document.getType().length() > 0) {
-                document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
-            }
-            document.setSubject(document.getSubject_sn());
-            document.setTeacher(document.getTeacher_sn());
-            document.setUser(document.getUname());
+        for (Document document : documents.getResults()) {
+//            if (document.getType().length() > 0) {
+//                document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
+//            }
+//            document.setSubject(document.getSubject_sn());
+//            document.setTeacher(document.getTeacher_sn());
+//            document.setUser(document.getUname());
             documentList.add(document);
         }
 
@@ -119,7 +114,7 @@ public class ModeratorView extends SecuredView {
         documentGrid.removeColumnByKey("id");
         documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
 
-        return null;
+        return documentGrid;
     }
 
     private Documents getPendingDocuments(int page) {

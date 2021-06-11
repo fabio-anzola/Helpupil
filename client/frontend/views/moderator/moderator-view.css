@@ -3,7 +3,7 @@
 }
 
 div.moderator-view {
-  width: 90%;
+  width: 100%;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -16,13 +16,19 @@ div.moderator-view {
   flex-direction: column;
 }
 
+vaadin-tabs {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 vaadin-button.add-teacher,
 vaadin-button.add-subject {
   margin-top: 15px;
 }
 
 
-/* Add teacher - Dialog */
+/* Add teacher/subject - Dialog */
 vaadin-vertical-layout.dialog-layout label {
   width: 100%;
   text-align: center;
