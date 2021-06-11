@@ -164,7 +164,7 @@ public class ModeratorView extends SecuredView {
         subjectGrid.removeColumnByKey("id");
         subjectGrid.setColumns("name", "shortname", "description");
 
-//        subjectGrid.addItemClickListener(item -> showSubjectDialog(item.getItem()));
+        subjectGrid.addItemClickListener(item -> showSubjectDialog(item.getItem()));
 
         return subjectGrid;
     }
@@ -240,6 +240,46 @@ public class ModeratorView extends SecuredView {
         updateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         updateButton.addClickListener(e -> {
             makeTeacherUpdateRequest(teacher.getId(), nameField.getValue(), shortnameField.getValue(), descriptionField.getValue());
+            dialog.close();
+        });
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> dialog.close());
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+        dialogButtonLayout.add(updateButton, cancelButton);
+
+
+        dialogLayout.add(nameField, shortnameField, descriptionField, dialogButtonLayout);
+
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+
+    private void showSubjectDialog(Subject subject) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label(subject.getName());
+        dialogLayout.add(dialogHeading);
+
+
+        TextField nameField = new TextField("Name");
+        nameField.setValue(subject.getName());
+        TextField shortnameField = new TextField("Shortname");
+        shortnameField.setValue(subject.getShortname());
+        TextField descriptionField = new TextField("Description");
+        descriptionField.setValue(subject.getDescription());
+
+
+        Button updateButton = new Button("Update");
+        updateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        updateButton.addClickListener(e -> {
+//            makeTeacherUpdateRequest(subject.getId(), nameField.getValue(), shortnameField.getValue(), descriptionField.getValue());
             dialog.close();
         });
         Button cancelButton = new Button("Cancel");
