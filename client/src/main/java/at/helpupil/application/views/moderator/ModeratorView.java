@@ -10,6 +10,7 @@ import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -26,10 +27,13 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.StreamRegistration;
+import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
 import javax.print.Doc;
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
@@ -150,6 +154,7 @@ public class ModeratorView extends SecuredView {
 
 
         Button showButton = new Button("Show");
+        showButton.addClickListener(e -> makeShowRequest(document));
         Button cancelButton = new Button("Cancel");
         cancelButton.addClickListener(e -> dialog.close());
 
@@ -210,9 +215,7 @@ public class ModeratorView extends SecuredView {
         });
 
         Button cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
@@ -270,9 +273,7 @@ public class ModeratorView extends SecuredView {
         });
 
         Button cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
+        cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
@@ -353,5 +354,45 @@ public class ModeratorView extends SecuredView {
         pagingMenuLayout = new HorizontalLayout();
         documentPage.add(createDocumentGrid());
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
+    }
+
+
+    private void makeShowRequest(Document document) {
+        byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asBytes()
+                .getBody();
+
+
+        final StreamResource streamResource = new StreamResource(document.getFile().getOriginalname(), () -> new ByteArrayInputStream(bytes));
+        streamResource.setContentType(document.getFile().getMimetype());
+        streamResource.setCacheTime(0);
+
+        final StreamRegistration registration = UI.getCurrent()
+                .getSession()
+                .getResourceRegistry()
+                .registerResource(streamResource);
+
+        UI.getCurrent().getPage().open(
+                String.valueOf(registration.getResourceUri()), "_blank"
+        );
+
+        // update user obj - purchase documents
+        fetchUserData(SessionStorage.get().getUser().getId());
+    }
+
+    private void fetchUserData(String id) {
+        HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(UserObj.class);
+
+        Error error = user.mapError(Error.class);
+
+        if (null == error) {
+            SessionStorage.update(user.getBody());
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 }
