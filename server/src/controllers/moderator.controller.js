@@ -31,9 +31,13 @@ const approve = catchAsync(async (req, res) => {
 });
 
 const decline = catchAsync(async (req, res) => {
+	console.log(req.query);
 	req.body.status = statusTypes.DECLINED;
 	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
+	const user = await userService.getUserById(document.user);
+	emailService.sendDeclineEmail(user.email, user.name, document.name, req.query.message)
 	await documentService.deleteDocumentById(req.params.documentId);
+
 	res.send(document);
 });
 
