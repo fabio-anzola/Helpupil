@@ -79,11 +79,11 @@ public class ModeratorView extends SecuredView {
 
         teacherPage.setVisible(false);
         teacherPage.addClassName("teacher-page");
-        teacherPage.add(createTeacherGrid());
-        addTeacher.addClassName("add-teacher");
         Div addTeacherDiv = new Div(addTeacher);
+        addTeacher.addClassName("add-teacher");
         addTeacher.addClickListener(e -> showAddTeacherDialog());
         teacherPage.add(addTeacherDiv);
+        teacherPage.add(createTeacherGrid());
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
 
         Div subjectPage = new Div();

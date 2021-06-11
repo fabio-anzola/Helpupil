@@ -22,11 +22,13 @@ vaadin-tabs.moderator-tabs {
   margin-right: auto;
 }
 
-div.moderator-view div:first-of-type {
+div.moderator-view vaadin-tabs + div {
   height: 100%;
 }
 
-div.document-page {
+div.document-page,
+div.teacher-page {
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
