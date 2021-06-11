@@ -83,6 +83,7 @@ public class ModeratorView extends SecuredView {
         Div addTeacherDiv = new Div(addTeacher);
         addTeacher.addClickListener(e -> showAddTeacherDialog());
         teacherPage.add(addTeacherDiv);
+        teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
 
         Div subjectPage = new Div();
         subjectPage.setVisible(false);
@@ -99,6 +100,7 @@ public class ModeratorView extends SecuredView {
         Div pages = new Div(documentPage, teacherPage, subjectPage);
 
         tabs.addSelectedChangeListener(e -> {
+            currentPage = 1;
             tabsToPages.values().forEach(page -> page.setVisible(false));
             Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
             selectedPage.setVisible(true);
@@ -452,6 +454,60 @@ public class ModeratorView extends SecuredView {
         return pagingMenuLayout;
     }
 
+    private Component createTeacherPagingMenu(int totalPages) {
+        pagingMenuLayout = new HorizontalLayout();
+        pagingMenuLayout.addClassName("paging-layout");
+
+
+        Button previousPage = new Button("Previous");
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                teachers = getTeachers(currentPage - 1);
+                currentPage = teachers.getPage();
+                if (teachers.getTotalResults() == 0) {
+                    currentPage = 0;
+                }
+                updateTeacherPage();
+            }
+        });
+
+        Select<String> itemsPerPageSelect = new Select<>();
+        itemsPerPageSelect.addClassName("paging-items-per-page-select");
+        itemsPerPageSelect.setItems(Arrays.stream(limits)
+                .mapToObj(String::valueOf)
+                .toArray(String[]::new));
+        itemsPerPageSelect.setValue(String.valueOf(limit));
+        itemsPerPageSelect.addValueChangeListener(e -> {
+            limit = Integer.parseInt(e.getValue());
+            currentPage = 1;
+            teachers = getTeachers(currentPage);
+            if (teachers.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateTeacherPage();
+        });
+
+        Button nextPage = new Button("Next");
+        nextPage.addClickListener(e -> {
+            if (currentPage < teachers.getTotalPages()) {
+                teachers = getTeachers(currentPage + 1);
+                currentPage = teachers.getPage();
+                if (teachers.getTotalResults() == 0) {
+                    currentPage = 0;
+                }
+                updateTeacherPage();
+            }
+        });
+
+        Label currentPageText = new Label();
+        currentPageText.setText(currentPage + " / " + totalPages);
+
+
+        pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
+
+        return pagingMenuLayout;
+    }
+
     private void updateDocumentPage() {
         documentPage.remove(documentGrid);
         documentPage.remove(pagingMenuLayout);
@@ -459,6 +515,15 @@ public class ModeratorView extends SecuredView {
         pagingMenuLayout = new HorizontalLayout();
         documentPage.add(createDocumentGrid());
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
+    }
+
+    private void updateTeacherPage() {
+        teacherPage.remove(teacherGrid);
+        teacherPage.remove(pagingMenuLayout);
+        teacherGrid = new Grid<>(Teacher.class);
+        pagingMenuLayout = new HorizontalLayout();
+        teacherPage.add(createTeacherGrid());
+        teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
     }
 
 
