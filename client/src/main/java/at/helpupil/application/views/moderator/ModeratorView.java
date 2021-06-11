@@ -55,6 +55,7 @@ public class ModeratorView extends SecuredView {
         Tab teacherTab = new Tab("Teachers");
         Tab subjectTab = new Tab("Subjects");
         Tabs tabs = new Tabs(documentTab, teacherTab, subjectTab);
+        tabs.addClassName("moderator-tabs");
         tabs.setFlexGrowForEnclosedTabs(1);
 
         Div documentPage = new Div();
@@ -96,9 +97,9 @@ public class ModeratorView extends SecuredView {
         Grid<Document> documentGrid = new Grid<>(Document.class);
 
         for (Document document : documents.getResults()) {
-//            if (document.getType().length() > 0) {
-//                document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
-//            }
+            if (document.getType().length() > 0) {
+                document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
+            }
 //            document.setSubject(document.getSubject_sn());
 //            document.setTeacher(document.getTeacher_sn());
 //            document.setUser(document.getUname());
@@ -108,9 +109,10 @@ public class ModeratorView extends SecuredView {
         documentGrid.setItems(documentList);
         documentGrid.removeColumnByKey("reviewer");
         documentGrid.removeColumnByKey("file");
+        documentGrid.removeColumnByKey("rating");
         documentGrid.removeColumnByKey("status");
         documentGrid.removeColumnByKey("id");
-        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
+        documentGrid.setColumns("name", "type", "subject", "teacher", "user", "price");
 
         return documentGrid;
     }

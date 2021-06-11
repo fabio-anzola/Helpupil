@@ -16,7 +16,7 @@ div.moderator-view {
   flex-direction: column;
 }
 
-vaadin-tabs {
+vaadin-tabs.moderator-tabs {
   width: 90%;
   margin-left: auto;
   margin-right: auto;
