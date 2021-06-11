@@ -92,7 +92,7 @@ public class ModeratorView extends SecuredView {
         subjectPage.addClassName("subject-page");
         subjectPage.add(createSubjectTopDiv());
         subjectPage.add(createSubjectGrid());
-//        subjectPage.add(createSubjectPagingMenu(subjects.getTotalPages()));
+        subjectPage.add(createSubjectPagingMenu(subjects.getTotalPages()));
 
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
@@ -714,6 +714,60 @@ public class ModeratorView extends SecuredView {
         return teacherPagingMenuLayout;
     }
 
+    private Component createSubjectPagingMenu(int totalPages) {
+        subjectPagingMenuLayout = new HorizontalLayout();
+        subjectPagingMenuLayout.addClassName("paging-layout");
+
+
+        Button previousPage = new Button("Previous");
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                subjects = getSubjects(currentPage - 1);
+                currentPage = subjects.getPage();
+                if (subjects.getTotalResults() == 0) {
+                    currentPage = 0;
+                }
+                updateSubjectPage();
+            }
+        });
+
+        Select<String> itemsPerPageSelect = new Select<>();
+        itemsPerPageSelect.addClassName("paging-items-per-page-select");
+        itemsPerPageSelect.setItems(Arrays.stream(limits)
+                .mapToObj(String::valueOf)
+                .toArray(String[]::new));
+        itemsPerPageSelect.setValue(String.valueOf(limit));
+        itemsPerPageSelect.addValueChangeListener(e -> {
+            limit = Integer.parseInt(e.getValue());
+            currentPage = 1;
+            subjects = getSubjects(currentPage);
+            if (subjects.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateSubjectPage();
+        });
+
+        Button nextPage = new Button("Next");
+        nextPage.addClickListener(e -> {
+            if (currentPage < subjects.getTotalPages()) {
+                subjects = getSubjects(currentPage + 1);
+                currentPage = subjects.getPage();
+                if (subjects.getTotalResults() == 0) {
+                    currentPage = 0;
+                }
+                updateSubjectPage();
+            }
+        });
+
+        Label currentPageText = new Label();
+        currentPageText.setText(currentPage + " / " + totalPages);
+
+
+        subjectPagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
+
+        return subjectPagingMenuLayout;
+    }
+
     private void updateDocumentPage() {
         documentPage.remove(documentGrid);
         documentPage.remove(documentPagingMenuLayout);
@@ -732,6 +786,14 @@ public class ModeratorView extends SecuredView {
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
     }
 
+    private void updateSubjectPage() {
+        subjectPage.remove(subjectGrid);
+        subjectPage.remove(subjectPagingMenuLayout);
+        subjectGrid = new Grid<>(Subject.class);
+        subjectPagingMenuLayout = new HorizontalLayout();
+        subjectPage.add(createSubjectGrid());
+        subjectPage.add(createSubjectPagingMenu(subjects.getTotalPages()));
+    }
 
     private void makeShowRequest(Document document) {
         byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())

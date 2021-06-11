@@ -31,7 +31,8 @@ div.moderator-view vaadin-tabs + div {
 }
 
 div.document-page,
-div.teacher-page {
+div.teacher-page,
+div.subject-page {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -49,7 +50,8 @@ div.top-div-doc {
   margin-right: auto;
 }
 
-div.top-div-doc div.add-teacher-div {
+div.top-div-doc div.add-teacher-div,
+div.top-div-doc div.add-subject-div {
   padding: 0 15px;
 
   position: absolute;
