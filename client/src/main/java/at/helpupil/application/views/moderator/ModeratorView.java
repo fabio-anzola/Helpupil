@@ -9,7 +9,6 @@ import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -32,12 +31,11 @@ import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
-import javax.print.Doc;
 import java.io.ByteArrayInputStream;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
-import static at.helpupil.application.utils.Resolve.resolveDocumentById;
+import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
@@ -48,7 +46,9 @@ public class ModeratorView extends SecuredView {
     private Button addSubject = new Button("Add New Subject");
     private int currentPage = 1;
     private Grid<Document> documentGrid = new Grid<>(Document.class);
+    private Grid<Teacher> teacherGrid = new Grid<>(Teacher.class);
     private Documents documents = getPendingDocuments(currentPage);
+    private Teachers teachers = getTeachers(currentPage);
     private HorizontalLayout pagingMenuLayout;
     private boolean searchState = false;
     private final int[] limits = new int[]{10, 15, 25};
@@ -56,6 +56,7 @@ public class ModeratorView extends SecuredView {
     private final ArrayList<String> foundIds = new ArrayList<>();
 
     private Div documentPage = new Div();
+    Div teacherPage = new Div();
 
     public ModeratorView() {
         addClassName("moderator-view");
@@ -75,8 +76,9 @@ public class ModeratorView extends SecuredView {
         documentPage.add(createDocumentGrid());
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
 
-        Div teacherPage = new Div();
         teacherPage.setVisible(false);
+        teacherPage.addClassName("teacher-page");
+        teacherPage.add(createTeacherGrid());
         addTeacher.addClassName("add-teacher");
         Div addTeacherDiv = new Div(addTeacher);
         addTeacher.addClickListener(e -> showAddTeacherDialog());
@@ -130,6 +132,20 @@ public class ModeratorView extends SecuredView {
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
         return documentGrid;
+    }
+
+    private Grid<Teacher> createTeacherGrid() {
+        List<Teacher> teacherList = new ArrayList<>(Arrays.asList(teachers.getResults()));
+
+        teacherGrid.addClassName("moderator-grid");
+        teacherGrid.setItems(teacherList);
+        teacherGrid.removeColumnByKey("user");
+        teacherGrid.removeColumnByKey("id");
+        teacherGrid.setColumns("name", "shortname", "description");
+
+//        teacherGrid.addItemClickListener(item -> showTeacherDialog(item.getItem()));
+
+        return teacherGrid;
     }
 
     private void showDocumentDialog(Document document) {
@@ -234,6 +250,37 @@ public class ModeratorView extends SecuredView {
             Notification.show(error.getMessage());
         }
         return null;
+    }
+
+    private Teachers getTeachers(int page) {
+        if (searchState) {
+            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+            Teacher[] teacherAr = new Teacher[itemsVisible];
+            int teacherArCounter = 0;
+            for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
+                teacherAr[teacherArCounter] = resolveTeacherById(foundIds.get(i));
+                teacherArCounter++;
+            }
+            if (teacherAr.length == 0) {
+                currentPage = 0;
+            }
+            return new Teachers(teacherAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
+        } else {
+            HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Teachers.class);
+
+            Error error = teachers.mapError(Error.class);
+
+            if (null == error) {
+                return teachers.getBody();
+            } else {
+                new Error(error.getCode(), error.getMessage());
+                return getTeachers(page);
+            }
+        }
     }
 
     private void showAddTeacherDialog() {
