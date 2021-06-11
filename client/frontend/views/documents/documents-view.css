@@ -77,11 +77,10 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
   margin-right: auto;
   display: flex;
   justify-content: center;
-  gap: 20px;
 }
 
-vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
-  flex-grow: 1;
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
+  width: 50%;
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout {

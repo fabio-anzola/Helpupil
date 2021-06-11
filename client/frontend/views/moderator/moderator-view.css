@@ -55,7 +55,7 @@ vaadin-horizontal-layout.paging-layout label {
   align-self: center;
 }
 
-/* Add teacher/subject - Dialog */
+/* Add - Dialog */
 vaadin-vertical-layout.dialog-layout label {
   width: 100%;
   text-align: center;
@@ -69,6 +69,10 @@ vaadin-vertical-layout.dialog-layout vaadin-text-field {
   margin-right: auto;
 }
 
+vaadin-vertical-layout.dialog-layout vaadin-text-field.decline-text-field {
+  width: 60%;
+}
+
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
   width: 60%;
   margin-top: 40px;
@@ -76,9 +80,8 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
   margin-right: auto;
   display: flex;
   justify-content: center;
-  gap: 20px;
 }
 
-vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
-  flex-grow: 1;
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
+  width: 50%;
 }
