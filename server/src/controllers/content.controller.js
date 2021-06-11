@@ -9,6 +9,12 @@ const downloadDocument = catchAsync(async (req, res) => {
   if (!file) {
     throw new ApiError(httpStatus.NOT_FOUND, 'File not found');
   }
+  console.log(req.user)
+  if (file.status != "approved") {
+    if (req.user.role != "admin" && req.user.role != "moderator") {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'File not approved');
+    }
+  }
   const document = await documentService.getDocumentByName(req.params.documentName);
 	const user = await userService.getUserById(req.user._id);
 	if (!user.purchasedDocuments.includes(document._id)) {
