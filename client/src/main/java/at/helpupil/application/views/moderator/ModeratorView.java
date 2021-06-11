@@ -64,6 +64,7 @@ public class ModeratorView extends SecuredView {
         tabs.addClassName("moderator-tabs");
         tabs.setFlexGrowForEnclosedTabs(1);
 
+        documentPage.addClassName("document-page");
         documentPage.add(createDocumentGrid());
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
 
@@ -110,6 +111,7 @@ public class ModeratorView extends SecuredView {
             documentList.add(document);
         }
 
+        documentGrid.addClassName("moderator-grid");
         documentGrid.setItems(documentList);
         documentGrid.removeColumnByKey("reviewer");
         documentGrid.removeColumnByKey("file");
