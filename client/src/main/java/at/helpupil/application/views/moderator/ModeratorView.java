@@ -50,14 +50,6 @@ public class ModeratorView extends SecuredView {
     public ModeratorView() {
         addClassName("moderator-view");
 
-        addTeacher.addClassName("add-teacher");
-        Div addTeacherDiv = new Div(addTeacher);
-        addTeacher.addClickListener(e -> showAddTeacherDialog());
-
-        addSubject.addClassName("add-subject");
-        Div addSubjectDiv = new Div(addSubject);
-        addSubject.addClickListener(e -> showAddSubjectDialog());
-
 
         Tab documentTab = new Tab("Documents");
         Tab teacherTab = new Tab("Teachers");
@@ -70,10 +62,16 @@ public class ModeratorView extends SecuredView {
 
         Div teacherPage = new Div();
         teacherPage.setVisible(false);
+        addTeacher.addClassName("add-teacher");
+        Div addTeacherDiv = new Div(addTeacher);
+        addTeacher.addClickListener(e -> showAddTeacherDialog());
         teacherPage.add(addTeacherDiv);
 
         Div subjectPage = new Div();
         subjectPage.setVisible(false);
+        addSubject.addClassName("add-subject");
+        Div addSubjectDiv = new Div(addSubject);
+        addSubject.addClickListener(e -> showAddSubjectDialog());
         subjectPage.add(addSubjectDiv);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
@@ -118,34 +116,20 @@ public class ModeratorView extends SecuredView {
     }
 
     private Documents getPendingDocuments(int page) {
-        if (searchState) {
-            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
-            Document[] documentAr = new Document[itemsVisible];
-            int documentArCounter = 0;
-            for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
-                documentAr[documentArCounter] = resolveDocumentById(foundIds.get(i));
-                documentArCounter++;
-            }
-            if (documentAr.length == 0) {
-                currentDocumentPage = 0;
-            }
-            return new Documents(documentAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
+        HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/mod/pending")
+                .queryString("limit", limit)
+                .queryString("page", page)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Documents.class);
+
+        Error error = documents.mapError(Error.class);
+
+        if (null == error) {
+            return documents.getBody();
         } else {
-            HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/mod/pending")
-                    .queryString("limit", limit)
-                    .queryString("page", page)
-                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                    .asObject(Documents.class);
-
-            Error error = documents.mapError(Error.class);
-
-            if (null == error) {
-                return documents.getBody();
-            } else {
-                Notification.show(error.getMessage());
-            }
-            return null;
+            Notification.show(error.getMessage());
         }
+        return null;
     }
 
     private void showAddTeacherDialog() {
