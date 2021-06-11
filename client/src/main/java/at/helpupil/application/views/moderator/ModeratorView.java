@@ -105,9 +105,9 @@ public class ModeratorView extends SecuredView {
             if (document.getType().length() > 0) {
                 document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
             }
-//            document.setSubject(document.getSubject_sn());
-//            document.setTeacher(document.getTeacher_sn());
-//            document.setUser(document.getUname());
+            document.setSubject(document.getSubject_sn());
+            document.setTeacher(document.getTeacher_sn());
+            document.setUser(document.getUname());
             documentList.add(document);
         }
 
