@@ -51,6 +51,8 @@ public class ModeratorView extends SecuredView {
     private int limit = limits[0];
     private final ArrayList<String> foundIds = new ArrayList<>();
 
+    private Div documentPage = new Div();
+
     public ModeratorView() {
         addClassName("moderator-view");
 
@@ -62,7 +64,6 @@ public class ModeratorView extends SecuredView {
         tabs.addClassName("moderator-tabs");
         tabs.setFlexGrowForEnclosedTabs(1);
 
-        Div documentPage = new Div();
         documentPage.add(createDocumentGrid());
         documentPage.add(createPagingMenu(documents.getTotalPages()));
 
@@ -302,11 +303,11 @@ public class ModeratorView extends SecuredView {
     }
 
     private void updateDocumentPage() {
-        remove(documentGrid);
-        remove(pagingMenuLayout);
+        documentPage.remove(documentGrid);
+        documentPage.remove(pagingMenuLayout);
         documentGrid = new Grid<>(Document.class);
         pagingMenuLayout = new HorizontalLayout();
-        add(createDocumentGrid());
-        add(createPagingMenu(documents.getTotalPages()));
+        documentPage.add(createDocumentGrid());
+        documentPage.add(createPagingMenu(documents.getTotalPages()));
     }
 }
