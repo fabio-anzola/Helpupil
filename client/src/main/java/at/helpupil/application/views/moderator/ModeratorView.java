@@ -279,7 +279,7 @@ public class ModeratorView extends SecuredView {
         Button updateButton = new Button("Update");
         updateButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         updateButton.addClickListener(e -> {
-//            makeTeacherUpdateRequest(subject.getId(), nameField.getValue(), shortnameField.getValue(), descriptionField.getValue());
+            makeSubjectUpdateRequest(subject.getId(), nameField.getValue(), shortnameField.getValue(), descriptionField.getValue());
             dialog.close();
         });
         Button cancelButton = new Button("Cancel");
@@ -587,6 +587,26 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    private void makeSubjectUpdateRequest(String subjectId, String name, String shortname, String description) {
+        HttpResponse<Subject> subject = Unirest.patch(BASE_URL + "/subject/" + subjectId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .contentType("application/json")
+                .body(new SubjectObj(name, shortname, description))
+                .asObject(Subject.class);
+
+        Error error = subject.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Subject has been updated!");
+            subjects = getSubjects(currentPage);
+            if (subjects.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateSubjectPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
 
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
