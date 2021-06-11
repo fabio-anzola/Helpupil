@@ -38,28 +38,31 @@ import java.io.ByteArrayInputStream;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
+import static at.helpupil.application.utils.Resolve.resolveSubjectById;
 import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
 @CssImport("./views/moderator/moderator-view.css")
 public class ModeratorView extends SecuredView {
-
-    private Button addSubject = new Button("Add New Subject");
     private int currentPage = 1;
     private Grid<Document> documentGrid = new Grid<>(Document.class);
     private Grid<Teacher> teacherGrid = new Grid<>(Teacher.class);
+    private Grid<Subject> subjectGrid = new Grid<>(Subject.class);
     private Documents documents = getPendingDocuments(currentPage);
     private Teachers teachers = getTeachers(currentPage);
+    private Subjects subjects = getSubjects(currentPage);
     private HorizontalLayout documentPagingMenuLayout;
     private HorizontalLayout teacherPagingMenuLayout;
+    private HorizontalLayout subjectPagingMenuLayout;
     private boolean searchState = false;
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
     private final ArrayList<String> foundIds = new ArrayList<>();
 
     private Div documentPage = new Div();
-    Div teacherPage = new Div();
+    private Div teacherPage = new Div();
+    private Div subjectPage = new Div();
 
     public ModeratorView() {
         addClassName("moderator-view");
@@ -85,12 +88,12 @@ public class ModeratorView extends SecuredView {
         teacherPage.add(createTeacherGrid());
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
 
-        Div subjectPage = new Div();
         subjectPage.setVisible(false);
-        addSubject.addClassName("add-subject");
-        Div addSubjectDiv = new Div(addSubject);
-        addSubject.addClickListener(e -> showAddSubjectDialog());
-        subjectPage.add(addSubjectDiv);
+        subjectPage.addClassName("subject-page");
+        subjectPage.add(createSubjectTopDiv());
+        subjectPage.add(createSubjectGrid());
+//        subjectPage.add(createSubjectPagingMenu(subjects.getTotalPages()));
+
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(documentTab, documentPage);
@@ -150,6 +153,20 @@ public class ModeratorView extends SecuredView {
         teacherGrid.addItemClickListener(item -> showTeacherDialog(item.getItem()));
 
         return teacherGrid;
+    }
+
+    private Grid<Subject> createSubjectGrid() {
+        List<Subject> subjectList = new ArrayList<>(Arrays.asList(subjects.getResults()));
+
+        subjectGrid.addClassName("moderator-grid");
+        subjectGrid.setItems(subjectList);
+        subjectGrid.removeColumnByKey("user");
+        subjectGrid.removeColumnByKey("id");
+        subjectGrid.setColumns("name", "shortname", "description");
+
+//        subjectGrid.addItemClickListener(item -> showSubjectDialog(item.getItem()));
+
+        return subjectGrid;
     }
 
     private void showDocumentDialog(Document document) {
@@ -285,6 +302,52 @@ public class ModeratorView extends SecuredView {
         return topDiv;
     }
 
+    private Component createSubjectTopDiv() {
+        Div topDiv = new Div();
+        topDiv.addClassName("top-div-doc");
+
+
+        Div emptyDiv = new Div();
+
+
+        Button addSubject = new Button("Add New Subject");
+        addSubject.addClassName("add-subject");
+        Div addTeacherDiv = new Div(addSubject);
+        addTeacherDiv.addClassName("add-subject-div");
+        addSubject.addClickListener(e -> showAddSubjectDialog());
+
+
+        Div innerDiv = new Div();
+        innerDiv.addClassName("search-inner-div");
+
+        TextField searchBox = new TextField();
+        searchBox.setPlaceholder("Search");
+        searchBox.setClearButtonVisible(true);
+        searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
+        searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
+        searchBox.addKeyDownListener(Key.ENTER, e -> makeTeacherSearchRequest(searchBox.getValue()));
+
+        Icon searchIcon = new Icon(VaadinIcon.SEARCH);
+        searchIcon.addClickListener(e -> makeTeacherSearchRequest(searchBox.getValue()));
+
+        Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
+        exitSearchState.addClickListener(e -> {
+            searchBox.clear();
+            if (searchState) {
+                searchState = false;
+                currentPage = 1;
+                subjects = getSubjects(currentPage);
+                updateTeacherPage();
+            }
+        });
+
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
+
+
+        topDiv.add(emptyDiv, addTeacherDiv, innerDiv);
+        return topDiv;
+    }
+
     private void makeApproveRequest(String documentId) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/approve/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -368,6 +431,40 @@ public class ModeratorView extends SecuredView {
             } else {
                 new Error(error.getCode(), error.getMessage());
                 return getTeachers(page);
+            }
+        }
+    }
+
+    private Subjects getSubjects(int page) {
+        if (searchState) {
+            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+            Subject[] subjectAr = new Subject[itemsVisible];
+            int subjectArCounter = 0;
+            for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
+                subjectAr[subjectArCounter] = resolveSubjectById(foundIds.get(i));
+                subjectArCounter++;
+            }
+            if (subjectAr.length == 0) {
+                currentPage = 0;
+            }
+            return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
+        } else {
+            HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
+                    .queryString("limit", limit)
+                    .queryString("page", page)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Subjects.class);
+
+            Error error = subjects.mapError(Error.class);
+
+            if (null == error) {
+                if (subjects.getBody().getResults().length == 0) {
+                    currentPage = 0;
+                }
+                return subjects.getBody();
+            } else {
+                new Error(error.getCode(), error.getMessage());
+                return getSubjects(page);
             }
         }
     }
