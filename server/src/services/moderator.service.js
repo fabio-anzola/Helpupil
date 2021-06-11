@@ -1,5 +1,4 @@
 const httpStatus = require('http-status');
-const emailService = require('./email.service');
 const ApiError = require('../utils/ApiError');
 const { Doc } = require('../models');
 
