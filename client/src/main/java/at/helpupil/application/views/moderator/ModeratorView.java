@@ -60,6 +60,9 @@ public class ModeratorView extends SecuredView {
     public ModeratorView() {
         addClassName("moderator-view");
 
+        if (documents.getTotalResults() == 0) {
+            currentPage = 0;
+        }
 
         Tab documentTab = new Tab("Documents");
         Tab teacherTab = new Tab("Teachers");
@@ -187,6 +190,9 @@ public class ModeratorView extends SecuredView {
         if (null == error) {
             Notification.show("Document has been approved!");
             documents = getPendingDocuments(currentPage);
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
             updateDocumentPage();
         } else {
             Notification.show(error.getMessage());
@@ -204,6 +210,9 @@ public class ModeratorView extends SecuredView {
         if (null == error) {
             Notification.show("Document has been declined!");
             documents = getPendingDocuments(currentPage);
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
             updateDocumentPage();
         } else {
             Notification.show(error.getMessage());
@@ -352,6 +361,9 @@ public class ModeratorView extends SecuredView {
             if (currentPage > 1) {
                 documents = getPendingDocuments(currentPage - 1);
                 currentPage = documents.getPage();
+                if (documents.getTotalResults() == 0) {
+                    currentPage = 0;
+                }
                 updateDocumentPage();
             }
         });
@@ -366,7 +378,9 @@ public class ModeratorView extends SecuredView {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             documents = getPendingDocuments(currentPage);
-            currentPage = documents.getPage();
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
             updateDocumentPage();
         });
 
@@ -375,6 +389,9 @@ public class ModeratorView extends SecuredView {
             if (currentPage < documents.getTotalPages()) {
                 documents = getPendingDocuments(currentPage + 1);
                 currentPage = documents.getPage();
+                if (documents.getTotalResults() == 0) {
+                    currentPage = 0;
+                }
                 updateDocumentPage();
             }
         });

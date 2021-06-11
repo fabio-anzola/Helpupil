@@ -526,7 +526,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             documents = getDocuments(currentPage);
-            currentPage = documents.getPage();
             updateDocumentPage();
         });
 
