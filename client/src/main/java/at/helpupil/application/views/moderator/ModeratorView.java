@@ -365,10 +365,10 @@ public class ModeratorView extends SecuredView {
         searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
-        searchBox.addKeyDownListener(Key.ENTER, e -> makeTeacherSearchRequest(searchBox.getValue()));
+        searchBox.addKeyDownListener(Key.ENTER, e -> makeSubjectSearchRequest(searchBox.getValue()));
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
-        searchIcon.addClickListener(e -> makeTeacherSearchRequest(searchBox.getValue()));
+        searchIcon.addClickListener(e -> makeSubjectSearchRequest(searchBox.getValue()));
 
         Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
         exitSearchState.addClickListener(e -> {
@@ -377,7 +377,7 @@ public class ModeratorView extends SecuredView {
                 searchState = false;
                 currentPage = 1;
                 subjects = getSubjects(currentPage);
-                updateTeacherPage();
+                updateSubjectPage();
             }
         });
 
@@ -933,5 +933,46 @@ public class ModeratorView extends SecuredView {
         currentPage = 1;
         teachers = getTeachers(currentPage);
         updateTeacherPage();
+    }
+
+    private void makeSubjectSearchRequest(String searchText) {
+        searchText = searchText.toLowerCase();
+        foundIds.clear();
+
+        int pageIndex = 0;
+        int pages = 1;
+        do {
+            pageIndex++;
+            HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
+                    .queryString("page", pageIndex)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Subjects.class);
+
+            Error error = subjects.mapError(Error.class);
+
+            if (null == error) {
+                if (pages < subjects.getBody().getTotalPages()) {
+                    pages = subjects.getBody().getTotalPages();
+                }
+
+                String finalSearchText = searchText;
+                Arrays.stream(subjects.getBody().getResults()).forEach(n -> {
+                    if (n.getShortname().toLowerCase().contains(finalSearchText)
+                            || n.getName().toLowerCase().contains(finalSearchText)
+                            || n.getDescription().toLowerCase().contains(finalSearchText)) {
+                        foundIds.add(n.getId());
+                    }
+                });
+            } else {
+                Notification.show(error.getMessage());
+                return;
+            }
+        } while (pageIndex != pages);
+
+
+        searchState = true;
+        currentPage = 1;
+        subjects = getSubjects(currentPage);
+        updateSubjectPage();
     }
 }
