@@ -19,9 +19,9 @@ const downloadDocument = catchAsync(async (req, res) => {
 	if (!user.purchasedDocuments.includes(document._id)) {
     if (req.user.role != "admin" && req.user.role != "moderator") {
       await userService.removeCoins(user._id, priceTypes[document.type.toUpperCase()]);
-      user.purchasedDocuments.push(document._id);
-      await userService.updateUserById(user._id, user);
     }
+    user.purchasedDocuments.push(document._id);
+    await userService.updateUserById(user._id, user);
 	}
   originalname = document.file.originalname;
   res.download(file, originalname);
