@@ -3,6 +3,7 @@ package at.helpupil.application.views.signup;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.requests.SignUp;
 import at.helpupil.application.utils.responses.Error;
@@ -43,6 +44,8 @@ public class SignUpView extends OpenView {
 
 
     public SignUpView() {
+        ThemeHelper.onLoad();
+
         addClassName("sign-up-view");
 
         add(createTitle());

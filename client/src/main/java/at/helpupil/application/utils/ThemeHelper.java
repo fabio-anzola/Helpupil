@@ -9,7 +9,7 @@ public class ThemeHelper {
 
     public static void onLoad() {
         ThemeList themeList = UI.getCurrent().getElement().getThemeList();
-        if (!readFromSession()) {
+        if (readFromSession()) {
             themeList.add(Lumo.DARK);
         }
     }

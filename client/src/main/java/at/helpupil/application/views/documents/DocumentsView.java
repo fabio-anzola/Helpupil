@@ -3,6 +3,7 @@ package at.helpupil.application.views.documents;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.StarObj;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.File;
@@ -57,6 +58,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     private Documents documents = getDocuments(currentPage);
 
     public DocumentsView() {
+        ThemeHelper.onLoad();
+
         addClassName("documents-view");
 
         add(createTopDiv());

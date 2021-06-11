@@ -1,6 +1,7 @@
 package at.helpupil.application.views.main;
 
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.views.about.AboutView;
 import at.helpupil.application.views.documents.DocumentsView;
 import at.helpupil.application.views.leaderboard.LeaderboardView;
@@ -84,13 +85,7 @@ public class MainView extends AppLayout {
         logoLayout.add(new H1("Helpupil"));
 
         logoLayout.add(new Button(new Icon(VaadinIcon.LIGHTBULB), click -> {
-            ThemeList themeList = UI.getCurrent().getElement().getThemeList();
-
-            if (themeList.contains(Lumo.DARK)) {
-                themeList.remove(Lumo.DARK);
-            } else {
-                themeList.add(Lumo.DARK);
-            }
+            ThemeHelper.onClick();
         }));
 
         layout.add(logoLayout, menu);
@@ -114,11 +109,19 @@ public class MainView extends AppLayout {
                     createTab("About", AboutView.class)
             };
         }
+        if (SessionStorage.get().getUser().getRole().equals("moderator")) {
+            return new Tab[]{
+                    createTab("Documents", DocumentsView.class),
+                    createTab("Teachers", TeachersView.class),
+                    createTab("Subjects", SubjectsView.class),
+                    createTab("Moderator", ModeratorView.class),
+                    createTab("Leaderboard", LeaderboardView.class),
+                    createTab("About", AboutView.class)};
+        }
         return new Tab[]{
                 createTab("Documents", DocumentsView.class),
                 createTab("Teachers", TeachersView.class),
                 createTab("Subjects", SubjectsView.class),
-                createTab("Moderator", ModeratorView.class),
                 createTab("Leaderboard", LeaderboardView.class),
                 createTab("About", AboutView.class)};
     }

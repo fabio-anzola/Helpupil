@@ -1,5 +1,6 @@
 package at.helpupil.application.views.about;
 
+import at.helpupil.application.utils.ThemeHelper;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.Route;
@@ -13,6 +14,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 public class AboutView extends Div {
 
     public AboutView() {
+        ThemeHelper.onLoad();
+
         addClassName("about-view");
         add(new Text("Content placeholder"));
     }

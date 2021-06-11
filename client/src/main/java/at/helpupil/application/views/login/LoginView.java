@@ -3,6 +3,7 @@ package at.helpupil.application.views.login;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.requests.ForgotPassword;
 import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.Error;
@@ -42,6 +43,8 @@ public class LoginView extends OpenView {
 
 
     public LoginView() {
+        ThemeHelper.onLoad();
+
         addClassName("login-view");
 
         add(createTitle());

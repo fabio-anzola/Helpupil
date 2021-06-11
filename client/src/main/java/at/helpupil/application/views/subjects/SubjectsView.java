@@ -3,6 +3,7 @@ package at.helpupil.application.views.subjects;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Subject;
 import at.helpupil.application.utils.responses.Subjects;
@@ -52,6 +53,8 @@ public class SubjectsView extends SecuredView {
     private Subjects subject = getSubjects(currentPage);
 
     public SubjectsView() {
+        ThemeHelper.onLoad();
+
         addClassName("subjects-view");
 
         add(createSearchBox());
