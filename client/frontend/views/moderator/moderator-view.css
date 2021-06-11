@@ -22,6 +22,10 @@ vaadin-tabs.moderator-tabs {
   margin-right: auto;
 }
 
+vaadin-tabs.moderator-tabs * {
+  font-size: 12pt;
+}
+
 div.moderator-view vaadin-tabs + div {
   height: 100%;
 }
