@@ -6,6 +6,9 @@ const edit = {
     params: Joi.object().keys({
       documentId: Joi.string().custom(objectId),
     }),
+		query: Joi.object().keys({
+			message: Joi.string().allow(null, ''),
+		})
 };
 
 const get = {

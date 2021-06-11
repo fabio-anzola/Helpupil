@@ -61,9 +61,48 @@ Your Helpupil Team`;
   await sendEmail(to, subject, text);
 };
 
+/**
+ * Send approve email
+ * @param {string} to
+ * @param {string} name
+ * @param {string} docName
+ * @returns {Promise}
+ */
+ const sendApproveEmail = async (to, name, docName) => {
+  const subject = 'Your Document has been approved!';
+  const text = `Hi ${name}!
+Congrats! 🎉 Your document with the name "${docName}" has been approved!
+
+Thanks for contributing to the community!
+Your Helpupil Team`;
+  await sendEmail(to, subject, text);
+};
+
+/**
+ * Send decline email
+ * @param {string} to
+ * @param {string} name
+ * @param {string} docName
+ * @param {string} message
+ * @returns {Promise}
+ */
+ const sendDeclineEmail = async (to, name, docName, message) => {
+  const subject = 'Your Document has been declined!';
+  const text = `Hi ${name}!
+Unfortunately we had to decline your document with the name "${docName}".
+Here your message from the moderator:
+"${message}"
+
+Thanks for contributing to the community!
+Your Helpupil Team`;
+  await sendEmail(to, subject, text);
+};
+
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
+  sendApproveEmail,
+  sendDeclineEmail,
 };
