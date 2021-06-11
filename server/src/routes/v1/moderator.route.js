@@ -1,7 +1,6 @@
 const express = require('express');
 const httpStatus = require('http-status');
 const auth = require('../../middlewares/auth');
-const emailService = require('./email.service');
 const validate = require('../../middlewares/validate');
 const moderatorValidation = require('../../validations/moderator.validation');
 const moderatorController = require('../../controllers/moderator.controller');
