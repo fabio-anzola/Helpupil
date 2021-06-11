@@ -94,8 +94,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
         exitSearchState.addClickListener(e -> {
+            searchBox.clear();
             if (searchState) {
-                searchBox.clear();
                 searchState = false;
                 currentPage = 1;
                 String[] resolvedFilter = resolveFilter();
@@ -537,7 +537,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             documents = getDocuments(currentPage);
-            currentPage = documents.getPage();
             updateDocumentPage();
         });
 

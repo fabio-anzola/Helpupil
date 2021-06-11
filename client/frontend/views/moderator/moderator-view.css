@@ -3,7 +3,7 @@
 }
 
 div.moderator-view {
-  width: 90%;
+  width: 100%;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
@@ -16,13 +16,79 @@ div.moderator-view {
   flex-direction: column;
 }
 
-vaadin-button.add-teacher,
-vaadin-button.add-subject {
-  margin-top: 15px;
+vaadin-tabs.moderator-tabs {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+vaadin-tabs.moderator-tabs * {
+  font-size: 12pt;
+}
 
-/* Add teacher - Dialog */
+div.moderator-view vaadin-tabs + div {
+  height: 100%;
+}
+
+div.document-page,
+div.teacher-page,
+div.subject-page {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search Layout */
+div.top-div-doc {
+  margin-top: 15px;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.top-div-doc div.add-teacher-div,
+div.top-div-doc div.add-subject-div {
+  padding: 0 15px;
+
+  position: absolute;
+  width: -moz-available;
+  width: -webkit-fill-available;
+}
+
+div.top-div-doc iron-icon {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+div.top-div-doc iron-icon:hover {
+  cursor: pointer;
+}
+
+/* Grid */
+vaadin-grid.moderator-grid {
+  margin-top: unset;
+  flex-grow: 2;
+  border: none;
+}
+
+/* Paging */
+vaadin-horizontal-layout.paging-layout {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 15px;
+}
+
+vaadin-horizontal-layout.paging-layout label {
+  align-self: center;
+}
+
+/* Add - Dialog */
 vaadin-vertical-layout.dialog-layout label {
   width: 100%;
   text-align: center;
@@ -36,6 +102,10 @@ vaadin-vertical-layout.dialog-layout vaadin-text-field {
   margin-right: auto;
 }
 
+vaadin-vertical-layout.dialog-layout vaadin-text-field.decline-text-field {
+  width: 60%;
+}
+
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
   width: 60%;
   margin-top: 40px;
@@ -43,9 +113,29 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
   margin-right: auto;
   display: flex;
   justify-content: center;
-  gap: 20px;
 }
 
-vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout * {
-  flex-grow: 1;
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
+  width: 50%;
+}
+
+
+@media only screen and (max-width: 900px) {
+  div.top-div-doc {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  div.top-div-doc div.add-teacher-div {
+    position: unset;
+    width: unset;
+    display: flex;
+    justify-content: center;
+    width: unset;
+  }
+
+  div.top-div-doc div.search-inner-div {
+    margin-top: 10px;
+  }
+
 }
