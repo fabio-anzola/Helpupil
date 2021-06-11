@@ -20,6 +20,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.textfield.TextField;
@@ -41,7 +42,10 @@ public class ModeratorView extends SecuredView {
 
     private Button addTeacher = new Button("Add New Teacher");
     private Button addSubject = new Button("Add New Subject");
-    private int currentDocumentPage = 1;
+    private int currentPage = 1;
+    private Grid<Document> documentGrid = new Grid<>(Document.class);
+    private Documents documents = getPendingDocuments(currentPage);
+    private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
     private boolean searchState = false;
     private final int[] limits = new int[]{10, 15, 25};
     private int limit = limits[0];
@@ -60,6 +64,7 @@ public class ModeratorView extends SecuredView {
 
         Div documentPage = new Div();
         documentPage.add(createDocumentGrid());
+        documentPage.add(createPagingMenu(documents.getTotalPages()));
 
         Div teacherPage = new Div();
         teacherPage.setVisible(false);
@@ -92,9 +97,7 @@ public class ModeratorView extends SecuredView {
     }
 
     private Grid<Document> createDocumentGrid() {
-        Documents documents = getPendingDocuments(currentDocumentPage);
         List<Document> documentList = new ArrayList<>();
-        Grid<Document> documentGrid = new Grid<>(Document.class);
 
         for (Document document : documents.getResults()) {
             if (document.getType().length() > 0) {
@@ -253,4 +256,57 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    private Component createPagingMenu(int totalPages) {
+        pagingMenuLayout.addClassName("paging-layout");
+
+
+        Button previousPage = new Button("Previous");
+        previousPage.addClickListener(e -> {
+            if (currentPage > 1) {
+                documents = getPendingDocuments(currentPage - 1);
+                currentPage = documents.getPage();
+                updateDocumentPage();
+            }
+        });
+
+        Select<String> itemsPerPageSelect = new Select<>();
+        itemsPerPageSelect.addClassName("paging-items-per-page-select");
+        itemsPerPageSelect.setItems(Arrays.stream(limits)
+                .mapToObj(String::valueOf)
+                .toArray(String[]::new));
+        itemsPerPageSelect.setValue(String.valueOf(limit));
+        itemsPerPageSelect.addValueChangeListener(e -> {
+            limit = Integer.parseInt(e.getValue());
+            currentPage = 1;
+            documents = getPendingDocuments(currentPage);
+            currentPage = documents.getPage();
+            updateDocumentPage();
+        });
+
+        Button nextPage = new Button("Next");
+        nextPage.addClickListener(e -> {
+            if (currentPage < documents.getTotalPages()) {
+                documents = getPendingDocuments(currentPage + 1);
+                currentPage = documents.getPage();
+                updateDocumentPage();
+            }
+        });
+
+        Label currentPageText = new Label();
+        currentPageText.setText(currentPage + " / " + totalPages);
+
+
+        pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
+
+        return pagingMenuLayout;
+    }
+
+    private void updateDocumentPage() {
+        remove(documentGrid);
+        remove(pagingMenuLayout);
+        documentGrid = new Grid<>(Document.class);
+        pagingMenuLayout = new HorizontalLayout();
+        add(createDocumentGrid());
+        add(createPagingMenu(documents.getTotalPages()));
+    }
 }
