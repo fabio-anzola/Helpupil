@@ -144,6 +144,10 @@ public class ModeratorView extends SecuredView {
         declineMessage.addClassName("decline-text-field");
 
         Button approveButton = new Button("Approve");
+        approveButton.addClickListener(e -> {
+            dialog.close();
+            makeApproveRequest(document.getId());
+        });
         approveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
 
         Button declineButton = new Button("Decline");
@@ -167,6 +171,22 @@ public class ModeratorView extends SecuredView {
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private void makeApproveRequest(String documentId) {
+        HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/approve/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Document has been approved!");
+            documents = getPendingDocuments(currentPage);
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private Documents getPendingDocuments(int page) {
