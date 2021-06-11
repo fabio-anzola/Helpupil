@@ -14,6 +14,9 @@ const getDocuments = catchAsync(async (req, res) => {
 });
 
 const approve = catchAsync(async (req, res) => {
+	if (req.status == statusTypes.APPROVED) {
+		throw new ApiError(httpStatus.FORBIDDEN, 'Document already approved');
+	}
 	req.body.status = statusTypes.APPROVED;
 	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
 	await userService.addCoins(document.user, priceTypes[document.type.toUpperCase()]);
