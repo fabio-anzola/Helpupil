@@ -9,6 +9,7 @@ import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,6 +18,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,7 +45,6 @@ import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 @CssImport("./views/moderator/moderator-view.css")
 public class ModeratorView extends SecuredView {
 
-    private Button addTeacher = new Button("Add New Teacher");
     private Button addSubject = new Button("Add New Subject");
     private int currentPage = 1;
     private Grid<Document> documentGrid = new Grid<>(Document.class);
@@ -79,10 +81,7 @@ public class ModeratorView extends SecuredView {
 
         teacherPage.setVisible(false);
         teacherPage.addClassName("teacher-page");
-        Div addTeacherDiv = new Div(addTeacher);
-        addTeacher.addClassName("add-teacher");
-        addTeacher.addClickListener(e -> showAddTeacherDialog());
-        teacherPage.add(addTeacherDiv);
+        teacherPage.add(createTeacherTopDiv());
         teacherPage.add(createTeacherGrid());
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
 
@@ -102,6 +101,8 @@ public class ModeratorView extends SecuredView {
 
         tabs.addSelectedChangeListener(e -> {
             currentPage = 1;
+            searchState = false;
+
             tabsToPages.values().forEach(page -> page.setVisible(false));
             Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
             selectedPage.setVisible(true);
@@ -197,6 +198,52 @@ public class ModeratorView extends SecuredView {
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private Component createTeacherTopDiv() {
+        Div topDiv = new Div();
+        topDiv.addClassName("top-div-doc");
+
+
+        Div emptyDiv = new Div();
+
+
+        Button addTeacher = new Button("Add New Teacher");
+        addTeacher.addClassName("add-teacher");
+        Div addTeacherDiv = new Div(addTeacher);
+        addTeacherDiv.addClassName("add-teacher-div");
+        addTeacher.addClickListener(e -> showAddTeacherDialog());
+
+
+        Div innerDiv = new Div();
+        innerDiv.addClassName("search-inner-div");
+
+        TextField searchBox = new TextField();
+        searchBox.setPlaceholder("Search");
+        searchBox.setClearButtonVisible(true);
+        searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
+        searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
+        searchBox.addKeyDownListener(Key.ENTER, e -> makeTeacherSearchRequest(searchBox.getValue()));
+
+        Icon searchIcon = new Icon(VaadinIcon.SEARCH);
+        searchIcon.addClickListener(e -> makeTeacherSearchRequest(searchBox.getValue()));
+
+        Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
+        exitSearchState.addClickListener(e -> {
+            if (searchState) {
+                searchBox.clear();
+                searchState = false;
+                currentPage = 1;
+                teachers = getTeachers(currentPage);
+                updateTeacherPage();
+            }
+        });
+
+        innerDiv.add(searchIcon, searchBox, exitSearchState);
+
+
+        topDiv.add(emptyDiv, addTeacherDiv, innerDiv);
+        return topDiv;
     }
 
     private void makeApproveRequest(String documentId) {
@@ -566,5 +613,46 @@ public class ModeratorView extends SecuredView {
         } else {
             Notification.show(error.getMessage());
         }
+    }
+
+    private void makeTeacherSearchRequest(String searchText) {
+        searchText = searchText.toLowerCase();
+        foundIds.clear();
+
+        int pageIndex = 0;
+        int pages = 1;
+        do {
+            pageIndex++;
+            HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
+                    .queryString("page", pageIndex)
+                    .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                    .asObject(Teachers.class);
+
+            Error error = teachers.mapError(Error.class);
+
+            if (null == error) {
+                if (pages < teachers.getBody().getTotalPages()) {
+                    pages = teachers.getBody().getTotalPages();
+                }
+
+                String finalSearchText = searchText;
+                Arrays.stream(teachers.getBody().getResults()).forEach(n -> {
+                    if (n.getShortname().toLowerCase().contains(finalSearchText)
+                            || n.getName().toLowerCase().contains(finalSearchText)
+                            || n.getDescription().toLowerCase().contains(finalSearchText)) {
+                        foundIds.add(n.getId());
+                    }
+                });
+            } else {
+                Notification.show(error.getMessage());
+                return;
+            }
+        } while (pageIndex != pages);
+
+
+        searchState = true;
+        currentPage = 1;
+        teachers = getTeachers(currentPage);
+        updateTeacherPage();
     }
 }
