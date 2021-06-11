@@ -83,7 +83,7 @@ const deleteDocumentById = async (documentId) => {
   if (!document) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
   }
-  await document.remove();
+  await Doc.deleteOne({ "_id": documentId });
   return document;
 };
 

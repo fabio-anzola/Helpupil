@@ -28,6 +28,7 @@ const approve = catchAsync(async (req, res) => {
 const decline = catchAsync(async (req, res) => {
 	req.body.status = statusTypes.DECLINED;
 	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
+	await documentService.deleteDocumentById(req.params.documentId);
 	res.send(document);
 });
 
