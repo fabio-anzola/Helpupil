@@ -95,6 +95,15 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout div 
   justify-content: center;
   margin-top: auto;
   margin-bottom: auto;
+  margin-left: unset;
+  padding: 10px 20px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout vaadin-button {
+  margin-left: unset;
+  width: auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron-icon {
