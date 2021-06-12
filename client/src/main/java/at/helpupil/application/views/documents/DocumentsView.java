@@ -467,8 +467,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         deleteButton.addClickListener(e -> {
-//            request
             dialog.close();
+            makeDeleteRequest(document.getId());
         });
 
         cancelButton.addClickListener(e -> dialog.close());
@@ -509,6 +509,25 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private void makeDeleteRequest(String documentId) {
+        HttpResponse<Document> document = Unirest.delete(BASE_URL + "/documents/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Document has been deleted!");
+            documents = getDocuments(currentPage);
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private void makeBuyRequest(Document document) {
