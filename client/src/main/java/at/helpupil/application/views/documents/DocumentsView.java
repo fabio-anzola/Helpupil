@@ -322,6 +322,13 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                 Notification.show("Deleted file");
             });
             dialogLayout.add(deleteButton);
+        } else if (SessionStorage.get().getUser().getRole().equals("moderator")) {
+            Button declineButton = new Button("Decline");
+            declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            declineButton.addClickListener(e -> {
+                Notification.show("Declined file");
+            });
+            dialogLayout.add(declineButton);
         }
 
 
