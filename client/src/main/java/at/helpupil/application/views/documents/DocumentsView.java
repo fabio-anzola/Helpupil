@@ -318,15 +318,15 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (document.getUser().equals(SessionStorage.get().getUser().getId())) {
             Button deleteButton = new Button("Delete");
             deleteButton.addClassName("document-delete-decline-button");
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             deleteButton.addClickListener(e -> {
-                Notification.show("Deleted file");
+                showDeleteDialog(document);
             });
             dialogLayout.add(deleteButton);
         } else if (SessionStorage.get().getUser().getRole().equals("moderator")) {
             Button declineButton = new Button("Decline");
             declineButton.addClassName("document-delete-decline-button");
-            declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
             declineButton.addClickListener(e -> {
                 Notification.show("Declined file");
             });
@@ -448,6 +448,36 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(buyButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void showDeleteDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("25vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Delete " + document.getName() + "?");
+
+        Button deleteButton = new Button("Delete");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        deleteButton.addClickListener(e -> {
+//            request
+            dialog.close();
+        });
+
+        cancelButton.addClickListener(e -> dialog.close());
+
+        dialogButtonLayout.add(deleteButton, cancelButton);
 
         dialogLayout.add(dialogHeading, dialogButtonLayout);
 

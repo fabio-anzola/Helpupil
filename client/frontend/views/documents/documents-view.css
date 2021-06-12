@@ -117,10 +117,10 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-button {
-  width: 38%;
+  width: 35%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 25px;
+  margin-top: 40px;
 }
 
 
