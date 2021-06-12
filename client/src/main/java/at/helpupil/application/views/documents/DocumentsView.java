@@ -297,6 +297,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialogLayout.add(dialogHeading);
 
         Button buyOrShowButton = createBuyOrShowButton(document);
+        buyOrShowButton.addClickListener(e -> dialog.close());
         Button cancelButton = new Button("Cancel");
 
 
@@ -444,7 +445,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             dialog.close();
         });
 
-        cancelButton.addClickListener(e -> dialog.close());
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showDocumentDialog(document);
+        });
 
         dialogButtonLayout.add(buyButton, cancelButton);
 
