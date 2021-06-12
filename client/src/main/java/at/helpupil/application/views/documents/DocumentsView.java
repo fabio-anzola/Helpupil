@@ -319,17 +319,13 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             Button deleteButton = new Button("Delete");
             deleteButton.addClassName("document-delete-decline-button");
             deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            deleteButton.addClickListener(e -> {
-                showDeleteDialog(document);
-            });
+            deleteButton.addClickListener(e -> showDeleteDialog(document));
             dialogLayout.add(deleteButton);
         } else if (SessionStorage.get().getUser().getRole().equals("moderator")) {
             Button declineButton = new Button("Decline");
             declineButton.addClassName("document-delete-decline-button");
             declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            declineButton.addClickListener(e -> {
-                Notification.show("Declined file");
-            });
+            declineButton.addClickListener(e -> showDeclineDialog(document));
             dialogLayout.add(declineButton);
         }
 
@@ -478,6 +474,36 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         cancelButton.addClickListener(e -> dialog.close());
 
         dialogButtonLayout.add(deleteButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void showDeclineDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("25vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Decline " + document.getName() + "?");
+
+        Button declineButton = new Button("Decline");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        declineButton.addClickListener(e -> {
+//            request
+            dialog.close();
+        });
+
+        cancelButton.addClickListener(e -> dialog.close());
+
+        dialogButtonLayout.add(declineButton, cancelButton);
 
         dialogLayout.add(dialogHeading, dialogButtonLayout);
 
