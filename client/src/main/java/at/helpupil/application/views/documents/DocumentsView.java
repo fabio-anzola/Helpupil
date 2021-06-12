@@ -329,7 +329,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             Button declineButton = new Button("Decline");
             declineButton.addClassName("document-delete-decline-button");
             declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            declineButton.addClickListener(e -> showDeclineDialog(document));
+            declineButton.addClickListener(e -> {
+                dialog.close();
+                showDeclineDialog(document);
+            });
             dialogLayout.add(declineButton);
         }
 
@@ -500,6 +503,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         Label dialogHeading = new Label("Decline " + document.getName() + "?");
 
+        TextField declineMessage = new TextField("Decline Message");
+        declineMessage.addClassName("decline-text-field");
+
         Button declineButton = new Button("Decline");
         Button cancelButton = new Button("Cancel");
 
@@ -507,15 +513,18 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         declineButton.addClickListener(e -> {
-//            request
             dialog.close();
+            makeDeclineRequest(document.getId(), declineMessage.getValue());
         });
 
-        cancelButton.addClickListener(e -> dialog.close());
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showDocumentDialog(document);
+        });
 
         dialogButtonLayout.add(declineButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, dialogButtonLayout);
+        dialogLayout.add(dialogHeading, declineMessage, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
@@ -530,6 +539,26 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         if (null == error) {
             Notification.show("Document has been deleted!");
+            documents = getDocuments(currentPage);
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
+
+    private void makeDeclineRequest(String documentId, String declineMessage) {
+        HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/decline/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("message", declineMessage)
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Document has been declined!");
             documents = getDocuments(currentPage);
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
