@@ -35,6 +35,7 @@ import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
+import org.apache.commons.io.filefilter.NotFileFilter;
 
 import java.io.*;
 import java.util.*;
@@ -190,9 +191,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (document.getType().length() > 0) {
                 document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
             }
-            document.setSubject(document.getSubject_sn());
-            document.setTeacher(document.getTeacher_sn());
-            document.setUser(document.getUname());
             documentsList.add(document);
         }
 
@@ -202,7 +200,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         documentGrid.removeColumnByKey("file");
         documentGrid.removeColumnByKey("status");
         documentGrid.removeColumnByKey("id");
-        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
+        documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "uname", "price");
+        documentGrid.getColumnByKey("subject_sn").setHeader("Subject");
+        documentGrid.getColumnByKey("teacher_sn").setHeader("Teacher");
+        documentGrid.getColumnByKey("uname").setHeader("User");
 
         documentGrid.addComponentColumn(this::createBuyOrShowButton);
 
@@ -235,7 +236,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getShortname(), n.getId()));
         subjectSelect.setItems(subjectMap.keySet());
         subjectSelect.setLabel("Subject");
-
 
 
         Types types = getTypes();
@@ -296,10 +296,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialogLayout.add(dialogHeading);
 
         Button buyOrShowButton = createBuyOrShowButton(document);
+        buyOrShowButton.addClickListener(e -> dialog.close());
         Button cancelButton = new Button("Cancel");
 
 
-        if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))) {
+        if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))
+                && SessionStorage.get().getUser().getPurchasedDocuments().contains(document.getId())) {
             HorizontalLayout ratingLayout = new HorizontalLayout();
             ratingLayout.addClassName("rating-layout");
             Div stars = new Div();
@@ -311,6 +313,27 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             });
             ratingLayout.add(stars, confirmRate);
             dialogLayout.add(ratingLayout);
+        }
+
+
+        if (document.getUser().equals(SessionStorage.get().getUser().getId())) {
+            Button deleteButton = new Button("Delete");
+            deleteButton.addClassName("document-delete-decline-button");
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            deleteButton.addClickListener(e -> {
+                dialog.close();
+                showDeleteDialog(document);
+            });
+            dialogLayout.add(deleteButton);
+        } else if (SessionStorage.get().getUser().getRole().equals("moderator")) {
+            Button declineButton = new Button("Decline");
+            declineButton.addClassName("document-delete-decline-button");
+            declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            declineButton.addClickListener(e -> {
+                dialog.close();
+                showDeclineDialog(document);
+            });
+            dialogLayout.add(declineButton);
         }
 
 
@@ -425,7 +448,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             dialog.close();
         });
 
-        cancelButton.addClickListener(e -> dialog.close());
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showDocumentDialog(document);
+        });
 
         dialogButtonLayout.add(buyButton, cancelButton);
 
@@ -433,6 +459,114 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    private void showDeleteDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("25vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Delete " + document.getName() + "?");
+
+        Button deleteButton = new Button("Delete");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        deleteButton.addClickListener(e -> {
+            dialog.close();
+            makeDeleteRequest(document.getId());
+        });
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showDocumentDialog(document);
+        });
+
+        dialogButtonLayout.add(deleteButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void showDeclineDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("25vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Decline " + document.getName() + "?");
+
+        TextField declineMessage = new TextField("Decline Message");
+        declineMessage.addClassName("decline-text-field");
+
+        Button declineButton = new Button("Decline");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+        declineButton.addClickListener(e -> {
+            dialog.close();
+            makeDeclineRequest(document.getId(), declineMessage.getValue());
+        });
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showDocumentDialog(document);
+        });
+
+        dialogButtonLayout.add(declineButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, declineMessage, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    private void makeDeleteRequest(String documentId) {
+        HttpResponse<Document> document = Unirest.delete(BASE_URL + "/documents/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Document has been deleted!");
+            documents = getDocuments(currentPage);
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
+
+    private void makeDeclineRequest(String documentId, String declineMessage) {
+        HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/decline/" + documentId)
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .queryString("message", declineMessage)
+                .asObject(Document.class);
+
+        Error error = document.mapError(Error.class);
+
+        if (null == error) {
+            Notification.show("Document has been declined!");
+            documents = getDocuments(currentPage);
+            if (documents.getTotalResults() == 0) {
+                currentPage = 0;
+            }
+            updateDocumentPage();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 
     private void makeBuyRequest(Document document) {
