@@ -317,6 +317,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         if (document.getUser().equals(SessionStorage.get().getUser().getId())) {
             Button deleteButton = new Button("Delete");
+            deleteButton.addClassName("document-delete-decline-button");
             deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             deleteButton.addClickListener(e -> {
                 Notification.show("Deleted file");
@@ -324,6 +325,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             dialogLayout.add(deleteButton);
         } else if (SessionStorage.get().getUser().getRole().equals("moderator")) {
             Button declineButton = new Button("Decline");
+            declineButton.addClassName("document-delete-decline-button");
             declineButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             declineButton.addClickListener(e -> {
                 Notification.show("Declined file");

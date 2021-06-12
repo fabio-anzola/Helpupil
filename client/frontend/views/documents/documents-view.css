@@ -116,6 +116,14 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron
   cursor: pointer;
 }
 
+vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-button {
+  width: 38%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
+}
+
+
 /* Paging */
 .paging-items-per-page-select {
   width: 90px;
