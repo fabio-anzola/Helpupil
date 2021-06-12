@@ -35,6 +35,7 @@ import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
+import org.apache.commons.io.filefilter.NotFileFilter;
 
 import java.io.*;
 import java.util.*;
@@ -190,9 +191,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (document.getType().length() > 0) {
                 document.setType(document.getType().substring(0, 1).toUpperCase() + document.getType().substring(1));
             }
-            document.setSubject(document.getSubject_sn());
-            document.setTeacher(document.getTeacher_sn());
-            document.setUser(document.getUname());
             documentsList.add(document);
         }
 
@@ -202,7 +200,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         documentGrid.removeColumnByKey("file");
         documentGrid.removeColumnByKey("status");
         documentGrid.removeColumnByKey("id");
-        documentGrid.setColumns("name", "type", "subject", "teacher", "rating", "user", "price");
+        documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "uname", "price");
+        documentGrid.getColumnByKey("subject_sn").setHeader("Subject");
+        documentGrid.getColumnByKey("teacher_sn").setHeader("Teacher");
+        documentGrid.getColumnByKey("uname").setHeader("User");
 
         documentGrid.addComponentColumn(this::createBuyOrShowButton);
 
@@ -311,6 +312,16 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             });
             ratingLayout.add(stars, confirmRate);
             dialogLayout.add(ratingLayout);
+        }
+
+
+        if (document.getUser().equals(SessionStorage.get().getUser().getId())) {
+            Button deleteButton = new Button("Delete");
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            deleteButton.addClickListener(e -> {
+                Notification.show("Deleted file");
+            });
+            dialogLayout.add(deleteButton);
         }
 
 
