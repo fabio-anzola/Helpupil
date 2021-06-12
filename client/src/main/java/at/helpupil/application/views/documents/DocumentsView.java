@@ -238,7 +238,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         subjectSelect.setLabel("Subject");
 
 
-
         Types types = getTypes();
         Map<String, String> typeMap = new HashMap<>();
         for (int i = 0; i < types.getFriendly_values().length; i++) {
@@ -301,7 +300,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Button cancelButton = new Button("Cancel");
 
 
-        if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))) {
+        if (Arrays.stream(document.getReviewer()).noneMatch(n -> n.equals(SessionStorage.get().getUser().getId()))
+                && SessionStorage.get().getUser().getPurchasedDocuments().contains(document.getId())) {
             HorizontalLayout ratingLayout = new HorizontalLayout();
             ratingLayout.addClassName("rating-layout");
             Div stars = new Div();
