@@ -48,9 +48,18 @@ import java.util.Optional;
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
 
+    /**
+     * menu to select the tabs
+     */
     private final Tabs menu;
+    /**
+     * title of this view
+     */
     private H1 viewTitle;
 
+    /**
+     * initializes main view
+     */
     public MainView() {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
@@ -59,6 +68,9 @@ public class MainView extends AppLayout {
         //((Tab) menu.getChildren().findFirst().get()).setSelected(true);
     }
 
+    /**
+     * @return header content with avatarmenu and viewtitle
+     */
     private Component createHeaderContent() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setId("header");
@@ -73,6 +85,10 @@ public class MainView extends AppLayout {
         return layout;
     }
 
+    /**
+     * @param menu where the tabs are shown
+     * @return drawer content with a button to switch between light and dark mode
+     */
     private Component createDrawerContent(Tabs menu) {
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
