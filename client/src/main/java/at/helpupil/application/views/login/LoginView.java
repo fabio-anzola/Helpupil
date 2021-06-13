@@ -34,12 +34,12 @@ import static at.helpupil.application.Application.BASE_URL;
 @CssImport("./views/login/login-view.css")
 public class LoginView extends OpenView {
 
-    private EmailField email = new EmailField("Email address");
-    private PasswordField password = new PasswordField("Password");
-    private Button forgotPassword = new Button("Forgot Password");
+    private final EmailField email = new EmailField("Email address");
+    private final PasswordField password = new PasswordField("Password");
+    private final Button forgotPassword = new Button("Forgot Password");
 
-    private Button clear = new Button("Clear");
-    private Button login = new Button("Login");
+    private final Button clear = new Button("Clear");
+    private final Button login = new Button("Login");
 
 
     public LoginView() {
