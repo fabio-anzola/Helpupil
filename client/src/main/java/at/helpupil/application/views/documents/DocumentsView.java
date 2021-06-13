@@ -230,12 +230,14 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Select<String> typeSelect = new Select<>();
 
         Teachers teachers = getTeachers();
+        if (teachers == null) return;
         Map<String, String> teacherMap = new HashMap<>();
         Arrays.stream(teachers.getResults()).forEach(n -> teacherMap.put(n.getShortname(), n.getId()));
         teacherSelect.setItems(teacherMap.keySet());
         teacherSelect.setLabel("Teacher");
 
         Subjects subjects = getSubjects();
+        if (subjects == null) return;
         Map<String, String> subjectMap = new HashMap<>();
         Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getShortname(), n.getId()));
         subjectSelect.setItems(subjectMap.keySet());
@@ -243,6 +245,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
 
         Types types = getTypes();
+        if (types == null) return;
         Map<String, String> typeMap = new HashMap<>();
         for (int i = 0; i < types.getFriendly_values().length; i++) {
             typeMap.put(types.getFriendly_values()[i], types.getValues()[i]);
@@ -563,6 +566,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Document has been deleted!");
             documents = getDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -583,6 +587,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Document has been declined!");
             documents = getDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -686,6 +691,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 documents = getDocuments(currentPage - 1);
+                if (documents == null) return;
                 currentPage = documents.getPage();
                 updateDocumentPage();
             }
@@ -708,6 +714,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         nextPage.addClickListener(e -> {
             if (currentPage < documents.getTotalPages()) {
                 documents = getDocuments(currentPage + 1);
+                if (documents == null) return;
                 currentPage = documents.getPage();
                 updateDocumentPage();
             }
@@ -742,6 +749,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         } else {
             getDocuments(currentPage);
         }
+        
+        if (documents == null) return null;
 
         Error error = documents.mapError(Error.class);
 
