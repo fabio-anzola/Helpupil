@@ -186,6 +186,9 @@ public class TeachersView extends SecuredView {
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
+    /**
+     * @return div with all teacher cards
+     */
     private Component createTeacherCards() {
         teacherLayoutDiv = new Div();
         teacherLayoutDiv.addClassName("teacher-layout-div");
@@ -204,6 +207,10 @@ public class TeachersView extends SecuredView {
         return teacherLayoutDiv;
     }
 
+    /**
+     * @param oneTeacher to create a card
+     * @return card of teacher
+     */
     private Card createTeacherCard(Teacher oneTeacher) {
         Card card = new Card(
                 new TitleLabel(oneTeacher.getName()),
@@ -214,6 +221,10 @@ public class TeachersView extends SecuredView {
         return card;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu
+     */
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
@@ -262,6 +273,10 @@ public class TeachersView extends SecuredView {
         return pagingMenuLayout;
     }
 
+    /**
+     * @param page current page
+     * @return all teachers for current page
+     */
     private Teachers getTeachers(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
