@@ -1104,6 +1104,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * make api request to filter teachers
+     * @param searchText to search for
+     */
     private void makeTeacherSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
@@ -1145,6 +1149,10 @@ public class ModeratorView extends SecuredView {
         updateTeacherPage();
     }
 
+    /**
+     * make api request to filter for subjects
+     * @param searchText to search for
+     */
     private void makeSubjectSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
