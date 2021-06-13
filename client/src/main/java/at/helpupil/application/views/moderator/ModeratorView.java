@@ -490,6 +490,10 @@ public class ModeratorView extends SecuredView {
         return topDiv;
     }
 
+    /**
+     * makes api request to approve a document
+     * @param documentId of document
+     */
     private void makeApproveRequest(String documentId) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/approve/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -510,6 +514,11 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * makes api request to decline a document
+     * @param documentId of document
+     * @param declineMessage to send to uploader to tell him why his document wasn't published
+     */
     private void makeDeclineRequest(String documentId, String declineMessage) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/decline/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
