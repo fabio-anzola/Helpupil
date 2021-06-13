@@ -640,6 +640,9 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * shows user a dialog to add a teacher
+     */
     private void showAddTeacherDialog() {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -685,6 +688,12 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * send api request to create a new teacher
+     * @param teacher name of teacher
+     * @param shortname of teacher
+     * @param description of teacher
+     */
     private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
         HttpResponse<Teacher> createTeacher = Unirest.post(BASE_URL + "/teacher")
                 .contentType("application/json")
@@ -701,6 +710,13 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * makes api request to update a teacher object
+     * @param teacherId of teacher
+     * @param name of teacher
+     * @param shortname of teacher
+     * @param description of teacher
+     */
     private void makeTeacherUpdateRequest(String teacherId, String name, String shortname, String description) {
         HttpResponse<Teacher> teacher = Unirest.patch(BASE_URL + "/teacher/" + teacherId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
