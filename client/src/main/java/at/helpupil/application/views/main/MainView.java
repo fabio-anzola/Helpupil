@@ -13,8 +13,6 @@ import at.helpupil.application.views.subjects.SubjectsView;
 import at.helpupil.application.views.teachers.TeachersView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -29,18 +27,15 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
-import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.lumo.Lumo;
 
 import java.util.Optional;
 
@@ -91,9 +86,7 @@ public class MainView extends AppLayout {
         logoLayout.add(new Image("images/logo.png", "Helpupil logo"));
         logoLayout.add(new H1("Helpupil"));
 
-        logoLayout.add(new Button(new Icon(VaadinIcon.LIGHTBULB), click -> {
-            ThemeHelper.onClick();
-        }));
+        logoLayout.add(new Button(new Icon(VaadinIcon.LIGHTBULB), click -> ThemeHelper.onClick()));
 
         layout.add(logoLayout, menu);
         return layout;
@@ -170,9 +163,7 @@ public class MainView extends AppLayout {
         }
 
         Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
-        avatarItem.addClickListener(e -> {
-            walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet()));
-        });
+        avatarItem.addClickListener(e -> walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet())));
 
         Icon walletIcon = new Icon(VaadinIcon.WALLET);
         HorizontalLayout walletLayout = new HorizontalLayout();
