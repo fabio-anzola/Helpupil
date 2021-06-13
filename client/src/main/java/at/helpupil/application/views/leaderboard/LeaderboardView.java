@@ -60,8 +60,10 @@ public class LeaderboardView extends SecuredView {
         if (null == error) {
             return topUsers.getBody();
         } else {
-            Notification.show(error.getMessage());
+            if (new Error(error.getCode(), error.getMessage()).continueCheck()) {
+                return makeLeaderboardRequest();
+            }
+            return null;
         }
-        return null;
     }
 }

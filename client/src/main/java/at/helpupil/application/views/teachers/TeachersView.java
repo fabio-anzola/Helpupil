@@ -127,7 +127,7 @@ public class TeachersView extends SecuredView {
                 });
             } else {
                 pageIndex--;
-                new Error(error.getCode(), error.getMessage());
+                new Error(error.getCode(), error.getMessage()).continueCheck();
             }
         } while (pageIndex != pages);
 
@@ -247,8 +247,10 @@ public class TeachersView extends SecuredView {
             if (null == error) {
                 return teachers.getBody();
             } else {
-                new Error(error.getCode(), error.getMessage());
-                return getTeachers(page);
+                if (new Error(error.getCode(), error.getMessage()).continueCheck()) {
+                    return getTeachers(page);
+                }
+                return null;
             }
         }
     }

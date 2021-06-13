@@ -9,6 +9,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
+import java.util.concurrent.Callable;
+
 import static at.helpupil.application.Application.BASE_URL;
 
 public class Error {
@@ -18,13 +20,20 @@ public class Error {
     public Error(float code, String message) {
         this.code = code;
         this.message = message;
-        checkForRefresh();
     }
 
-    private void checkForRefresh() {
-        if (this.code == 401 && this.message.equals("Please authenticate")) {
+    public boolean continueCheck() {
+        if (checkForRefresh()) {
             refreshToken();
+            return true;
+        } else {
+            Notification.show("Sorry something went wrong: " + this.message).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
+        return false;
+    }
+
+    private boolean checkForRefresh() {
+        return this.code == 401 && this.message.equals("Please authenticate");
     }
 
     private void refreshToken() {
@@ -38,7 +47,7 @@ public class Error {
         if (null == error) {
             SessionStorage.update(token.getBody());
         } else {
-            Notification.show(error.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);;
+            Notification.show(error.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
     }
 
