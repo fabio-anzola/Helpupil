@@ -119,6 +119,10 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
   width: 50%;
 }
 
+/* Select Overlay */
+vaadin-select-overlay {
+  text-align: center;
+}
 
 @media only screen and (max-width: 900px) {
   div.top-div-doc {
@@ -127,6 +131,14 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
   }
 
   div.top-div-doc div.add-teacher-div {
+    position: unset;
+    width: unset;
+    display: flex;
+    justify-content: center;
+    width: unset;
+  }
+
+  div.top-div-doc div.add-subject-div {
     position: unset;
     width: unset;
     display: flex;

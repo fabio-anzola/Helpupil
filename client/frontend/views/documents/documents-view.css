@@ -123,12 +123,19 @@ vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-butto
   margin-top: 40px;
 }
 
+vaadin-vertical-layout.dialog-layout vaadin-upload {
+  text-align: center;
+}
 
 /* Paging */
 .paging-items-per-page-select {
   width: 90px;
 }
 
+/* Select Overlay */
+vaadin-select-overlay {
+  text-align: center;
+}
 
 @media only screen and (max-width: 900px) {
   div.top-div-doc {
@@ -148,4 +155,11 @@ vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-butto
     margin-top: 10px;
   }
 
+  vaadin-vertical-layout.dialog-layout vaadin-upload {
+    margin-top: 20px;
+  }
+
+  vaadin-vertical-layout.dialog-layout vaadin-upload vaadin-button {
+    width: 100%;
+  }
 }
