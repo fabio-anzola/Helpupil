@@ -739,6 +739,13 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * makes api request to update a subject
+     * @param subjectId of subject
+     * @param name of subject
+     * @param shortname of subject
+     * @param description of subject
+     */
     private void makeSubjectUpdateRequest(String subjectId, String name, String shortname, String description) {
         HttpResponse<Subject> subject = Unirest.patch(BASE_URL + "/subject/" + subjectId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -761,6 +768,9 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * shows user a dialog to add a subject
+     */
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -806,6 +816,12 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * makes api request to create a new subject
+     * @param subject name of subject
+     * @param shortname of subject
+     * @param description of subject
+     */
     private void makeSubjectCreateRequest(String subject, String shortname, String description) {
         HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
                 .contentType("application/json")
@@ -823,7 +839,6 @@ public class ModeratorView extends SecuredView {
     }
 
     private Component createDocumentPagingMenu(int totalPages) {
-//        pagingMenuLayout = new HorizontalLayout();
         documentPagingMenuLayout = new HorizontalLayout();
         documentPagingMenuLayout.addClassName("paging-layout");
 
