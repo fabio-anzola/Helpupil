@@ -795,6 +795,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * updates grid for paging
+     */
     private void updateDocumentPage() {
         remove(documentGrid);
         remove(pagingMenuLayout);
@@ -804,6 +807,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         add(createPagingMenu(documents.getTotalPages()));
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu so user can choose which page he wants to see
+     */
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
@@ -850,6 +857,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return pagingMenuLayout;
     }
 
+    /**
+     * @param limit number of documents per page
+     * @param k search key
+     * @param v search value
+     * @return documents which match search criteria
+     */
     private Documents getDocuments(int limit, String k, String v) {
         HttpResponse<Documents> documents = null;
         if (null != k && null != v) {
@@ -885,6 +898,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @return all teachers
+     */
     private Teachers getTeachers() {
         HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -903,6 +919,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @return all subjects
+     */
     private Subjects getSubjects() {
         HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -921,6 +940,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @param page current page
+     * @return documents for the current page
+     */
     private Documents getDocuments(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
@@ -954,6 +977,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @return available types
+     */
     private Types getTypes() {
         HttpResponse<Types> types = Unirest.get(BASE_URL + "/documents/types")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -972,6 +998,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * when a parameter is in the url this method is called
+     * it sets the filter up so only filtered documents are shown
+     * @param beforeEvent event before this method was called
+     * @param s parameter for filter
+     */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
         if (!s.isEmpty() && s.split("/").length == 2) {
