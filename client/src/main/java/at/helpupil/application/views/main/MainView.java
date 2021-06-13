@@ -108,6 +108,9 @@ public class MainView extends AppLayout {
         return layout;
     }
 
+    /**
+     * @return menu for tabs
+     */
     private Tabs createMenu() {
         final Tabs tabs = new Tabs();
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
@@ -117,6 +120,10 @@ public class MainView extends AppLayout {
         return tabs;
     }
 
+    /**
+     * menu is different when you are logged out, logged in or a moderator/admin
+     * @return menu with each view
+     */
     private Component[] createMenuItems() {
         if (SessionStorage.isNull()) {
             return new Tab[]{
@@ -143,6 +150,11 @@ public class MainView extends AppLayout {
                 createTab("About", AboutView.class)};
     }
 
+    /**
+     * @param text of tab
+     * @param navigationTarget destination of target
+     * @return new tab
+     */
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
         final Tab tab = new Tab();
         tab.add(new RouterLink(text, navigationTarget));
@@ -150,6 +162,10 @@ public class MainView extends AppLayout {
         return tab;
     }
 
+    /**
+     * method is called after navigation
+     * sets viewtitle to a new title
+     */
     @Override
     protected void afterNavigation() {
         super.afterNavigation();
@@ -157,17 +173,27 @@ public class MainView extends AppLayout {
         viewTitle.setText(getCurrentPageTitle());
     }
 
+    /**
+     * @param component where a tab will be returned
+     * @return tab for given component
+     */
     private Optional<Tab> getTabForComponent(Component component) {
         return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass()))
                 .findFirst().map(Tab.class::cast);
     }
 
+    /**
+     * @return current page title
+     */
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
 
 
+    /**
+     * @return avatar menu so user can see his wallet and logout
+     */
     private MenuBar createAvatarMenu() {
         MenuBar menuBar = new MenuBar();
         menuBar.addClassName("avatar-menu");
