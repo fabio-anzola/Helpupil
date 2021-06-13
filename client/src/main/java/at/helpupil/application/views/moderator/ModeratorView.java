@@ -122,6 +122,9 @@ public class ModeratorView extends SecuredView {
      */
     private final Div subjectPage = new Div();
 
+    /**
+     * initializes Moderator View
+     */
     public ModeratorView() {
         ThemeHelper.onLoad();
 
@@ -174,6 +177,9 @@ public class ModeratorView extends SecuredView {
         add(tabs, pages);
     }
 
+    /**
+     * @return grid of documents and with readable columns and values
+     */
     private Grid<Document> createDocumentGrid() {
         List<Document> documentList = new ArrayList<>();
 
@@ -201,6 +207,9 @@ public class ModeratorView extends SecuredView {
         return documentGrid;
     }
 
+    /**
+     * @return grid of teachers and with readable columns and values
+     */
     private Grid<Teacher> createTeacherGrid() {
         List<Teacher> teacherList = new ArrayList<>(Arrays.asList(teachers.getResults()));
 
@@ -215,6 +224,9 @@ public class ModeratorView extends SecuredView {
         return teacherGrid;
     }
 
+    /**
+     * @return grid of subjects and with readable columns and values
+     */
     private Grid<Subject> createSubjectGrid() {
         List<Subject> subjectList = new ArrayList<>(Arrays.asList(subjects.getResults()));
 
