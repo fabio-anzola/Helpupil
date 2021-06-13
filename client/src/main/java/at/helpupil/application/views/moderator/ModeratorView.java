@@ -540,6 +540,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * @param page current page
+     * @return all pending documents for current page
+     */
     private Documents getPendingDocuments(int page) {
         HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/mod/pending")
                 .queryString("limit", limit)
@@ -557,6 +561,10 @@ public class ModeratorView extends SecuredView {
         return null;
     }
 
+    /**
+     * @param page current page
+     * @return all teachers for current page
+     */
     private Teachers getTeachers(int page) {
         if (searchState) {
             if (foundIds == null) return null;
@@ -591,6 +599,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * @param page current page
+     * @return all subjects for current page
+     */
     private Subjects getSubjects(int page) {
         if (searchState) {
             if (foundIds == null) return null;
