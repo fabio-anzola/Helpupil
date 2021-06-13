@@ -129,6 +129,10 @@ vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-butto
   width: 90px;
 }
 
+/* Select Overlay */
+vaadin-select-overlay {
+  text-align: center;
+}
 
 @media only screen and (max-width: 900px) {
   div.top-div-doc {
