@@ -22,7 +22,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -170,9 +169,7 @@ public class SubjectsView extends SecuredView {
                 new PrimaryLabel(oneSubject.getShortname()),
                 new SecondaryLabel(oneSubject.getDescription())
         );
-        card.addClickListener(e -> {
-            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + oneSubject.getShortname() + "\"");
-        });
+        card.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/subject/" + oneSubject.getShortname() + "\""));
         return card;
     }
 
@@ -184,6 +181,7 @@ public class SubjectsView extends SecuredView {
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 subject = getSubjects(currentPage - 1);
+                if (subject == null) return;
                 currentPage = subject.getPage();
                 updateSubjectPage();
             }
@@ -199,6 +197,7 @@ public class SubjectsView extends SecuredView {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             subject = getSubjects(currentPage);
+            if (subject == null) return;
             currentPage = subject.getPage();
             updateSubjectPage();
         });
@@ -207,6 +206,7 @@ public class SubjectsView extends SecuredView {
         nextPage.addClickListener(e -> {
             if (currentPage < subject.getTotalPages()) {
                 subject = getSubjects(currentPage + 1);
+                if (subject == null) return;
                 currentPage = subject.getPage();
                 updateSubjectPage();
             }

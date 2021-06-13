@@ -38,21 +38,56 @@ import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.*;
 import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 
+/**
+ * Here the users can see all approved documents
+ * Users who aren't logged in are redirected to login
+ */
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
 @CssImport("./views/documents/documents-view.css")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
+    /**
+     * grid of documents
+     */
     private Grid<Document> documentGrid = new Grid<>(Document.class);
+    /**
+     * layout for paging menu
+     */
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    /**
+     * used to filter documents
+     */
     private String[] filter;
+    /**
+     * true if user searches
+     */
     private boolean searchState = false;
+    /**
+     * list of found ids
+     */
     private final ArrayList<String> foundIds = new ArrayList<>();
+    /**
+     * limits for user to choose for paging
+     */
     private final int[] limits = new int[]{10, 15, 25};
+    /**
+     * default value for paging
+     */
     private int limit = limits[0];
+    /**
+     * current page for paging
+     */
     private int currentPage = 1;
+    /**
+     * all approved documents
+     */
     private Documents documents = getDocuments(currentPage);
 
+    /**
+     * initializes View
+     * checks if darkmode is stored in session
+     */
     public DocumentsView() {
         ThemeHelper.onLoad();
 
@@ -63,6 +98,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         add(createPagingMenu(documents.getTotalPages()));
     }
 
+    /**
+     * @return top div for button to upload document
+     *      + searchbox to filter documents
+     */
     private Component createTopDiv() {
         Div topDiv = new Div();
         topDiv.addClassName("top-div-doc");
@@ -114,6 +153,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return topDiv;
     }
 
+    /**
+     * @return resolved filter: objects instead of shortnames
+     */
     private String[] resolveFilter() {
         String k = filter[0];
         String v = filter[1];
@@ -129,6 +171,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return new String[]{k, v};
     }
 
+    /**
+     * now only documents which apply the filter are shown
+     * @param searchText to filter for
+     */
     private void makeSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
@@ -183,6 +229,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         updateDocumentPage();
     }
 
+    /**
+     * @return grid of documents
+     */
     private Grid<Document> createDocumentGrid() {
         List<Document> documentsList = new ArrayList<>();
 
@@ -212,6 +261,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return documentGrid;
     }
 
+    /**
+     * display upload dialog to upload a document
+     */
     private void showUploadDialog() {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -230,12 +282,14 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         Select<String> typeSelect = new Select<>();
 
         Teachers teachers = getTeachers();
+        if (teachers == null) return;
         Map<String, String> teacherMap = new HashMap<>();
         Arrays.stream(teachers.getResults()).forEach(n -> teacherMap.put(n.getShortname(), n.getId()));
         teacherSelect.setItems(teacherMap.keySet());
         teacherSelect.setLabel("Teacher");
 
         Subjects subjects = getSubjects();
+        if (subjects == null) return;
         Map<String, String> subjectMap = new HashMap<>();
         Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getShortname(), n.getId()));
         subjectSelect.setItems(subjectMap.keySet());
@@ -243,6 +297,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
 
         Types types = getTypes();
+        if (types == null) return;
         Map<String, String> typeMap = new HashMap<>();
         for (int i = 0; i < types.getFriendly_values().length; i++) {
             typeMap.put(types.getFriendly_values()[i], types.getValues()[i]);
@@ -289,6 +344,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
+    /**
+     * here the user can rate or buy a document
+     * @param document to which the dialog is displayed
+     */
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -359,6 +418,15 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
+    /**
+     * uploads a file to the database
+     * @param name of new document
+     * @param subject of new document
+     * @param type of new document
+     * @param teacher of new document
+     * @param buffer file data of new document
+     * @return 0 if upload was successful
+     */
     private int makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
         MultipartBody body = Unirest.post(BASE_URL + "/documents/base64/")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -382,6 +450,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @param starDiv here are all stars
+     * @return current rating
+     */
     private int getCurrentRate(Div starDiv) {
         int[] currentRate = new int[1];
         starDiv.getChildren().forEach(n -> {
@@ -393,6 +465,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return currentRate[0];
     }
 
+    /**
+     * makes request to api to update rating
+     * @param documentId of document
+     * @param rating of document
+     */
     private void makeRatingRequest(String documentId, int rating) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/rating/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -413,12 +490,21 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @param starDiv here are all stars
+     * @param starIndex how many stars are rated
+     */
     private void replaceStars(Div starDiv, int starIndex) {
         starDiv.removeAll();
         ArrayList<StarObj> starList = generateStars(starDiv, starIndex);
         starList.forEach(starDiv::add);
     }
 
+    /**
+     * @param starDiv here are all stars
+     * @param starIndex how many stars the user decided to rate the document
+     * @return list of stars which are filled and empty
+     */
     private ArrayList<StarObj> generateStars(Div starDiv, int starIndex) {
         ArrayList<StarObj> newStarList = new ArrayList<>();
 
@@ -439,6 +525,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return newStarList;
     }
 
+    /**
+     * shows buy dialog to user so he can buy this document
+     * @param document to show buy dialog
+     */
     private void showBuyDialog(Document document) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -476,6 +566,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
+    /**
+     * show delete dialog to moderator so he can delete this document
+     * @param document to show delete dialog
+     */
     private void showDeleteDialog(Document document) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -513,6 +607,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
+    /**
+     * shows decline dialog to moderator so he can decline this document
+     * @param document to show decline dialog
+     */
     private void showDeclineDialog(Document document) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -553,6 +651,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         dialog.open();
     }
 
+    /**
+     * makes request to api to delete the document from the database
+     * @param documentId id of document
+     */
     private void makeDeleteRequest(String documentId) {
         HttpResponse<Document> document = Unirest.delete(BASE_URL + "/documents/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -563,6 +665,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Document has been deleted!");
             documents = getDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -572,6 +675,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * makes request to the api to decline the document
+     * @param documentId id of document
+     * @param declineMessage will be sent to the uploader so he knows why his document wasn't approved
+     */
     private void makeDeclineRequest(String documentId, String declineMessage) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/decline/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -583,6 +691,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Document has been declined!");
             documents = getDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -592,6 +701,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * makes request to api to buy the document
+     * @param document which may be bought
+     */
     private void makeBuyRequest(Document document) {
         if (!isBuyRequestAllowed(document)) {
             return;
@@ -628,6 +741,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         fetchUserData(SessionStorage.get().getUser().getId());
     }
 
+    /**
+     * makes request to api to get user by id
+     * @param id of user
+     */
     private void fetchUserData(String id) {
         HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -645,6 +762,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * asks api if buy request is allowed
+     * @param document which may be bought
+     * @return true if buy request is allowed
+     */
     private boolean isBuyRequestAllowed(Document document) {
         Error error = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -661,6 +783,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @param document where the button may be buy or show
+     * @return show button in the document grid if document has already been bought
+     */
     private Button createBuyOrShowButton(Document document) {
         if (SessionStorage.get().getUser().getPurchasedDocuments().contains(document.getId())) {
             return new Button("Show", clickEvent -> makeBuyRequest(document));
@@ -669,6 +795,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * updates grid for paging
+     */
     private void updateDocumentPage() {
         remove(documentGrid);
         remove(pagingMenuLayout);
@@ -678,6 +807,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         add(createPagingMenu(documents.getTotalPages()));
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu so user can choose which page he wants to see
+     */
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
@@ -686,6 +819,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 documents = getDocuments(currentPage - 1);
+                if (documents == null) return;
                 currentPage = documents.getPage();
                 updateDocumentPage();
             }
@@ -708,6 +842,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         nextPage.addClickListener(e -> {
             if (currentPage < documents.getTotalPages()) {
                 documents = getDocuments(currentPage + 1);
+                if (documents == null) return;
                 currentPage = documents.getPage();
                 updateDocumentPage();
             }
@@ -722,6 +857,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         return pagingMenuLayout;
     }
 
+    /**
+     * @param limit number of documents per page
+     * @param k search key
+     * @param v search value
+     * @return documents which match search criteria
+     */
     private Documents getDocuments(int limit, String k, String v) {
         HttpResponse<Documents> documents = null;
         if (null != k && null != v) {
@@ -742,6 +883,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         } else {
             getDocuments(currentPage);
         }
+        
+        if (documents == null) return null;
 
         Error error = documents.mapError(Error.class);
 
@@ -755,6 +898,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @return all teachers
+     */
     private Teachers getTeachers() {
         HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -773,6 +919,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @return all subjects
+     */
     private Subjects getSubjects() {
         HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -791,6 +940,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @param page current page
+     * @return documents for the current page
+     */
     private Documents getDocuments(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
@@ -824,6 +977,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * @return available types
+     */
     private Types getTypes() {
         HttpResponse<Types> types = Unirest.get(BASE_URL + "/documents/types")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -842,6 +998,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
     }
 
+    /**
+     * when a parameter is in the url this method is called
+     * it sets the filter up so only filtered documents are shown
+     * @param beforeEvent event before this method was called
+     * @param s parameter for filter
+     */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
         if (!s.isEmpty() && s.split("/").length == 2) {

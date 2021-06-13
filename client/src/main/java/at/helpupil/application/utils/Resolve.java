@@ -7,7 +7,14 @@ import kong.unirest.Unirest;
 
 import static at.helpupil.application.Application.BASE_URL;
 
+/**
+ * static methods to resolve objects by specific keys
+ */
 public class Resolve {
+    /**
+     * @param shortname of subject
+     * @return subject resolved by shortname
+     */
     public static String resolveSubjectByShortname(String shortname) {
         HttpResponse<Subjects> subject = Unirest.get(BASE_URL + "/subject")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -23,6 +30,10 @@ public class Resolve {
         }
     }
 
+    /**
+     * @param shortname of teacher
+     * @return teacher resolved by shortname
+     */
     public static String resolveTeacherByShortname(String shortname) {
         HttpResponse<Teachers> teacher = Unirest.get(BASE_URL + "/teacher")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -38,6 +49,10 @@ public class Resolve {
         }
     }
 
+    /**
+     * @param id of subject
+     * @return subject resolved by id
+     */
     public static Subject resolveSubjectById(String id) {
         HttpResponse<Subject> subject = Unirest.get(BASE_URL + "/subject/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -52,6 +67,10 @@ public class Resolve {
         }
     }
 
+    /**
+     * @param id of teacher
+     * @return teacher resolved by id
+     */
     public static Teacher resolveTeacherById(String id) {
         HttpResponse<Teacher> teacher = Unirest.get(BASE_URL + "/teacher/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -66,20 +85,10 @@ public class Resolve {
         }
     }
 
-    public static String resolveUserById(String id) {
-        HttpResponse<UserPublicObj> user = Unirest.get(BASE_URL + "/users/public/" + id)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(UserPublicObj.class);
-
-        Error error = user.mapError(Error.class);
-
-        if (null == error) {
-            return user.getBody().getName();
-        } else {
-            return id;
-        }
-    }
-
+    /**
+     * @param id of document
+     * @return document resolved by id
+     */
     public static Document resolveDocumentById(String id) {
         HttpResponse<Document> document = Unirest.get(BASE_URL + "/documents/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())

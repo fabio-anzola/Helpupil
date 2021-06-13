@@ -63,9 +63,9 @@ public class ModeratorView extends SecuredView {
     private int limit = limits[0];
     private final ArrayList<String> foundIds = new ArrayList<>();
 
-    private Div documentPage = new Div();
-    private Div teacherPage = new Div();
-    private Div subjectPage = new Div();
+    private final Div documentPage = new Div();
+    private final Div teacherPage = new Div();
+    private final Div subjectPage = new Div();
 
     public ModeratorView() {
         ThemeHelper.onLoad();
@@ -415,6 +415,7 @@ public class ModeratorView extends SecuredView {
         if (null == error) {
             Notification.show("Document has been approved!");
             documents = getPendingDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -435,6 +436,7 @@ public class ModeratorView extends SecuredView {
         if (null == error) {
             Notification.show("Document has been declined!");
             documents = getPendingDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -463,6 +465,7 @@ public class ModeratorView extends SecuredView {
 
     private Teachers getTeachers(int page) {
         if (searchState) {
+            if (foundIds == null) return null;
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Teacher[] teacherAr = new Teacher[itemsVisible];
             int teacherArCounter = 0;
@@ -496,6 +499,7 @@ public class ModeratorView extends SecuredView {
 
     private Subjects getSubjects(int page) {
         if (searchState) {
+            if (foundIds == null) return null;
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
             Subject[] subjectAr = new Subject[itemsVisible];
             int subjectArCounter = 0;
@@ -603,6 +607,7 @@ public class ModeratorView extends SecuredView {
         if (null == error) {
             Notification.show("Teacher has been updated!");
             teachers = getTeachers(currentPage);
+            if (teachers == null) return;
             if (teachers.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -624,6 +629,7 @@ public class ModeratorView extends SecuredView {
         if (null == error) {
             Notification.show("Subject has been updated!");
             subjects = getSubjects(currentPage);
+            if (subjects == null) return;
             if (subjects.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -704,6 +710,7 @@ public class ModeratorView extends SecuredView {
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 documents = getPendingDocuments(currentPage - 1);
+                if (documents == null) return;
                 currentPage = documents.getPage();
                 if (documents.getTotalResults() == 0) {
                     currentPage = 0;
@@ -722,6 +729,7 @@ public class ModeratorView extends SecuredView {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             documents = getPendingDocuments(currentPage);
+            if (documents == null) return;
             if (documents.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -732,6 +740,7 @@ public class ModeratorView extends SecuredView {
         nextPage.addClickListener(e -> {
             if (currentPage < documents.getTotalPages()) {
                 documents = getPendingDocuments(currentPage + 1);
+                if (documents == null) return;
                 currentPage = documents.getPage();
                 if (documents.getTotalResults() == 0) {
                     currentPage = 0;
@@ -758,6 +767,7 @@ public class ModeratorView extends SecuredView {
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 teachers = getTeachers(currentPage - 1);
+                if (teachers == null) return;
                 currentPage = teachers.getPage();
                 if (teachers.getTotalResults() == 0) {
                     currentPage = 0;
@@ -776,6 +786,7 @@ public class ModeratorView extends SecuredView {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             teachers = getTeachers(currentPage);
+            if (teachers == null) return;
             if (teachers.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -786,6 +797,7 @@ public class ModeratorView extends SecuredView {
         nextPage.addClickListener(e -> {
             if (currentPage < teachers.getTotalPages()) {
                 teachers = getTeachers(currentPage + 1);
+                if (teachers == null) return;
                 currentPage = teachers.getPage();
                 if (teachers.getTotalResults() == 0) {
                     currentPage = 0;
@@ -812,6 +824,7 @@ public class ModeratorView extends SecuredView {
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 subjects = getSubjects(currentPage - 1);
+                if (subjects == null) return;
                 currentPage = subjects.getPage();
                 if (subjects.getTotalResults() == 0) {
                     currentPage = 0;
@@ -830,6 +843,7 @@ public class ModeratorView extends SecuredView {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             subjects = getSubjects(currentPage);
+            if (subjects == null) return;
             if (subjects.getTotalResults() == 0) {
                 currentPage = 0;
             }
@@ -840,6 +854,7 @@ public class ModeratorView extends SecuredView {
         nextPage.addClickListener(e -> {
             if (currentPage < subjects.getTotalPages()) {
                 subjects = getSubjects(currentPage + 1);
+                if (subjects == null) return;
                 currentPage = subjects.getPage();
                 if (subjects.getTotalResults() == 0) {
                     currentPage = 0;

@@ -22,7 +22,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -171,9 +170,7 @@ public class TeachersView extends SecuredView {
                 new PrimaryLabel(oneTeacher.getShortname()),
                 new SecondaryLabel(oneTeacher.getDescription())
         );
-        card.addClickListener(e -> {
-            UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/teacher/" + oneTeacher.getShortname() + "\"");
-        });
+        card.addClickListener(e -> UI.getCurrent().getPage().executeJs("window.location = \"" + Auth.getURL() + "/documents/teacher/" + oneTeacher.getShortname() + "\""));
         return card;
     }
 
@@ -185,6 +182,7 @@ public class TeachersView extends SecuredView {
         previousPage.addClickListener(e -> {
             if (currentPage > 1) {
                 teacher = getTeachers(currentPage - 1);
+                if (teacher == null) return;
                 currentPage = teacher.getPage();
                 updateTeacherPage();
             }
@@ -200,6 +198,7 @@ public class TeachersView extends SecuredView {
             limit = Integer.parseInt(e.getValue());
             currentPage = 1;
             teacher = getTeachers(currentPage);
+            if (teacher == null) return;
             currentPage = teacher.getPage();
             updateTeacherPage();
         });
@@ -208,6 +207,7 @@ public class TeachersView extends SecuredView {
         nextPage.addClickListener(e -> {
             if (currentPage < teacher.getTotalPages()) {
                 teacher = getTeachers(currentPage + 1);
+                if (teacher == null) return;
                 currentPage = teacher.getPage();
                 updateTeacherPage();
             }
