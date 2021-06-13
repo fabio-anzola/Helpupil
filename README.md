@@ -61,8 +61,10 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![LoginView](https://github.com/fabio-anzola/Helpupil/blob/master/docs/screenshots/productshot-1.png?raw=true)
-![DocumentsView](https://github.com/fabio-anzola/Helpupil/blob/master/docs/screenshots/productshot-2.png?raw=true)
+<p>
+  <img class="screenshot" src="https://github.com/fabio-anzola/Helpupil/blob/master/docs/screenshots/productshot-1.png?raw=true" alt="LoginView">
+  <img class="screenshot" src="https://github.com/fabio-anzola/Helpupil/blob/master/docs/screenshots/productshot-2.png?raw=true" alt="DocumentsView">
+</p>
 
 ### Built With
 
