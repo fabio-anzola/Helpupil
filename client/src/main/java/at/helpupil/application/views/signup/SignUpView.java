@@ -2,16 +2,13 @@ package at.helpupil.application.views.signup;
 
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
-import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
-import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.requests.SignUp;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -24,7 +21,6 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouteAlias;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -35,12 +31,12 @@ import static at.helpupil.application.Application.BASE_URL;
 @CssImport("./views/signup/sign-up-view.css")
 public class SignUpView extends OpenView {
 
-    private EmailField email = new EmailField("Email address");
-    private TextField name = new TextField("Username: ");
-    private PasswordField password = new PasswordField("Password");
+    private final EmailField email = new EmailField("Email address");
+    private final TextField name = new TextField("Username: ");
+    private final PasswordField password = new PasswordField("Password");
 
-    private Button clear = new Button("Clear");
-    private Button signUp = new Button("Sign Up");
+    private final Button clear = new Button("Clear");
+    private final Button signUp = new Button("Sign Up");
 
 
     public SignUpView() {
