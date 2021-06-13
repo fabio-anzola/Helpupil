@@ -18,7 +18,7 @@
   <p align="center">
     Helpupil is a platform where users can upload documents and make them available for other users to learn. For uploading files you get points, but only if they are marked as valid by a moderator. With these points one can compete with other users on a leaderboard. Other users of the platform can spend points to get access to documents for further education.
     <br />
-    <a href="https://github.com/fabio-anzola/Helpupil"><strong>Explore the docs »</strong></a>
+    <a href="https://api.helpupil.at/v1/docs"><strong>Explore the API docs »</strong></a>
     <br />
     <br />
     <a href="https://helpupil.at/">View Demo</a>
@@ -62,33 +62,35 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
-
+![LoginView](https://github.com/fabio-anzola/Helpupil/blob/master/docs/screenshots/productshot-1.png?raw=true)
+![DocumentsView](https://github.com/fabio-anzola/Helpupil/blob/master/docs/screenshots/productshot-2.png?raw=true)
 
 ### Built With
 
-* []()
-* []()
-* []()
-
-
+* [Express](http://expressjs.com)
+* [Vaadin](https://vaadin.com)
+* [MongoDB](https://www.mongodb.com)
+* [Swagger](https://swagger.io)
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get a local copy up and running follow these simple steps.
+To get a local copy up and running follow these simple steps:
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
+#### API
 * npm
   ```sh
   npm install npm@latest -g
   ```
+
+#### Web-Frontend
+
+You will need:  
+1. JetBrains IntelliJ IDEA
+2. Maven/An active internet connection
+3. Oracle JDK / Open JDK with version 15.0.1 (or higher) 
 
 ### Installation
 
@@ -96,30 +98,26 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    git clone https://github.com/fabio-anzola/Helpupil.git
    ```
-2. Install NPM packages
+2. (API) Install NPM packages
    ```sh
+   cd server
    npm install
    ```
 
+2. (Frontend) Install NPM packages
+   ```sh
+   cd client
+   maven install (within IDE)
+   ```
 
-
-<!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
 
 
-
-<!-- ROADMAP -->
 ## Roadmap
 
 See the [open issues](https://github.com/fabio-anzola/Helpupil/issues) for a list of proposed features (and known issues).
 
-
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -130,35 +128,20 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
-
-<!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the ... License. See `LICENSE` for more information.
 
-
-
-<!-- CONTACT -->
 ## Contact
 
 Project Link: [https://github.com/fabio-anzola/Helpupil](https://github.com/fabio-anzola/Helpupil)
 
-
-
-<!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
+* [ANZOLA Fabio](https://github.com/fabio-anzola)
+* [KRIKLER Richard](https://github.com/RichardKrikler)
+* [RIGLER Tobias](https://github.com/rigler-tobias)
 
-
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/fabio-anzola/repo.svg?style=for-the-badge
 [contributors-url]: https://github.com/fabio-anzola/repo/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/fabio-anzola/repo.svg?style=for-the-badge
