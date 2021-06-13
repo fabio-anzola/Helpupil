@@ -199,12 +199,16 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         documentGrid.removeColumnByKey("file");
         documentGrid.removeColumnByKey("status");
         documentGrid.removeColumnByKey("id");
-        documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "uname", "price");
+        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
+            documentGrid.removeColumnByKey("uname");
+            documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "price");
+        } else {
+            documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "uname", "price");
+            documentGrid.getColumnByKey("uname").setHeader("User");
+            documentGrid.addComponentColumn(this::createBuyOrShowButton);
+        }
         documentGrid.getColumnByKey("subject_sn").setHeader("Subject");
         documentGrid.getColumnByKey("teacher_sn").setHeader("Teacher");
-        documentGrid.getColumnByKey("uname").setHeader("User");
-
-        documentGrid.addComponentColumn(this::createBuyOrShowButton);
 
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
 
