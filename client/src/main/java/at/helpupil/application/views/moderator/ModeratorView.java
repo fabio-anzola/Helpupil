@@ -472,8 +472,10 @@ public class ModeratorView extends SecuredView {
             if (null == error) {
                 return teachers.getBody();
             } else {
-                new Error(error.getCode(), error.getMessage());
-                return getTeachers(page);
+                if (new Error(error.getCode(), error.getMessage()).continueCheck()) {
+                    return getTeachers(page);
+                }
+                return null;
             }
         }
     }
@@ -506,8 +508,10 @@ public class ModeratorView extends SecuredView {
                 }
                 return subjects.getBody();
             } else {
-                new Error(error.getCode(), error.getMessage());
-                return getSubjects(page);
+                if (new Error(error.getCode(), error.getMessage()).continueCheck()) {
+                    return getSubjects(page);
+                }
+                return null;
             }
         }
     }
