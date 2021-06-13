@@ -838,6 +838,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu for documents
+     */
     private Component createDocumentPagingMenu(int totalPages) {
         documentPagingMenuLayout = new HorizontalLayout();
         documentPagingMenuLayout.addClassName("paging-layout");
@@ -895,6 +899,10 @@ public class ModeratorView extends SecuredView {
         return documentPagingMenuLayout;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu for teachers
+     */
     private Component createTeacherPagingMenu(int totalPages) {
         teacherPagingMenuLayout = new HorizontalLayout();
         teacherPagingMenuLayout.addClassName("paging-layout");
@@ -952,6 +960,10 @@ public class ModeratorView extends SecuredView {
         return teacherPagingMenuLayout;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu for subjects
+     */
     private Component createSubjectPagingMenu(int totalPages) {
         subjectPagingMenuLayout = new HorizontalLayout();
         subjectPagingMenuLayout.addClassName("paging-layout");
@@ -1009,6 +1021,9 @@ public class ModeratorView extends SecuredView {
         return subjectPagingMenuLayout;
     }
 
+    /**
+     * update document page
+     */
     private void updateDocumentPage() {
         documentPage.remove(documentGrid);
         documentPage.remove(documentPagingMenuLayout);
@@ -1018,6 +1033,9 @@ public class ModeratorView extends SecuredView {
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
     }
 
+    /**
+     * update teacher page
+     */
     private void updateTeacherPage() {
         teacherPage.remove(teacherGrid);
         teacherPage.remove(teacherPagingMenuLayout);
@@ -1027,6 +1045,9 @@ public class ModeratorView extends SecuredView {
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
     }
 
+    /**
+     * update subject page
+     */
     private void updateSubjectPage() {
         subjectPage.remove(subjectGrid);
         subjectPage.remove(subjectPagingMenuLayout);
