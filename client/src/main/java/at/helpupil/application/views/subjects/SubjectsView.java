@@ -127,7 +127,7 @@ public class SubjectsView extends SecuredView {
                 });
             } else {
                 pageIndex--;
-                new Error(error.getCode(), error.getMessage());
+                new Error(error.getCode(), error.getMessage()).continueCheck();
             }
         } while (pageIndex != pages);
 
@@ -249,8 +249,10 @@ public class SubjectsView extends SecuredView {
                 }
                 return subjects.getBody();
             } else {
-                new Error(error.getCode(), error.getMessage());
-                return getSubjects(page);
+                if (new Error(error.getCode(), error.getMessage()).continueCheck()) {
+                    return getSubjects(page);
+                }
+                return null;
             }
         }
     }
