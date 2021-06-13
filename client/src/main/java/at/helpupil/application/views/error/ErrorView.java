@@ -14,10 +14,16 @@ import com.vaadin.flow.router.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This view is shown to the user if the page can not be found
+ */
 @Route(value = "errorpage", layout = MainView.class)
 @PageTitle("404 Page")
 @CssImport("./views/error/error-view.css")
 public class ErrorView extends OpenView {
+    /**
+     * User can click on a button to get back to login
+     */
     public ErrorView() {
         ThemeHelper.onLoad();
 
