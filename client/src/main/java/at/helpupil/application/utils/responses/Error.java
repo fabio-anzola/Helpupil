@@ -1,15 +1,11 @@
 package at.helpupil.application.utils.responses;
 
-import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.requests.RefreshObj;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-
-import java.util.concurrent.Callable;
 
 import static at.helpupil.application.Application.BASE_URL;
 
