@@ -1,5 +1,6 @@
 package at.helpupil.application.views.main;
 
+import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.views.about.AboutView;
@@ -175,7 +176,10 @@ public class MainView extends AppLayout {
 
         avatarItem.getSubMenu().addItem(walletLayout);
         avatarItem.getSubMenu().addItem("Logout",
-                e -> Notification.show("Logout"));
+                e -> {
+                    SessionStorage.set(null);
+                    Auth.redirectIfNotValid();
+                });
 
         return menuBar;
     }
