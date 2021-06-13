@@ -112,7 +112,17 @@ You will need:
 
 ## Usage
 
-
+* Users can log into their account
+* Users can create their own account
+* Users can upload their documents
+* Users are structured after their Subject / Professor
+* Users can download a document
+* There is a Point-system evaluating the most contributing users
+* Users get points for uploading documents
+* There is a leaderboard
+* There are different roles
+* The API uses a database to store all data
+* We support specific file formats: jpg/png/pdf
 
 ## Roadmap
 
