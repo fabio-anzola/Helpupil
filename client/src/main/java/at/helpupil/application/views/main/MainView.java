@@ -13,6 +13,7 @@ import at.helpupil.application.views.subjects.SubjectsView;
 import at.helpupil.application.views.teachers.TeachersView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -168,13 +169,14 @@ public class MainView extends AppLayout {
             return menuBar;
         }
 
-        menuBar.setOpenOnHover(true);
+        Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        avatarItem.addClickListener(e -> {
+            walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        });
 
         Icon walletIcon = new Icon(VaadinIcon.WALLET);
-        Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
         HorizontalLayout walletLayout = new HorizontalLayout();
         walletLayout.add(walletIcon, walletSpan);
-
         avatarItem.getSubMenu().addItem(walletLayout);
         avatarItem.getSubMenu().addItem("Logout",
                 e -> {
