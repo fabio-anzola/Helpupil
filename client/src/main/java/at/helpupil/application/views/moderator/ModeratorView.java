@@ -44,27 +44,82 @@ import static at.helpupil.application.utils.Resolve.resolveSubjectById;
 import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 
+/**
+ * This view is only for moderators
+ * It shows 3 Tabs so the moderators can manage documents, teachers and subjects
+ */
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
 @CssImport("./views/moderator/moderator-view.css")
 public class ModeratorView extends SecuredView {
+    /**
+     * current page
+     */
     private int currentPage = 1;
+    /**
+     * grid of documents
+     */
     private Grid<Document> documentGrid = new Grid<>(Document.class);
+    /**
+     * grid of teachers
+     */
     private Grid<Teacher> teacherGrid = new Grid<>(Teacher.class);
+    /**
+     * grid of subjects
+     */
     private Grid<Subject> subjectGrid = new Grid<>(Subject.class);
+    /**
+     * all pending documents for current page
+     */
     private Documents documents = getPendingDocuments(currentPage);
+    /**
+     * all teachers for current page
+     */
     private Teachers teachers = getTeachers(currentPage);
+    /**
+     * all subjects for current page
+     */
     private Subjects subjects = getSubjects(currentPage);
+    /**
+     * layout for document paging menu
+     */
     private HorizontalLayout documentPagingMenuLayout;
+    /**
+     * layout for teacher paging menu
+     */
     private HorizontalLayout teacherPagingMenuLayout;
+    /**
+     * layout for subject paging menu
+     */
     private HorizontalLayout subjectPagingMenuLayout;
+    /**
+     * true if user searches something
+     */
     private boolean searchState = false;
+    /**
+     * limits for maximum elements per page
+     */
     private final int[] limits = new int[]{10, 15, 25};
+    /**
+     * default value for elements per page
+     */
     private int limit = limits[0];
+    /**
+     * list of found ids
+     */
     private final ArrayList<String> foundIds = new ArrayList<>();
 
+    /**
+     * div for document page
+     */
     private final Div documentPage = new Div();
+    /**
+     * div for teacher page
+     */
     private final Div teacherPage = new Div();
+    /**
+     * div for subject page
+     */
     private final Div subjectPage = new Div();
 
     public ModeratorView() {
