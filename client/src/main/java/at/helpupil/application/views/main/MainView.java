@@ -22,6 +22,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -167,8 +168,12 @@ public class MainView extends AppLayout {
 
         menuBar.setOpenOnHover(true);
 
-        avatarItem.getSubMenu().addItem("Wallet",
-                e -> Notification.show("Wallet"));
+        Icon walletIcon = new Icon(VaadinIcon.WALLET);
+        Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        HorizontalLayout walletLayout = new HorizontalLayout();
+        walletLayout.add(walletIcon, walletSpan);
+
+        avatarItem.getSubMenu().addItem(walletLayout);
         avatarItem.getSubMenu().addItem("Logout",
                 e -> Notification.show("Logout"));
 
