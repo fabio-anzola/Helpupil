@@ -134,6 +134,14 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
     width: unset;
   }
 
+  div.top-div-doc div.add-subject-div {
+    position: unset;
+    width: unset;
+    display: flex;
+    justify-content: center;
+    width: unset;
+  }
+
   div.top-div-doc div.search-inner-div {
     margin-top: 10px;
   }
