@@ -151,11 +151,11 @@ Project Link: [https://github.com/fabio-anzola/Helpupil](https://github.com/fabi
 * [KRIKLER Richard](https://github.com/RichardKrikler)
 * [RIGLER Tobias](https://github.com/rigler-tobias)
 
-[contributors-shield]: https://img.shields.io/github/contributors/fabio-anzola/repo.svg?style=for-the-badge
-[contributors-url]: https://github.com/fabio-anzola/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/fabio-anzola/repo.svg?style=for-the-badge
-[forks-url]: https://github.com/fabio-anzola/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/fabio-anzola/repo.svg?style=for-the-badge
-[stars-url]: https://github.com/fabio-anzola/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/fabio-anzola/repo.svg?style=for-the-badge
-[issues-url]: https://github.com/fabio-anzola/repo/issues
+[contributors-shield]: https://img.shields.io/github/contributors/fabio-anzola/Helpupil.svg?style=for-the-badge
+[contributors-url]: https://github.com/fabio-anzola/Helpupil/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/fabio-anzola/Helpupil.svg?style=for-the-badge
+[forks-url]: https://github.com/fabio-anzola/Helpupil/network/members
+[stars-shield]: https://img.shields.io/github/stars/fabio-anzola/Helpupil.svg?style=for-the-badge
+[stars-url]: https://github.com/fabio-anzola/Helpupil/stargazers
+[issues-shield]: https://img.shields.io/github/issues/fabio-anzola/Helpupil.svg?style=for-the-badge
+[issues-url]: https://github.com/fabio-anzola/Helpupil/issues
