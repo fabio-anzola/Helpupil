@@ -115,7 +115,8 @@ public class MainView extends AppLayout {
                     createTab("About", AboutView.class)
             };
         }
-        if (SessionStorage.get().getUser().getRole().equals("moderator")) {
+        if (SessionStorage.get().getUser().getRole().equals("moderator")
+                && SessionStorage.get().getUser().getRole().equals("admin")) {
             return new Tab[]{
                     createTab("Documents", DocumentsView.class),
                     createTab("Teachers", TeachersView.class),
