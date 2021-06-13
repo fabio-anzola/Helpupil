@@ -1,7 +1,6 @@
 package at.helpupil.application.utils;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServletRequest;
 

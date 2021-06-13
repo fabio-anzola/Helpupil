@@ -66,20 +66,6 @@ public class Resolve {
         }
     }
 
-    public static String resolveUserById(String id) {
-        HttpResponse<UserPublicObj> user = Unirest.get(BASE_URL + "/users/public/" + id)
-                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
-                .asObject(UserPublicObj.class);
-
-        Error error = user.mapError(Error.class);
-
-        if (null == error) {
-            return user.getBody().getName();
-        } else {
-            return id;
-        }
-    }
-
     public static Document resolveDocumentById(String id) {
         HttpResponse<Document> document = Unirest.get(BASE_URL + "/documents/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
