@@ -44,29 +44,87 @@ import static at.helpupil.application.utils.Resolve.resolveSubjectById;
 import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 
+/**
+ * This view is only for moderators
+ * It shows 3 Tabs so the moderators can manage documents, teachers and subjects
+ */
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
 @CssImport("./views/moderator/moderator-view.css")
 public class ModeratorView extends SecuredView {
+    /**
+     * current page
+     */
     private int currentPage = 1;
+    /**
+     * grid of documents
+     */
     private Grid<Document> documentGrid = new Grid<>(Document.class);
+    /**
+     * grid of teachers
+     */
     private Grid<Teacher> teacherGrid = new Grid<>(Teacher.class);
+    /**
+     * grid of subjects
+     */
     private Grid<Subject> subjectGrid = new Grid<>(Subject.class);
+    /**
+     * all pending documents for current page
+     */
     private Documents documents = getPendingDocuments(currentPage);
+    /**
+     * all teachers for current page
+     */
     private Teachers teachers = getTeachers(currentPage);
+    /**
+     * all subjects for current page
+     */
     private Subjects subjects = getSubjects(currentPage);
+    /**
+     * layout for document paging menu
+     */
     private HorizontalLayout documentPagingMenuLayout;
+    /**
+     * layout for teacher paging menu
+     */
     private HorizontalLayout teacherPagingMenuLayout;
+    /**
+     * layout for subject paging menu
+     */
     private HorizontalLayout subjectPagingMenuLayout;
+    /**
+     * true if user searches something
+     */
     private boolean searchState = false;
+    /**
+     * limits for maximum elements per page
+     */
     private final int[] limits = new int[]{10, 15, 25};
+    /**
+     * default value for elements per page
+     */
     private int limit = limits[0];
+    /**
+     * list of found ids
+     */
     private final ArrayList<String> foundIds = new ArrayList<>();
 
+    /**
+     * div for document page
+     */
     private final Div documentPage = new Div();
+    /**
+     * div for teacher page
+     */
     private final Div teacherPage = new Div();
+    /**
+     * div for subject page
+     */
     private final Div subjectPage = new Div();
 
+    /**
+     * initializes Moderator View
+     */
     public ModeratorView() {
         ThemeHelper.onLoad();
 
@@ -119,6 +177,9 @@ public class ModeratorView extends SecuredView {
         add(tabs, pages);
     }
 
+    /**
+     * @return grid of documents and with readable columns and values
+     */
     private Grid<Document> createDocumentGrid() {
         List<Document> documentList = new ArrayList<>();
 
@@ -146,6 +207,9 @@ public class ModeratorView extends SecuredView {
         return documentGrid;
     }
 
+    /**
+     * @return grid of teachers and with readable columns and values
+     */
     private Grid<Teacher> createTeacherGrid() {
         List<Teacher> teacherList = new ArrayList<>(Arrays.asList(teachers.getResults()));
 
@@ -160,6 +224,9 @@ public class ModeratorView extends SecuredView {
         return teacherGrid;
     }
 
+    /**
+     * @return grid of subjects and with readable columns and values
+     */
     private Grid<Subject> createSubjectGrid() {
         List<Subject> subjectList = new ArrayList<>(Arrays.asList(subjects.getResults()));
 
@@ -174,6 +241,10 @@ public class ModeratorView extends SecuredView {
         return subjectGrid;
     }
 
+    /**
+     * dialog will be shown for a specific document when clicked
+     * @param document specific document
+     */
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -226,6 +297,10 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * dialog will be shown for a specific teacher when clicked
+     * @param teacher specific teacher
+     */
     private void showTeacherDialog(Teacher teacher) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -270,6 +345,10 @@ public class ModeratorView extends SecuredView {
     }
 
 
+    /**
+     * dialog will be shown for a specific subject when clicked
+     * @param subject specific subject
+     */
     private void showSubjectDialog(Subject subject) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -313,6 +392,9 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * @return div for the top of the page (includes button to add a new teacher)
+     */
     private Component createTeacherTopDiv() {
         Div topDiv = new Div();
         topDiv.addClassName("top-div-doc");
@@ -359,6 +441,9 @@ public class ModeratorView extends SecuredView {
         return topDiv;
     }
 
+    /**
+     * @return div for the top of the page (includes button to add a new subject)
+     */
     private Component createSubjectTopDiv() {
         Div topDiv = new Div();
         topDiv.addClassName("top-div-doc");
@@ -405,6 +490,10 @@ public class ModeratorView extends SecuredView {
         return topDiv;
     }
 
+    /**
+     * makes api request to approve a document
+     * @param documentId of document
+     */
     private void makeApproveRequest(String documentId) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/approve/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -425,6 +514,11 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * makes api request to decline a document
+     * @param documentId of document
+     * @param declineMessage to send to uploader to tell him why his document wasn't published
+     */
     private void makeDeclineRequest(String documentId, String declineMessage) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/mod/decline/" + documentId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -446,6 +540,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * @param page current page
+     * @return all pending documents for current page
+     */
     private Documents getPendingDocuments(int page) {
         HttpResponse<Documents> documents = Unirest.get(BASE_URL + "/mod/pending")
                 .queryString("limit", limit)
@@ -463,6 +561,10 @@ public class ModeratorView extends SecuredView {
         return null;
     }
 
+    /**
+     * @param page current page
+     * @return all teachers for current page
+     */
     private Teachers getTeachers(int page) {
         if (searchState) {
             if (foundIds == null) return null;
@@ -497,6 +599,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * @param page current page
+     * @return all subjects for current page
+     */
     private Subjects getSubjects(int page) {
         if (searchState) {
             if (foundIds == null) return null;
@@ -534,6 +640,9 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * shows user a dialog to add a teacher
+     */
     private void showAddTeacherDialog() {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -579,6 +688,12 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * send api request to create a new teacher
+     * @param teacher name of teacher
+     * @param shortname of teacher
+     * @param description of teacher
+     */
     private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
         HttpResponse<Teacher> createTeacher = Unirest.post(BASE_URL + "/teacher")
                 .contentType("application/json")
@@ -595,6 +710,13 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * makes api request to update a teacher object
+     * @param teacherId of teacher
+     * @param name of teacher
+     * @param shortname of teacher
+     * @param description of teacher
+     */
     private void makeTeacherUpdateRequest(String teacherId, String name, String shortname, String description) {
         HttpResponse<Teacher> teacher = Unirest.patch(BASE_URL + "/teacher/" + teacherId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -617,6 +739,13 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * makes api request to update a subject
+     * @param subjectId of subject
+     * @param name of subject
+     * @param shortname of subject
+     * @param description of subject
+     */
     private void makeSubjectUpdateRequest(String subjectId, String name, String shortname, String description) {
         HttpResponse<Subject> subject = Unirest.patch(BASE_URL + "/subject/" + subjectId)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -639,6 +768,9 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * shows user a dialog to add a subject
+     */
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -684,6 +816,12 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * makes api request to create a new subject
+     * @param subject name of subject
+     * @param shortname of subject
+     * @param description of subject
+     */
     private void makeSubjectCreateRequest(String subject, String shortname, String description) {
         HttpResponse<Subject> createSubject = Unirest.post(BASE_URL + "/subject")
                 .contentType("application/json")
@@ -700,8 +838,11 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu for documents
+     */
     private Component createDocumentPagingMenu(int totalPages) {
-//        pagingMenuLayout = new HorizontalLayout();
         documentPagingMenuLayout = new HorizontalLayout();
         documentPagingMenuLayout.addClassName("paging-layout");
 
@@ -758,6 +899,10 @@ public class ModeratorView extends SecuredView {
         return documentPagingMenuLayout;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu for teachers
+     */
     private Component createTeacherPagingMenu(int totalPages) {
         teacherPagingMenuLayout = new HorizontalLayout();
         teacherPagingMenuLayout.addClassName("paging-layout");
@@ -815,6 +960,10 @@ public class ModeratorView extends SecuredView {
         return teacherPagingMenuLayout;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu for subjects
+     */
     private Component createSubjectPagingMenu(int totalPages) {
         subjectPagingMenuLayout = new HorizontalLayout();
         subjectPagingMenuLayout.addClassName("paging-layout");
@@ -872,6 +1021,9 @@ public class ModeratorView extends SecuredView {
         return subjectPagingMenuLayout;
     }
 
+    /**
+     * update document page
+     */
     private void updateDocumentPage() {
         documentPage.remove(documentGrid);
         documentPage.remove(documentPagingMenuLayout);
@@ -881,6 +1033,9 @@ public class ModeratorView extends SecuredView {
         documentPage.add(createDocumentPagingMenu(documents.getTotalPages()));
     }
 
+    /**
+     * update teacher page
+     */
     private void updateTeacherPage() {
         teacherPage.remove(teacherGrid);
         teacherPage.remove(teacherPagingMenuLayout);
@@ -890,6 +1045,9 @@ public class ModeratorView extends SecuredView {
         teacherPage.add(createTeacherPagingMenu(teachers.getTotalPages()));
     }
 
+    /**
+     * update subject page
+     */
     private void updateSubjectPage() {
         subjectPage.remove(subjectGrid);
         subjectPage.remove(subjectPagingMenuLayout);
@@ -899,6 +1057,10 @@ public class ModeratorView extends SecuredView {
         subjectPage.add(createSubjectPagingMenu(subjects.getTotalPages()));
     }
 
+    /**
+     * makes show request for specific document to api so moderator can check the document -> approve/decline/still pending
+     * @param document specific document
+     */
     private void makeShowRequest(Document document) {
         byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -923,6 +1085,10 @@ public class ModeratorView extends SecuredView {
         fetchUserData(SessionStorage.get().getUser().getId());
     }
 
+    /**
+     * makes request to api to fetch user data for a specific user
+     * @param id of user
+     */
     private void fetchUserData(String id) {
         HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -938,6 +1104,10 @@ public class ModeratorView extends SecuredView {
         }
     }
 
+    /**
+     * make api request to filter teachers
+     * @param searchText to search for
+     */
     private void makeTeacherSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
@@ -979,6 +1149,10 @@ public class ModeratorView extends SecuredView {
         updateTeacherPage();
     }
 
+    /**
+     * make api request to filter for subjects
+     * @param searchText to search for
+     */
     private void makeSubjectSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();

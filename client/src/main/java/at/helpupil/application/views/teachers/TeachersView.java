@@ -36,21 +36,51 @@ import java.util.Arrays;
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 
+/**
+ * This view shows all teachers in the database
+ */
 @Route(value = "teachers", layout = MainView.class)
 @PageTitle("Teachers")
 @CssImport("./views/teachers/teachers-view.css")
 public class TeachersView extends SecuredView {
 
+    /**
+     * div for teacher layout
+     */
     private Div teacherLayoutDiv = new Div();
+    /**
+     * layout for paging menu
+     */
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    /**
+     * true if user searches for something
+     */
     private boolean searchState = false;
+    /**
+     * list of found ids
+     */
     private final ArrayList<String> foundIds = new ArrayList<>();
+    /**
+     * limits of maximum teachers per page
+     */
     private final int[] limits = new int[]{10, 15, 25};
+    /**
+     * default value for teachers per page
+     */
     private int limit = limits[0];
+    /**
+     * current page
+     */
     private int currentPage = 1;
+    /**
+     * all teachers in database
+     */
     private Teachers teacher = getTeachers(currentPage);
 
+    /**
+     * initializes Teacher View
+     */
     public TeachersView() {
         ThemeHelper.onLoad();
 
@@ -61,6 +91,9 @@ public class TeachersView extends SecuredView {
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
+    /**
+     * @return search box for user to search something
+     */
     private Component createSearchBox() {
         Div searchDiv = new Div();
         searchDiv.addClassName("search-div");
@@ -96,6 +129,10 @@ public class TeachersView extends SecuredView {
         return searchDiv;
     }
 
+    /**
+     * make api request to filter documents
+     * @param searchText to filter for
+     */
     private void makeSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
@@ -137,6 +174,9 @@ public class TeachersView extends SecuredView {
         updateTeacherPage();
     }
 
+    /**
+     * updates teacher page
+     */
     private void updateTeacherPage() {
         remove(teacherLayoutDiv);
         remove(pagingMenuLayout);
@@ -146,6 +186,9 @@ public class TeachersView extends SecuredView {
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
+    /**
+     * @return div with all teacher cards
+     */
     private Component createTeacherCards() {
         teacherLayoutDiv = new Div();
         teacherLayoutDiv.addClassName("teacher-layout-div");
@@ -164,6 +207,10 @@ public class TeachersView extends SecuredView {
         return teacherLayoutDiv;
     }
 
+    /**
+     * @param oneTeacher to create a card
+     * @return card of teacher
+     */
     private Card createTeacherCard(Teacher oneTeacher) {
         Card card = new Card(
                 new TitleLabel(oneTeacher.getName()),
@@ -174,6 +221,10 @@ public class TeachersView extends SecuredView {
         return card;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu
+     */
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
@@ -222,6 +273,10 @@ public class TeachersView extends SecuredView {
         return pagingMenuLayout;
     }
 
+    /**
+     * @param page current page
+     * @return all teachers for current page
+     */
     private Teachers getTeachers(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));

@@ -26,19 +26,40 @@ import kong.unirest.Unirest;
 
 import static at.helpupil.application.Application.BASE_URL;
 
+/**
+ * This view is show to sign up
+ */
 @Route(value = "signup", layout = MainView.class)
 @PageTitle("Sign Up")
 @CssImport("./views/signup/sign-up-view.css")
 public class SignUpView extends OpenView {
 
+    /**
+     * email of new user
+     */
     private final EmailField email = new EmailField("Email address");
+    /**
+     * name of new user
+     */
     private final TextField name = new TextField("Username: ");
+    /**
+     * password of new user
+     */
     private final PasswordField password = new PasswordField("Password");
 
+    /**
+     * button to clear fields
+     */
     private final Button clear = new Button("Clear");
+    /**
+     * button to sign up
+     */
     private final Button signUp = new Button("Sign Up");
 
 
+    /**
+     * initializes Sign Up View
+     */
     public SignUpView() {
         ThemeHelper.onLoad();
 
@@ -61,16 +82,25 @@ public class SignUpView extends OpenView {
         });
     }
 
+    /**
+     * clears all fields in form
+     */
     private void clearForm() {
         email.setValue("");
         name.setValue("");
         password.setValue("");
     }
 
+    /**
+     * @return title as H3
+     */
     private Component createTitle() {
         return new H3("Sign Up");
     }
 
+    /**
+     * @return layout for form
+     */
     private Component createFormLayout() {
         VerticalLayout formLayout = new VerticalLayout();
         formLayout.addClassName("form-layout");
@@ -79,6 +109,9 @@ public class SignUpView extends OpenView {
         return formLayout;
     }
 
+    /**
+     * @return layout for buttons
+     */
     private Component createButtonLayout() {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addClassName("button-layout");
@@ -89,6 +122,12 @@ public class SignUpView extends OpenView {
         return buttonLayout;
     }
 
+    /**
+     * makes sign up request to api to register a new user
+     * @param email of new user
+     * @param name of new user
+     * @param password of new user
+     */
     private void makeSignUpRequest(String email, String name, String password) {
         HttpResponse<User> user = Unirest.post(BASE_URL + "/auth/register")
                 .contentType("application/json")
@@ -105,6 +144,10 @@ public class SignUpView extends OpenView {
         }
     }
 
+    /**
+     * sends verification email to user after sign up
+     * @param user which will get a verification email
+     */
     private void sendVerifyEmail(User user) {
         Unirest.post(BASE_URL + "/auth/send-verification-email")
                 .queryString("token", user.getTokens().getAccess().getToken())

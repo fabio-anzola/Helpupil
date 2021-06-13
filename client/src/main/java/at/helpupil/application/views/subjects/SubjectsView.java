@@ -36,21 +36,51 @@ import java.util.Arrays;
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.resolveSubjectById;
 
+/**
+ * This view is shows all subjects in the database
+ */
 @Route(value = "subjects", layout = MainView.class)
 @PageTitle("Subjects")
 @CssImport("./views/subjects/subjects-view.css")
 public class SubjectsView extends SecuredView {
 
+    /**
+     * div for subject layout
+     */
     private Div subjectLayoutDiv = new Div();
+    /**
+     * layout for paging
+     */
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    /**
+     * true if user searches something
+     */
     private boolean searchState = false;
+    /**
+     * list of found ids
+     */
     private final ArrayList<String> foundIds = new ArrayList<>();
+    /**
+     * numbers of maximum subjects per page
+     */
     private final int[] limits = new int[]{10, 15, 25};
+    /**
+     * default value for subjects per page
+     */
     private int limit = limits[0];
+    /**
+     * current page
+     */
     private int currentPage = 1;
+    /**
+     * gets all subjects from database
+     */
     private Subjects subject = getSubjects(currentPage);
 
+    /**
+     * initializes subjects view
+     */
     public SubjectsView() {
         ThemeHelper.onLoad();
 
@@ -61,6 +91,9 @@ public class SubjectsView extends SecuredView {
         add(createPagingMenu(subject.getTotalPages()));
     }
 
+    /**
+     * @return search box where users can filter documents
+     */
     private Component createSearchBox() {
         Div searchDiv = new Div();
         searchDiv.addClassName("search-div");
@@ -96,6 +129,10 @@ public class SubjectsView extends SecuredView {
         return searchDiv;
     }
 
+    /**
+     * makes search request to api to filter documents
+     * @param searchText to filter for
+     */
     private void makeSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
@@ -136,6 +173,9 @@ public class SubjectsView extends SecuredView {
         updateSubjectPage();
     }
 
+    /**
+     * updates subject page
+     */
     private void updateSubjectPage() {
         remove(subjectLayoutDiv);
         remove(pagingMenuLayout);
@@ -145,6 +185,9 @@ public class SubjectsView extends SecuredView {
         add(createPagingMenu(subject.getTotalPages()));
     }
 
+    /**
+     * @return div with all cards
+     */
     private Component createSubjectCards() {
         subjectLayoutDiv = new Div();
         subjectLayoutDiv.addClassName("subject-layout-div");
@@ -163,6 +206,10 @@ public class SubjectsView extends SecuredView {
         return subjectLayoutDiv;
     }
 
+    /**
+     * @param oneSubject a subject
+     * @return a card of a subject
+     */
     private Card createSubjectCard(Subject oneSubject) {
         Card card = new Card(
                 new TitleLabel(oneSubject.getName()),
@@ -173,6 +220,10 @@ public class SubjectsView extends SecuredView {
         return card;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu so user can choose a page
+     */
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
@@ -221,6 +272,10 @@ public class SubjectsView extends SecuredView {
         return pagingMenuLayout;
     }
 
+    /**
+     * @param page current page
+     * @return subjects for current page
+     */
     private Subjects getSubjects(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
