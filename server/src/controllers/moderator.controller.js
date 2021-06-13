@@ -22,10 +22,8 @@ const approve = catchAsync(async (req, res) => {
 	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
 	await userService.addCoins(document.user, priceTypes[document.type.toUpperCase()]);
 	const user = await userService.getUserById(document.user);
-	if (!user.purchasedDocuments.includes(document._id)) {
-		user.purchasedDocuments.push(document._id);
-		await userService.updateUserById(document.user, user);
-	}
+	user.purchasedDocuments.push(document._id);
+	await userService.updateUserById(document.user, user);
 	emailService.sendApproveEmail(user.email, user.name, doc.name)
 	res.send(document);
 });
