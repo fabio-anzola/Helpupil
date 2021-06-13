@@ -36,19 +36,46 @@ import java.util.Arrays;
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.resolveTeacherById;
 
+/**
+ * This view shows all teachers in the database
+ */
 @Route(value = "teachers", layout = MainView.class)
 @PageTitle("Teachers")
 @CssImport("./views/teachers/teachers-view.css")
 public class TeachersView extends SecuredView {
 
+    /**
+     * div for teacher layout
+     */
     private Div teacherLayoutDiv = new Div();
+    /**
+     * layout for paging menu
+     */
     private HorizontalLayout pagingMenuLayout = new HorizontalLayout();
 
+    /**
+     * true if user searches for something
+     */
     private boolean searchState = false;
+    /**
+     * list of found ids
+     */
     private final ArrayList<String> foundIds = new ArrayList<>();
+    /**
+     * limits of maximum teachers per page
+     */
     private final int[] limits = new int[]{10, 15, 25};
+    /**
+     * default value for teachers per page
+     */
     private int limit = limits[0];
+    /**
+     * current page
+     */
     private int currentPage = 1;
+    /**
+     * all teachers in database
+     */
     private Teachers teacher = getTeachers(currentPage);
 
     public TeachersView() {
