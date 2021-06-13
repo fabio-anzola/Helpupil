@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class UserObj {
     private String role;
     private boolean isEmailVerified;
-    private float wallet;
+    private int wallet;
     private ArrayList<Object> purchasedDocuments;
     private String name;
     private String email;
     private String id;
 
-    public UserObj(String role, boolean isEmailVerified, float wallet, ArrayList<Object> purchasedDocuments, String name, String email, String id) {
+    public UserObj(String role, boolean isEmailVerified, int wallet, ArrayList<Object> purchasedDocuments, String name, String email, String id) {
         this.role = role;
         this.isEmailVerified = isEmailVerified;
         this.wallet = wallet;
@@ -29,7 +29,7 @@ public class UserObj {
         return isEmailVerified;
     }
 
-    public float getWallet() {
+    public int getWallet() {
         return wallet;
     }
 
@@ -63,7 +63,7 @@ public class UserObj {
         this.isEmailVerified = isEmailVerified;
     }
 
-    public void setWallet(float wallet) {
+    public void setWallet(int wallet) {
         this.wallet = wallet;
     }
 

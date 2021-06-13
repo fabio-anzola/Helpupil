@@ -1,5 +1,6 @@
 package at.helpupil.application.views.main;
 
+import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.views.about.AboutView;
@@ -12,17 +13,23 @@ import at.helpupil.application.views.subjects.SubjectsView;
 import at.helpupil.application.views.teachers.TeachersView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -67,7 +74,7 @@ public class MainView extends AppLayout {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        layout.add(new Avatar());
+        layout.add(createAvatarMenu());
         return layout;
     }
 
@@ -109,7 +116,8 @@ public class MainView extends AppLayout {
                     createTab("About", AboutView.class)
             };
         }
-        if (SessionStorage.get().getUser().getRole().equals("moderator")) {
+        if (SessionStorage.get().getUser().getRole().equals("moderator")
+                || SessionStorage.get().getUser().getRole().equals("admin")) {
             return new Tab[]{
                     createTab("Documents", DocumentsView.class),
                     createTab("Teachers", TeachersView.class),
@@ -148,5 +156,34 @@ public class MainView extends AppLayout {
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
+    }
+
+
+    private MenuBar createAvatarMenu() {
+        MenuBar menuBar = new MenuBar();
+        menuBar.addClassName("avatar-menu");
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
+        MenuItem avatarItem = menuBar.addItem(new Avatar());
+
+        if (SessionStorage.isNull()) {
+            return menuBar;
+        }
+
+        Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        avatarItem.addClickListener(e -> {
+            walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        });
+
+        Icon walletIcon = new Icon(VaadinIcon.WALLET);
+        HorizontalLayout walletLayout = new HorizontalLayout();
+        walletLayout.add(walletIcon, walletSpan);
+        avatarItem.getSubMenu().addItem(walletLayout);
+        avatarItem.getSubMenu().addItem("Logout",
+                e -> {
+                    SessionStorage.set(null);
+                    Auth.redirectIfNotValid();
+                });
+
+        return menuBar;
     }
 }
