@@ -140,7 +140,7 @@ Contributions are what make the open source community such an amazing place to b
 
 ## License
 
-Distributed under the ... License. See `LICENSE` for more information.
+The creators hold all copyrights.
 
 ## Contact
 
