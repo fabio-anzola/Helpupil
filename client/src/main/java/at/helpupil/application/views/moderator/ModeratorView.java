@@ -241,6 +241,10 @@ public class ModeratorView extends SecuredView {
         return subjectGrid;
     }
 
+    /**
+     * dialog will be shown for a specific document when clicked
+     * @param document specific document
+     */
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -293,6 +297,10 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * dialog will be shown for a specific teacher when clicked
+     * @param teacher specific teacher
+     */
     private void showTeacherDialog(Teacher teacher) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
@@ -337,6 +345,10 @@ public class ModeratorView extends SecuredView {
     }
 
 
+    /**
+     * dialog will be shown for a specific subject when clicked
+     * @param subject specific subject
+     */
     private void showSubjectDialog(Subject subject) {
         Dialog dialog = new Dialog();
         if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
