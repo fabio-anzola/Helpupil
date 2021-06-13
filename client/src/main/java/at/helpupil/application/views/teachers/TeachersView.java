@@ -78,6 +78,9 @@ public class TeachersView extends SecuredView {
      */
     private Teachers teacher = getTeachers(currentPage);
 
+    /**
+     * initializes Teacher View
+     */
     public TeachersView() {
         ThemeHelper.onLoad();
 
@@ -88,6 +91,9 @@ public class TeachersView extends SecuredView {
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
+    /**
+     * @return search box for user to search something
+     */
     private Component createSearchBox() {
         Div searchDiv = new Div();
         searchDiv.addClassName("search-div");
@@ -123,6 +129,10 @@ public class TeachersView extends SecuredView {
         return searchDiv;
     }
 
+    /**
+     * make api request to filter documents
+     * @param searchText to filter for
+     */
     private void makeSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
         foundIds.clear();
@@ -164,6 +174,9 @@ public class TeachersView extends SecuredView {
         updateTeacherPage();
     }
 
+    /**
+     * updates teacher page
+     */
     private void updateTeacherPage() {
         remove(teacherLayoutDiv);
         remove(pagingMenuLayout);
