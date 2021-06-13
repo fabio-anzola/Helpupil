@@ -173,6 +173,9 @@ public class SubjectsView extends SecuredView {
         updateSubjectPage();
     }
 
+    /**
+     * updates subject page
+     */
     private void updateSubjectPage() {
         remove(subjectLayoutDiv);
         remove(pagingMenuLayout);
@@ -182,6 +185,9 @@ public class SubjectsView extends SecuredView {
         add(createPagingMenu(subject.getTotalPages()));
     }
 
+    /**
+     * @return div with all cards
+     */
     private Component createSubjectCards() {
         subjectLayoutDiv = new Div();
         subjectLayoutDiv.addClassName("subject-layout-div");
@@ -200,6 +206,10 @@ public class SubjectsView extends SecuredView {
         return subjectLayoutDiv;
     }
 
+    /**
+     * @param oneSubject a subject
+     * @return a card of a subject
+     */
     private Card createSubjectCard(Subject oneSubject) {
         Card card = new Card(
                 new TitleLabel(oneSubject.getName()),
@@ -210,6 +220,10 @@ public class SubjectsView extends SecuredView {
         return card;
     }
 
+    /**
+     * @param totalPages number of pages
+     * @return paging menu so user can choose a page
+     */
     private Component createPagingMenu(int totalPages) {
         pagingMenuLayout.addClassName("paging-layout");
 
@@ -258,6 +272,10 @@ public class SubjectsView extends SecuredView {
         return pagingMenuLayout;
     }
 
+    /**
+     * @param page current page
+     * @return subjects for current page
+     */
     private Subjects getSubjects(int page) {
         if (searchState) {
             int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
