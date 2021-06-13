@@ -46,7 +46,6 @@ const getTeacherById = async (id) => {
  * @returns {Promise<Teacher>}
  */
 const updateTeacherById = async (teacherId, updateBody) => {
-	console.log(updateBody);
 	const teacher = await getTeacherById(teacherId);
 	if (!teacher) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Teacher not found');

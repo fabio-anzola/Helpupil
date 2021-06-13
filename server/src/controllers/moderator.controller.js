@@ -31,7 +31,6 @@ const approve = catchAsync(async (req, res) => {
 });
 
 const decline = catchAsync(async (req, res) => {
-	console.log(req.query);
 	req.body.status = statusTypes.DECLINED;
 	const document = await moderatorService.updateDocumentById(req.params.documentId, req.body);
 	const user = await userService.getUserById(document.user);

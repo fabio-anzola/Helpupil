@@ -46,7 +46,6 @@ const getSubjectById = async (id) => {
  * @returns {Promise<Subject>}
  */
 const updateSubjectById = async (subjectId, updateBody) => {
-	console.log(updateBody);
 	const subject = await getSubjectById(subjectId);
 	if (!subject) {
 		throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found');
