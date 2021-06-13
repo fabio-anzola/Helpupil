@@ -26,19 +26,40 @@ import kong.unirest.Unirest;
 
 import static at.helpupil.application.Application.BASE_URL;
 
+/**
+ * This view is show to sign up
+ */
 @Route(value = "signup", layout = MainView.class)
 @PageTitle("Sign Up")
 @CssImport("./views/signup/sign-up-view.css")
 public class SignUpView extends OpenView {
 
+    /**
+     * email of new user
+     */
     private final EmailField email = new EmailField("Email address");
+    /**
+     * name of new user
+     */
     private final TextField name = new TextField("Username: ");
+    /**
+     * password of new user
+     */
     private final PasswordField password = new PasswordField("Password");
 
+    /**
+     * button to clear fields
+     */
     private final Button clear = new Button("Clear");
+    /**
+     * button to sign up
+     */
     private final Button signUp = new Button("Sign Up");
 
 
+    /**
+     * initializes Sign Up View
+     */
     public SignUpView() {
         ThemeHelper.onLoad();
 
@@ -61,6 +82,9 @@ public class SignUpView extends OpenView {
         });
     }
 
+    /**
+     * clears all fields in form
+     */
     private void clearForm() {
         email.setValue("");
         name.setValue("");
