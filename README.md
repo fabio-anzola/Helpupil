@@ -2,7 +2,6 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 
 
 
@@ -160,5 +159,3 @@ Project Link: [https://github.com/fabio-anzola/Helpupil](https://github.com/fabi
 [stars-url]: https://github.com/fabio-anzola/repo/stargazers
 [issues-shield]: https://img.shields.io/github/issues/fabio-anzola/repo.svg?style=for-the-badge
 [issues-url]: https://github.com/fabio-anzola/repo/issues
-[license-shield]: https://img.shields.io/github/license/fabio-anzola/repo.svg?style=for-the-badge
-[license-url]: https://github.com/fabio-anzola/repo/blob/master/LICENSE.txt
