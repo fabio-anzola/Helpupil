@@ -392,6 +392,9 @@ public class ModeratorView extends SecuredView {
         dialog.open();
     }
 
+    /**
+     * @return div for the top of the page (includes button to add a new teacher)
+     */
     private Component createTeacherTopDiv() {
         Div topDiv = new Div();
         topDiv.addClassName("top-div-doc");
@@ -438,6 +441,9 @@ public class ModeratorView extends SecuredView {
         return topDiv;
     }
 
+    /**
+     * @return div for the top of the page (includes button to add a new subject)
+     */
     private Component createSubjectTopDiv() {
         Div topDiv = new Div();
         topDiv.addClassName("top-div-doc");
