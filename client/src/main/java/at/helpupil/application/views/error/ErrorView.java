@@ -14,7 +14,7 @@ import com.vaadin.flow.router.*;
 
 import javax.servlet.http.HttpServletResponse;
 
-@Route(value = "error", layout = MainView.class)
+@Route(value = "errorpage", layout = MainView.class)
 @PageTitle("404 Page")
 @CssImport("./views/error/error-view.css")
 public class ErrorView extends OpenView {
