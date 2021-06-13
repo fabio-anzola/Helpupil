@@ -46,7 +46,15 @@ public class ErrorView extends OpenView {
     }
 }
 
+/**
+ * This class is called by Vaadin when it can't find the requested page
+ */
 class RouteNotFound extends RouteNotFoundError {
+    /**
+     * @param event that happened before this method was called
+     * @param parameter from error
+     * @return reroutes the user to ErrorView
+     */
     @Override
     public int setErrorParameter(BeforeEnterEvent event, ErrorParameter<NotFoundException> parameter) {
         event.rerouteTo(ErrorView.class);
