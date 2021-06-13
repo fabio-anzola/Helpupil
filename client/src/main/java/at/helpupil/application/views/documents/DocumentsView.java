@@ -1,12 +1,8 @@
 package at.helpupil.application.views.documents;
 
-import at.helpupil.application.utils.SecuredView;
-import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.StarObj;
-import at.helpupil.application.utils.ThemeHelper;
+import at.helpupil.application.utils.*;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
-import at.helpupil.application.utils.responses.File;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -22,7 +18,6 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -35,13 +30,13 @@ import com.vaadin.flow.server.StreamResource;
 import kong.unirest.HttpResponse;
 import kong.unirest.MultipartBody;
 import kong.unirest.Unirest;
-import org.apache.commons.io.filefilter.NotFileFilter;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.*;
+import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
@@ -218,7 +213,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     private void showUploadDialog() {
         Dialog dialog = new Dialog();
-        dialog.setWidth("40vw");
+        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
+            dialog.setWidth("100vw");
+        } else {
+            dialog.setWidth("40vw");
+        }
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -291,7 +290,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
-        dialog.setWidth("40vw");
+        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
+            dialog.setWidth("100vw");
+        } else {
+            dialog.setWidth("40vw");
+        }
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -437,7 +440,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     private void showBuyDialog(Document document) {
         Dialog dialog = new Dialog();
-        dialog.setWidth("25vw");
+        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
+            dialog.setWidth("100vw");
+        } else {
+            dialog.setWidth("25vw");
+        }
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -470,7 +477,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     private void showDeleteDialog(Document document) {
         Dialog dialog = new Dialog();
-        dialog.setWidth("25vw");
+        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
+            dialog.setWidth("100vw");
+        } else {
+            dialog.setWidth("25vw");
+        }
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -503,7 +514,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     private void showDeclineDialog(Document document) {
         Dialog dialog = new Dialog();
-        dialog.setWidth("25vw");
+        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
+            dialog.setWidth("100vw");
+        } else {
+            dialog.setWidth("25vw");
+        }
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");

@@ -148,4 +148,13 @@ vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-butto
     margin-top: 10px;
   }
 
+  vaadin-vertical-layout.dialog-layout vaadin-upload {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  vaadin-vertical-layout.dialog-layout vaadin-upload vaadin-button {
+    width: 100%;
+  }
 }
