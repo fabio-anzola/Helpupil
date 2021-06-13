@@ -1057,6 +1057,10 @@ public class ModeratorView extends SecuredView {
         subjectPage.add(createSubjectPagingMenu(subjects.getTotalPages()));
     }
 
+    /**
+     * makes show request for specific document to api so moderator can check the document -> approve/decline/still pending
+     * @param document specific document
+     */
     private void makeShowRequest(Document document) {
         byte[] bytes = Unirest.get(BASE_URL + "/content/" + document.getFile().getFilename())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
@@ -1081,6 +1085,10 @@ public class ModeratorView extends SecuredView {
         fetchUserData(SessionStorage.get().getUser().getId());
     }
 
+    /**
+     * makes request to api to fetch user data for a specific user
+     * @param id of user
+     */
     private void fetchUserData(String id) {
         HttpResponse<UserObj> user = Unirest.get(BASE_URL + "/users/" + id)
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
