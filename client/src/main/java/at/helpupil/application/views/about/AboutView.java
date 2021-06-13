@@ -16,11 +16,17 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * Here is information for users about our project
+ */
 @Route(value = "about", layout = MainView.class)
 @PageTitle("About")
 @CssImport("./views/about/about-view.css")
 public class AboutView extends Div {
 
+    /**
+     * reads README.md from github and renders it on AboutView
+     */
     public AboutView() {
         ThemeHelper.onLoad();
 
