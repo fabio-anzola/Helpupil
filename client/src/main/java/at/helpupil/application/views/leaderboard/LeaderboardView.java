@@ -20,11 +20,17 @@ import java.util.List;
 
 import static at.helpupil.application.Application.BASE_URL;
 
+/**
+ * This view shows the 10 users with the most points on a leaderboard
+ */
 @Route(value = "leaderboard", layout = MainView.class)
 @PageTitle("Leaderboard")
 @CssImport("./views/leaderboard/leaderboard-view.css")
 public class LeaderboardView extends SecuredView {
 
+    /**
+     * initializes Leaderboard
+     */
     public LeaderboardView() {
         ThemeHelper.onLoad();
 
@@ -45,6 +51,10 @@ public class LeaderboardView extends SecuredView {
         add(topUserGrid);
     }
 
+    /**
+     * makes request to api to get the 10 users with the most points
+     * @return 10 users with the most points
+     */
     private LeaderboardObjs makeLeaderboardRequest() {
         HttpResponse<LeaderboardObjs> topUsers = Unirest.get(BASE_URL + "/users/public/leaderboard")
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
