@@ -9,29 +9,50 @@ import kong.unirest.Unirest;
 
 import static at.helpupil.application.Application.BASE_URL;
 
+/**
+ * Response object if an error occurs
+ */
 public class Error {
+    /**
+     * number of error (for example: 404)
+     */
     private float code;
+    /**
+     * message of error (for example: not found)
+     */
     private String message;
 
+    /**
+     * @param code of error
+     * @param message of error
+     */
     public Error(float code, String message) {
         this.code = code;
         this.message = message;
     }
 
+    /**
+     * @return true and sends a refresh request to api if user is unauthorized
+     */
     public boolean continueCheck() {
         if (checkForRefresh()) {
             refreshToken();
             return true;
-        } else {
-            Notification.show("Sorry something went wrong: " + this.message).addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
+        Notification.show("Sorry something went wrong: " + this.message).addThemeVariants(NotificationVariant.LUMO_ERROR);
         return false;
     }
 
+    /**
+     * @return true if you aren't authorized
+     */
     private boolean checkForRefresh() {
         return this.code == 401 && this.message.equals("Please authenticate");
     }
 
+    /**
+     * sends http request to api to refresh access token
+     */
     private void refreshToken() {
         HttpResponse<Tokens> token = Unirest.post(BASE_URL + "/auth/refresh-tokens")
                 .contentType("application/json")
@@ -47,20 +68,32 @@ public class Error {
         }
     }
 
+    /**
+     * @return code of error
+     */
     public float getCode() {
         return code;
     }
 
+    /**
+     * @return message of error
+     */
     public String getMessage() {
         return message;
     }
 
     // Setter Methods
 
+    /**
+     * @param code of error
+     */
     public void setCode(float code) {
         this.code = code;
     }
 
+    /**
+     * @param message of error
+     */
     public void setMessage(String message) {
         this.message = message;
     }
