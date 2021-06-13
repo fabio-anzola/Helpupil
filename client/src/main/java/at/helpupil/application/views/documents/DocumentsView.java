@@ -102,8 +102,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             if (searchState) {
                 searchState = false;
                 currentPage = 1;
-                String[] resolvedFilter = resolveFilter();
-                documents = getDocuments(currentPage, resolvedFilter[0], resolvedFilter[1]);
+                if (filter == null) {
+                    documents = getDocuments(currentPage);
+                } else {
+                    String[] resolvedFilter = resolveFilter();
+                    documents = getDocuments(currentPage, resolvedFilter[0], resolvedFilter[1]);
+                }
                 updateDocumentPage();
             }
         });
