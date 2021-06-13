@@ -17,12 +17,15 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -67,7 +70,7 @@ public class MainView extends AppLayout {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        layout.add(new Avatar());
+        layout.add(createAvatar());
         return layout;
     }
 
@@ -148,5 +151,27 @@ public class MainView extends AppLayout {
     private String getCurrentPageTitle() {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
+    }
+
+
+    private MenuBar createAvatar() {
+        MenuBar menuBar = new MenuBar();
+        Avatar avatar = new Avatar();
+        MenuItem avatarItem = menuBar.addItem(avatar);
+
+
+        if (SessionStorage.isNull()) {
+            return menuBar;
+        }
+
+//        menuBar.setOpenOnHover(true);
+
+        avatarItem.getSubMenu().addItem("Wallet",
+                e -> Notification.show("Wallet"));
+        avatarItem.getSubMenu().addItem("Logout",
+                e -> Notification.show("Logout"));
+
+
+        return menuBar;
     }
 }
