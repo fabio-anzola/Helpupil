@@ -7,11 +7,10 @@ public class ResponsiveUI {
         SMALL, DESKTOP
     }
 
-    private static int windowWidth;
-
     public static LayoutMode getLayoutMode() {
-        UI.getCurrent().getPage().retrieveExtendedClientDetails(details -> windowWidth = details.getWindowInnerWidth());
-        if (windowWidth < 900) {
+        int[] windowWidth = new int[1];
+        UI.getCurrent().getPage().retrieveExtendedClientDetails(details -> windowWidth[0] = details.getWindowInnerWidth());
+        if (windowWidth[0] < 900) {
             return LayoutMode.SMALL;
         } else {
             return LayoutMode.DESKTOP;
