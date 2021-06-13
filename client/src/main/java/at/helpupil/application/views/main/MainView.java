@@ -25,6 +25,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -70,7 +71,7 @@ public class MainView extends AppLayout {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        layout.add(createAvatar());
+        layout.add(createAvatarMenu());
         return layout;
     }
 
@@ -154,23 +155,22 @@ public class MainView extends AppLayout {
     }
 
 
-    private MenuBar createAvatar() {
+    private MenuBar createAvatarMenu() {
         MenuBar menuBar = new MenuBar();
-        Avatar avatar = new Avatar();
-        MenuItem avatarItem = menuBar.addItem(avatar);
-
+        menuBar.addClassName("avatar-menu");
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
+        MenuItem avatarItem = menuBar.addItem(new Avatar());
 
         if (SessionStorage.isNull()) {
             return menuBar;
         }
 
-//        menuBar.setOpenOnHover(true);
+        menuBar.setOpenOnHover(true);
 
         avatarItem.getSubMenu().addItem("Wallet",
                 e -> Notification.show("Wallet"));
         avatarItem.getSubMenu().addItem("Logout",
                 e -> Notification.show("Logout"));
-
 
         return menuBar;
     }
