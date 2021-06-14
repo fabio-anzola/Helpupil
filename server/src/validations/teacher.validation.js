@@ -33,7 +33,7 @@ const updateTeacher = {
 		.keys({
 			name: Joi.string(),
 			shortname: Joi.string(),
-			description: Joi.string(),
+			description: Joi.string().allow(null, ''),
 		})
 		.min(1),
 };
