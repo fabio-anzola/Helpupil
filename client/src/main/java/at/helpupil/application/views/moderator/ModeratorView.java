@@ -53,9 +53,17 @@ import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 @CssImport("./views/moderator/moderator-view.css")
 public class ModeratorView extends SecuredView {
     /**
-     * current page
+     * current document page
      */
-    private int currentPage = 1;
+    private int currentDocumentPage = 1;
+    /**
+     * current teacher page
+     */
+    private int currentTeacherPage = 1;
+    /**
+     * current subject page
+     */
+    private int currentSubjectPage = 1;
     /**
      * grid of documents
      */
@@ -71,15 +79,15 @@ public class ModeratorView extends SecuredView {
     /**
      * all pending documents for current page
      */
-    private Documents documents = getPendingDocuments(currentPage);
+    private Documents documents = getPendingDocuments(currentDocumentPage);
     /**
      * all teachers for current page
      */
-    private Teachers teachers = getTeachers(currentPage);
+    private Teachers teachers = getTeachers(currentTeacherPage);
     /**
      * all subjects for current page
      */
-    private Subjects subjects = getSubjects(currentPage);
+    private Subjects subjects = getSubjects(currentSubjectPage);
     /**
      * layout for document paging menu
      */
@@ -93,9 +101,13 @@ public class ModeratorView extends SecuredView {
      */
     private HorizontalLayout subjectPagingMenuLayout;
     /**
-     * true if user searches something
+     * true if user searches teachers
      */
-    private boolean searchState = false;
+    private boolean teacherSearchState = false;
+    /**
+     * true if user searches subjects
+     */
+    private boolean subjectSearchState = false;
     /**
      * limits for maximum elements per page
      */
@@ -105,9 +117,13 @@ public class ModeratorView extends SecuredView {
      */
     private int limit = limits[0];
     /**
-     * list of found ids
+     * list of found teacher ids
      */
-    private final ArrayList<String> foundIds = new ArrayList<>();
+    private final ArrayList<String> foundTeacherIds = new ArrayList<>();
+    /**
+     * list of found subject ids
+     */
+    private final ArrayList<String> foundSubjectIds = new ArrayList<>();
 
     /**
      * div for document page
@@ -129,10 +145,6 @@ public class ModeratorView extends SecuredView {
         ThemeHelper.onLoad();
 
         addClassName("moderator-view");
-
-        if (documents.getTotalResults() == 0) {
-            currentPage = 0;
-        }
 
         Tab documentTab = new Tab("Documents");
         Tab teacherTab = new Tab("Teachers");
@@ -166,9 +178,6 @@ public class ModeratorView extends SecuredView {
         Div pages = new Div(documentPage, teacherPage, subjectPage);
 
         tabs.addSelectedChangeListener(e -> {
-            currentPage = 1;
-            searchState = false;
-
             tabsToPages.values().forEach(page -> page.setVisible(false));
             Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
             selectedPage.setVisible(true);
@@ -243,6 +252,7 @@ public class ModeratorView extends SecuredView {
 
     /**
      * dialog will be shown for a specific document when clicked
+     *
      * @param document specific document
      */
     private void showDocumentDialog(Document document) {
@@ -299,6 +309,7 @@ public class ModeratorView extends SecuredView {
 
     /**
      * dialog will be shown for a specific teacher when clicked
+     *
      * @param teacher specific teacher
      */
     private void showTeacherDialog(Teacher teacher) {
@@ -347,6 +358,7 @@ public class ModeratorView extends SecuredView {
 
     /**
      * dialog will be shown for a specific subject when clicked
+     *
      * @param subject specific subject
      */
     private void showSubjectDialog(Subject subject) {
@@ -426,10 +438,10 @@ public class ModeratorView extends SecuredView {
         Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
         exitSearchState.addClickListener(e -> {
             searchBox.clear();
-            if (searchState) {
-                searchState = false;
-                currentPage = 1;
-                teachers = getTeachers(currentPage);
+            if (teacherSearchState) {
+                teacherSearchState = false;
+                currentTeacherPage = 1;
+                teachers = getTeachers(currentTeacherPage);
                 updateTeacherPage();
             }
         });
@@ -475,10 +487,10 @@ public class ModeratorView extends SecuredView {
         Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
         exitSearchState.addClickListener(e -> {
             searchBox.clear();
-            if (searchState) {
-                searchState = false;
-                currentPage = 1;
-                subjects = getSubjects(currentPage);
+            if (subjectSearchState) {
+                subjectSearchState = false;
+                currentSubjectPage = 1;
+                subjects = getSubjects(currentSubjectPage);
                 updateSubjectPage();
             }
         });
@@ -492,6 +504,7 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes api request to approve a document
+     *
      * @param documentId of document
      */
     private void makeApproveRequest(String documentId) {
@@ -503,11 +516,7 @@ public class ModeratorView extends SecuredView {
 
         if (null == error) {
             Notification.show("Document has been approved!");
-            documents = getPendingDocuments(currentPage);
-            if (documents == null) return;
-            if (documents.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            documents = getPendingDocuments(currentDocumentPage);
             updateDocumentPage();
         } else {
             Notification.show(error.getMessage());
@@ -516,7 +525,8 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes api request to decline a document
-     * @param documentId of document
+     *
+     * @param documentId     of document
      * @param declineMessage to send to uploader to tell him why his document wasn't published
      */
     private void makeDeclineRequest(String documentId, String declineMessage) {
@@ -529,11 +539,7 @@ public class ModeratorView extends SecuredView {
 
         if (null == error) {
             Notification.show("Document has been declined!");
-            documents = getPendingDocuments(currentPage);
-            if (documents == null) return;
-            if (documents.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            documents = getPendingDocuments(currentDocumentPage);
             updateDocumentPage();
         } else {
             Notification.show(error.getMessage());
@@ -566,19 +572,19 @@ public class ModeratorView extends SecuredView {
      * @return all teachers for current page
      */
     private Teachers getTeachers(int page) {
-        if (searchState) {
-            if (foundIds == null) return null;
-            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+        if (teacherSearchState) {
+            if (foundTeacherIds == null) return null;
+            int itemsVisible = Math.min(limit, foundTeacherIds.size() - ((page - 1) * limit));
             Teacher[] teacherAr = new Teacher[itemsVisible];
             int teacherArCounter = 0;
             for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
-                teacherAr[teacherArCounter] = resolveTeacherById(foundIds.get(i));
+                teacherAr[teacherArCounter] = resolveTeacherById(foundTeacherIds.get(i));
                 teacherArCounter++;
             }
             if (teacherAr.length == 0) {
-                currentPage = 0;
+                currentTeacherPage = 0;
             }
-            return new Teachers(teacherAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
+            return new Teachers(teacherAr, page, limit, (int) Math.ceil((float) foundTeacherIds.size() / limit), foundTeacherIds.size());
         } else {
             HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
                     .queryString("limit", limit)
@@ -604,19 +610,19 @@ public class ModeratorView extends SecuredView {
      * @return all subjects for current page
      */
     private Subjects getSubjects(int page) {
-        if (searchState) {
-            if (foundIds == null) return null;
-            int itemsVisible = Math.min(limit, foundIds.size() - ((page - 1) * limit));
+        if (subjectSearchState) {
+            if (foundSubjectIds == null) return null;
+            int itemsVisible = Math.min(limit, foundSubjectIds.size() - ((page - 1) * limit));
             Subject[] subjectAr = new Subject[itemsVisible];
             int subjectArCounter = 0;
             for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
-                subjectAr[subjectArCounter] = resolveSubjectById(foundIds.get(i));
+                subjectAr[subjectArCounter] = resolveSubjectById(foundSubjectIds.get(i));
                 subjectArCounter++;
             }
             if (subjectAr.length == 0) {
-                currentPage = 0;
+                currentSubjectPage = 0;
             }
-            return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
+            return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundSubjectIds.size() / limit), foundSubjectIds.size());
         } else {
             HttpResponse<Subjects> subjects = Unirest.get(BASE_URL + "/subject")
                     .queryString("limit", limit)
@@ -627,9 +633,6 @@ public class ModeratorView extends SecuredView {
             Error error = subjects.mapError(Error.class);
 
             if (null == error) {
-                if (subjects.getBody().getResults().length == 0) {
-                    currentPage = 0;
-                }
                 return subjects.getBody();
             } else {
                 if (new Error(error.getCode(), error.getMessage()).continueCheck()) {
@@ -690,8 +693,9 @@ public class ModeratorView extends SecuredView {
 
     /**
      * send api request to create a new teacher
-     * @param teacher name of teacher
-     * @param shortname of teacher
+     *
+     * @param teacher     name of teacher
+     * @param shortname   of teacher
      * @param description of teacher
      */
     private void makeTeacherCreateRequest(String teacher, String shortname, String description) {
@@ -712,9 +716,10 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes api request to update a teacher object
-     * @param teacherId of teacher
-     * @param name of teacher
-     * @param shortname of teacher
+     *
+     * @param teacherId   of teacher
+     * @param name        of teacher
+     * @param shortname   of teacher
      * @param description of teacher
      */
     private void makeTeacherUpdateRequest(String teacherId, String name, String shortname, String description) {
@@ -728,11 +733,7 @@ public class ModeratorView extends SecuredView {
 
         if (null == error) {
             Notification.show("Teacher has been updated!");
-            teachers = getTeachers(currentPage);
-            if (teachers == null) return;
-            if (teachers.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            teachers = getTeachers(currentTeacherPage);
             updateTeacherPage();
         } else {
             Notification.show(error.getMessage());
@@ -741,9 +742,10 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes api request to update a subject
-     * @param subjectId of subject
-     * @param name of subject
-     * @param shortname of subject
+     *
+     * @param subjectId   of subject
+     * @param name        of subject
+     * @param shortname   of subject
      * @param description of subject
      */
     private void makeSubjectUpdateRequest(String subjectId, String name, String shortname, String description) {
@@ -757,11 +759,7 @@ public class ModeratorView extends SecuredView {
 
         if (null == error) {
             Notification.show("Subject has been updated!");
-            subjects = getSubjects(currentPage);
-            if (subjects == null) return;
-            if (subjects.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            subjects = getSubjects(currentSubjectPage);
             updateSubjectPage();
         } else {
             Notification.show(error.getMessage());
@@ -818,8 +816,9 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes api request to create a new subject
-     * @param subject name of subject
-     * @param shortname of subject
+     *
+     * @param subject     name of subject
+     * @param shortname   of subject
      * @param description of subject
      */
     private void makeSubjectCreateRequest(String subject, String shortname, String description) {
@@ -849,13 +848,10 @@ public class ModeratorView extends SecuredView {
 
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
-            if (currentPage > 1) {
-                documents = getPendingDocuments(currentPage - 1);
+            if (currentDocumentPage > 1) {
+                documents = getPendingDocuments(currentDocumentPage - 1);
                 if (documents == null) return;
-                currentPage = documents.getPage();
-                if (documents.getTotalResults() == 0) {
-                    currentPage = 0;
-                }
+                currentDocumentPage = documents.getPage();
                 updateDocumentPage();
             }
         });
@@ -868,30 +864,22 @@ public class ModeratorView extends SecuredView {
         itemsPerPageSelect.setValue(String.valueOf(limit));
         itemsPerPageSelect.addValueChangeListener(e -> {
             limit = Integer.parseInt(e.getValue());
-            currentPage = 1;
-            documents = getPendingDocuments(currentPage);
-            if (documents == null) return;
-            if (documents.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            currentDocumentPage = 1;
+            documents = getPendingDocuments(currentDocumentPage);
             updateDocumentPage();
         });
 
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
-            if (currentPage < documents.getTotalPages()) {
-                documents = getPendingDocuments(currentPage + 1);
+            if (currentDocumentPage < documents.getTotalPages()) {
+                documents = getPendingDocuments(currentDocumentPage + 1);
                 if (documents == null) return;
-                currentPage = documents.getPage();
-                if (documents.getTotalResults() == 0) {
-                    currentPage = 0;
-                }
+                currentDocumentPage = documents.getPage();
                 updateDocumentPage();
             }
         });
 
-        Label currentPageText = new Label();
-        currentPageText.setText(currentPage + " / " + totalPages);
+        Label currentPageText = new Label(((totalPages == 0) ? 0 : currentDocumentPage) + " / " + totalPages);
 
 
         documentPagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
@@ -910,13 +898,10 @@ public class ModeratorView extends SecuredView {
 
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
-            if (currentPage > 1) {
-                teachers = getTeachers(currentPage - 1);
+            if (currentTeacherPage > 1) {
+                teachers = getTeachers(currentTeacherPage - 1);
                 if (teachers == null) return;
-                currentPage = teachers.getPage();
-                if (teachers.getTotalResults() == 0) {
-                    currentPage = 0;
-                }
+                currentTeacherPage = teachers.getPage();
                 updateTeacherPage();
             }
         });
@@ -929,30 +914,22 @@ public class ModeratorView extends SecuredView {
         itemsPerPageSelect.setValue(String.valueOf(limit));
         itemsPerPageSelect.addValueChangeListener(e -> {
             limit = Integer.parseInt(e.getValue());
-            currentPage = 1;
-            teachers = getTeachers(currentPage);
-            if (teachers == null) return;
-            if (teachers.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            currentTeacherPage = 1;
+            teachers = getTeachers(currentTeacherPage);
             updateTeacherPage();
         });
 
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
-            if (currentPage < teachers.getTotalPages()) {
-                teachers = getTeachers(currentPage + 1);
+            if (currentTeacherPage < teachers.getTotalPages()) {
+                teachers = getTeachers(currentTeacherPage + 1);
                 if (teachers == null) return;
-                currentPage = teachers.getPage();
-                if (teachers.getTotalResults() == 0) {
-                    currentPage = 0;
-                }
+                currentTeacherPage = teachers.getPage();
                 updateTeacherPage();
             }
         });
 
-        Label currentPageText = new Label();
-        currentPageText.setText(currentPage + " / " + totalPages);
+        Label currentPageText = new Label(((totalPages == 0) ? 0 : currentTeacherPage) + " / " + totalPages);
 
 
         teacherPagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
@@ -971,13 +948,10 @@ public class ModeratorView extends SecuredView {
 
         Button previousPage = new Button("Previous");
         previousPage.addClickListener(e -> {
-            if (currentPage > 1) {
-                subjects = getSubjects(currentPage - 1);
+            if (currentSubjectPage > 1) {
+                subjects = getSubjects(currentSubjectPage - 1);
                 if (subjects == null) return;
-                currentPage = subjects.getPage();
-                if (subjects.getTotalResults() == 0) {
-                    currentPage = 0;
-                }
+                currentSubjectPage = subjects.getPage();
                 updateSubjectPage();
             }
         });
@@ -990,30 +964,22 @@ public class ModeratorView extends SecuredView {
         itemsPerPageSelect.setValue(String.valueOf(limit));
         itemsPerPageSelect.addValueChangeListener(e -> {
             limit = Integer.parseInt(e.getValue());
-            currentPage = 1;
-            subjects = getSubjects(currentPage);
-            if (subjects == null) return;
-            if (subjects.getTotalResults() == 0) {
-                currentPage = 0;
-            }
+            currentSubjectPage = 1;
+            subjects = getSubjects(currentSubjectPage);
             updateSubjectPage();
         });
 
         Button nextPage = new Button("Next");
         nextPage.addClickListener(e -> {
-            if (currentPage < subjects.getTotalPages()) {
-                subjects = getSubjects(currentPage + 1);
+            if (currentSubjectPage < subjects.getTotalPages()) {
+                subjects = getSubjects(currentSubjectPage + 1);
                 if (subjects == null) return;
-                currentPage = subjects.getPage();
-                if (subjects.getTotalResults() == 0) {
-                    currentPage = 0;
-                }
+                currentSubjectPage = subjects.getPage();
                 updateSubjectPage();
             }
         });
 
-        Label currentPageText = new Label();
-        currentPageText.setText(currentPage + " / " + totalPages);
+        Label currentPageText = new Label(((totalPages == 0) ? 0 : currentSubjectPage) + " / " + totalPages);
 
 
         subjectPagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
@@ -1059,6 +1025,7 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes show request for specific document to api so moderator can check the document -> approve/decline/still pending
+     *
      * @param document specific document
      */
     private void makeShowRequest(Document document) {
@@ -1087,6 +1054,7 @@ public class ModeratorView extends SecuredView {
 
     /**
      * makes request to api to fetch user data for a specific user
+     *
      * @param id of user
      */
     private void fetchUserData(String id) {
@@ -1106,11 +1074,12 @@ public class ModeratorView extends SecuredView {
 
     /**
      * make api request to filter teachers
+     *
      * @param searchText to search for
      */
     private void makeTeacherSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
-        foundIds.clear();
+        foundTeacherIds.clear();
 
         int pageIndex = 0;
         int pages = 1;
@@ -1133,7 +1102,7 @@ public class ModeratorView extends SecuredView {
                     if (n.getShortname().toLowerCase().contains(finalSearchText)
                             || n.getName().toLowerCase().contains(finalSearchText)
                             || n.getDescription().toLowerCase().contains(finalSearchText)) {
-                        foundIds.add(n.getId());
+                        foundTeacherIds.add(n.getId());
                     }
                 });
             } else {
@@ -1143,19 +1112,20 @@ public class ModeratorView extends SecuredView {
         } while (pageIndex != pages);
 
 
-        searchState = true;
-        currentPage = 1;
-        teachers = getTeachers(currentPage);
+        teacherSearchState = true;
+        currentTeacherPage = 1;
+        teachers = getTeachers(currentTeacherPage);
         updateTeacherPage();
     }
 
     /**
      * make api request to filter for subjects
+     *
      * @param searchText to search for
      */
     private void makeSubjectSearchRequest(String searchText) {
         searchText = searchText.toLowerCase();
-        foundIds.clear();
+        foundSubjectIds.clear();
 
         int pageIndex = 0;
         int pages = 1;
@@ -1178,7 +1148,7 @@ public class ModeratorView extends SecuredView {
                     if (n.getShortname().toLowerCase().contains(finalSearchText)
                             || n.getName().toLowerCase().contains(finalSearchText)
                             || n.getDescription().toLowerCase().contains(finalSearchText)) {
-                        foundIds.add(n.getId());
+                        foundSubjectIds.add(n.getId());
                     }
                 });
             } else {
@@ -1188,9 +1158,9 @@ public class ModeratorView extends SecuredView {
         } while (pageIndex != pages);
 
 
-        searchState = true;
-        currentPage = 1;
-        subjects = getSubjects(currentPage);
+        subjectSearchState = true;
+        currentSubjectPage = 1;
+        subjects = getSubjects(currentSubjectPage);
         updateSubjectPage();
     }
 }
