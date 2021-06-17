@@ -196,13 +196,19 @@ public class MainView extends AppLayout {
      */
     private MenuBar createAvatarMenu() {
         MenuBar menuBar = new MenuBar();
-        menuBar.addClassName("avatar-menu");
-        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
-        MenuItem avatarItem = menuBar.addItem(new Avatar());
 
         if (SessionStorage.isNull()) {
+            menuBar.getStyle().set("display", "none");
             return menuBar;
         }
+
+        menuBar.addClassName("avatar-menu");
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
+        Avatar avatar = new Avatar();
+        avatar.setName(SessionStorage.get().getUser().getName());
+        MenuItem avatarItem = menuBar.addItem(avatar);
+
+        avatarItem.getSubMenu().addItem(SessionStorage.get().getUser().getName());
 
         Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
         avatarItem.addClickListener(e -> walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet())));
