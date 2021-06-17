@@ -581,9 +581,6 @@ public class ModeratorView extends SecuredView {
                 teacherAr[teacherArCounter] = resolveTeacherById(foundTeacherIds.get(i));
                 teacherArCounter++;
             }
-            if (teacherAr.length == 0) {
-                currentTeacherPage = 0;
-            }
             return new Teachers(teacherAr, page, limit, (int) Math.ceil((float) foundTeacherIds.size() / limit), foundTeacherIds.size());
         } else {
             HttpResponse<Teachers> teachers = Unirest.get(BASE_URL + "/teacher")
@@ -618,9 +615,6 @@ public class ModeratorView extends SecuredView {
             for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
                 subjectAr[subjectArCounter] = resolveSubjectById(foundSubjectIds.get(i));
                 subjectArCounter++;
-            }
-            if (subjectAr.length == 0) {
-                currentSubjectPage = 0;
             }
             return new Subjects(subjectAr, page, limit, (int) Math.ceil((float) foundSubjectIds.size() / limit), foundSubjectIds.size());
         } else {
