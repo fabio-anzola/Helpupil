@@ -33,6 +33,8 @@ import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.Map.Entry;
 
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.*;
@@ -100,7 +102,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * @return top div for button to upload document
-     *      + searchbox to filter documents
+     * + searchbox to filter documents
      */
     private Component createTopDiv() {
         Div topDiv = new Div();
@@ -173,6 +175,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * now only documents which apply the filter are shown
+     *
      * @param searchText to filter for
      */
     private void makeSearchRequest(String searchText) {
@@ -283,8 +286,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         Teachers teachers = getTeachers();
         if (teachers == null) return;
-        Map<String, String> teacherMap = new HashMap<>();
-        Arrays.stream(teachers.getResults()).forEach(n -> teacherMap.put(n.getShortname(), n.getId()));
+        Map<String, String> teacherMap = Arrays.stream(teachers.getResults())
+                .collect(Collectors.toMap(Teacher::getShortname, Teacher::getId))
+                .entrySet().stream()
+                .sorted(Entry.comparingByKey())
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         teacherSelect.setItems(teacherMap.keySet());
         teacherSelect.setLabel("Teacher");
 
@@ -346,6 +352,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * here the user can rate or buy a document
+     *
      * @param document to which the dialog is displayed
      */
     private void showDocumentDialog(Document document) {
@@ -420,11 +427,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * uploads a file to the database
-     * @param name of new document
+     *
+     * @param name    of new document
      * @param subject of new document
-     * @param type of new document
+     * @param type    of new document
      * @param teacher of new document
-     * @param buffer file data of new document
+     * @param buffer  file data of new document
      * @return 0 if upload was successful
      */
     private int makeDocumentUploadRequest(String name, String subject, String type, String teacher, MemoryBuffer buffer) {
@@ -467,8 +475,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * makes request to api to update rating
+     *
      * @param documentId of document
-     * @param rating of document
+     * @param rating     of document
      */
     private void makeRatingRequest(String documentId, int rating) {
         HttpResponse<Document> document = Unirest.patch(BASE_URL + "/rating/" + documentId)
@@ -491,7 +500,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     }
 
     /**
-     * @param starDiv here are all stars
+     * @param starDiv   here are all stars
      * @param starIndex how many stars are rated
      */
     private void replaceStars(Div starDiv, int starIndex) {
@@ -501,7 +510,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     }
 
     /**
-     * @param starDiv here are all stars
+     * @param starDiv   here are all stars
      * @param starIndex how many stars the user decided to rate the document
      * @return list of stars which are filled and empty
      */
@@ -527,6 +536,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * shows buy dialog to user so he can buy this document
+     *
      * @param document to show buy dialog
      */
     private void showBuyDialog(Document document) {
@@ -568,6 +578,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * show delete dialog to moderator so he can delete this document
+     *
      * @param document to show delete dialog
      */
     private void showDeleteDialog(Document document) {
@@ -609,6 +620,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * shows decline dialog to moderator so he can decline this document
+     *
      * @param document to show decline dialog
      */
     private void showDeclineDialog(Document document) {
@@ -653,6 +665,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * makes request to api to delete the document from the database
+     *
      * @param documentId id of document
      */
     private void makeDeleteRequest(String documentId) {
@@ -677,7 +690,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * makes request to the api to decline the document
-     * @param documentId id of document
+     *
+     * @param documentId     id of document
      * @param declineMessage will be sent to the uploader so he knows why his document wasn't approved
      */
     private void makeDeclineRequest(String documentId, String declineMessage) {
@@ -703,6 +717,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * makes request to api to buy the document
+     *
      * @param document which may be bought
      */
     private void makeBuyRequest(Document document) {
@@ -743,6 +758,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * makes request to api to get user by id
+     *
      * @param id of user
      */
     private void fetchUserData(String id) {
@@ -764,6 +780,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * asks api if buy request is allowed
+     *
      * @param document which may be bought
      * @return true if buy request is allowed
      */
@@ -859,8 +876,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * @param limit number of documents per page
-     * @param k search key
-     * @param v search value
+     * @param k     search key
+     * @param v     search value
      * @return documents which match search criteria
      */
     private Documents getDocuments(int limit, String k, String v) {
@@ -883,7 +900,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         } else {
             getDocuments(currentPage);
         }
-        
+
         if (documents == null) return null;
 
         Error error = documents.mapError(Error.class);
@@ -1001,8 +1018,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     /**
      * when a parameter is in the url this method is called
      * it sets the filter up so only filtered documents are shown
+     *
      * @param beforeEvent event before this method was called
-     * @param s parameter for filter
+     * @param s           parameter for filter
      */
     @Override
     public void setParameter(BeforeEvent beforeEvent, @WildcardParameter String s) {
