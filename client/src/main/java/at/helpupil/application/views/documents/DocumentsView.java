@@ -681,10 +681,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Document has been deleted!");
             documents = getDocuments(currentPage);
-            if (documents == null) return;
-            if (documents.getTotalResults() == 0) {
-                currentPage = 0;
-            }
             updateDocumentPage();
         } else {
             Notification.show(error.getMessage());
@@ -708,10 +704,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         if (null == error) {
             Notification.show("Document has been declined!");
             documents = getDocuments(currentPage);
-            if (documents == null) return;
-            if (documents.getTotalResults() == 0) {
-                currentPage = 0;
-            }
             updateDocumentPage();
         } else {
             Notification.show(error.getMessage());
@@ -868,8 +860,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             }
         });
 
-        Label currentPageText = new Label();
-        currentPageText.setText(currentPage + " / " + totalPages);
+        Label currentPageText = new Label(((totalPages == 0) ? 0 : currentPage) + " / " + totalPages);
 
 
         pagingMenuLayout.add(previousPage, currentPageText, nextPage, itemsPerPageSelect);
@@ -972,9 +963,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             for (int i = limit * (page - 1); i < ((page - 1) * limit) + itemsVisible; i++) {
                 documentAr[documentArCounter] = resolveDocumentById(foundIds.get(i));
                 documentArCounter++;
-            }
-            if (documentAr.length == 0) {
-                currentPage = 0;
             }
             return new Documents(documentAr, page, limit, (int) Math.ceil((float) foundIds.size() / limit), foundIds.size());
         } else {
