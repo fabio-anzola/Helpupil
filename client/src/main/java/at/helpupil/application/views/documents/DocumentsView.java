@@ -296,8 +296,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         Subjects subjects = getSubjects();
         if (subjects == null) return;
-        Map<String, String> subjectMap = new HashMap<>();
-        Arrays.stream(subjects.getResults()).forEach(n -> subjectMap.put(n.getShortname(), n.getId()));
+        Map<String, String> subjectMap = Arrays.stream(subjects.getResults())
+                .collect(Collectors.toMap(Subject::getShortname, Subject::getId))
+                .entrySet().stream()
+                .sorted(Entry.comparingByKey())
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         subjectSelect.setItems(subjectMap.keySet());
         subjectSelect.setLabel("Subject");
 
