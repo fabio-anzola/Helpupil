@@ -7,9 +7,6 @@ const { priceTypes } = require('../config/documents');
 const downloadDocument = catchAsync(async (req, res) => {
   const file = "content/" + req.params.documentName;
   const document = await documentService.getDocumentByName(req.params.documentName);
-  if (!document) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'File not found');
-  }
   if (document.status != "approved") {
     if (req.user.role != "admin" && req.user.role != "moderator") {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'File not approved');

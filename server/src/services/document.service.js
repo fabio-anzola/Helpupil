@@ -62,9 +62,13 @@ const getDocumentById = async (id) => {
  * @returns {Promise<Document>}
  */
 const getDocumentByName = async (name) => {
-  const document = (await Doc.findOne({
+  let document = (await Doc.findOne({
     "file.filename": name
-  })).toObject();
+  }));
+  if (!document) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'File not found');
+  }
+  document = document.toObject();
   document.price = priceTypes[document.type.toUpperCase()];
   document.teacher_sn = (await teacherService.getTeacherById(document.teacher)).shortname;
   document.subject_sn = (await subjectService.getSubjectById(document.subject)).shortname;
