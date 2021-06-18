@@ -53,7 +53,7 @@ vaadin-grid {
   border: none;
 }
 
-/* Add teacher - Dialog */
+/* Dialog */
 vaadin-vertical-layout.dialog-layout label {
   width: 100%;
   text-align: center;
@@ -63,11 +63,22 @@ vaadin-vertical-layout.dialog-layout label {
 
 vaadin-vertical-layout.dialog-layout vaadin-text-field,
 vaadin-vertical-layout.dialog-layout vaadin-select,
+vaadin-vertical-layout.dialog-layout vaadin-combo-box,
 vaadin-vertical-layout.dialog-layout vaadin-upload {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-upload {
+  margin-top: 20px;
+}
+
+/* Select Overlay */
+vaadin-select-overlay,
+vaadin-combo-box-overlay {
+  text-align: center;
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
@@ -81,6 +92,10 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {
   width: 50%;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-upload {
+  text-align: center;
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout {
@@ -123,19 +138,11 @@ vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-butto
   margin-top: 40px;
 }
 
-vaadin-vertical-layout.dialog-layout vaadin-upload {
-  text-align: center;
-}
-
 /* Paging */
 .paging-items-per-page-select {
   width: 90px;
 }
 
-/* Select Overlay */
-vaadin-select-overlay {
-  text-align: center;
-}
 
 @media only screen and (max-width: 900px) {
   div.top-div-doc {
