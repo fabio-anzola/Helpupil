@@ -10,6 +10,7 @@ import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -280,9 +281,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         TextField name = new TextField("Name");
 
-        Select<String> teacherSelect = new Select<>();
-        Select<String> subjectSelect = new Select<>();
+        ComboBox<String> teacherSelect = new ComboBox<>();
+        teacherSelect.getElement().setAttribute("theme", "align-center");
+        ComboBox<String> subjectSelect = new ComboBox<>();
+        subjectSelect.getElement().setAttribute("theme", "align-center");
         Select<String> typeSelect = new Select<>();
+        typeSelect.getElement().setAttribute("theme", "align-center");
 
         Teachers teachers = getTeachers();
         if (teachers == null) return;
