@@ -329,15 +329,16 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         HorizontalLayout dialogButtonLayout = new HorizontalLayout();
 
         confirmButton.addClickListener(e -> {
-            if (teacherSelect.getValue().trim().isEmpty()
-                    && subjectSelect.getValue().trim().isEmpty()
-                    && typeSelect.getValue().trim().isEmpty()
-                    && name.getValue().trim().isEmpty()) {
+            if (name.getValue().trim().isEmpty()
+                    || teacherSelect.getValue() == null
+                    || subjectSelect.getValue() == null
+                    || typeSelect.getValue() == null) {
                 Notification.show("Check your input");
-            }
-            int code = makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
-            if (code == 0) {
-                dialog.close();
+            } else {
+                int code = makeDocumentUploadRequest(name.getValue(), subjectMap.get(subjectSelect.getValue()), typeMap.get(typeSelect.getValue()), teacherMap.get(teacherSelect.getValue()), buffer);
+                if (code == 0) {
+                    dialog.close();
+                }
             }
         });
 
