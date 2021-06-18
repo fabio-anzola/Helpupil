@@ -128,10 +128,7 @@ vaadin-select-overlay {
     grid-template-columns: none;
   }
 
-  div.top-div-doc div.add-teacher-div {
-    width: unset;
-  }
-
+  div.top-div-doc div.add-teacher-div,
   div.top-div-doc div.add-subject-div {
     width: unset;
   }
