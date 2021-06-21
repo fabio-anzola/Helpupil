@@ -3,6 +3,9 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
+import at.helpupil.application.utils.requests.Login;
+import at.helpupil.application.utils.responses.Error;
+import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.about.AboutView;
 import at.helpupil.application.views.documents.DocumentsView;
 import at.helpupil.application.views.leaderboard.LeaderboardView;
@@ -27,6 +30,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -36,8 +40,12 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 
 import java.util.Optional;
+
+import static at.helpupil.application.Application.BASE_URL;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -122,6 +130,7 @@ public class MainView extends AppLayout {
 
     /**
      * menu is different when you are logged out, logged in or a moderator/admin
+     *
      * @return menu with each view
      */
     private Component[] createMenuItems() {
@@ -151,7 +160,7 @@ public class MainView extends AppLayout {
     }
 
     /**
-     * @param text of tab
+     * @param text             of tab
      * @param navigationTarget destination of target
      * @return new tab
      */
@@ -211,7 +220,10 @@ public class MainView extends AppLayout {
         avatarItem.getSubMenu().addItem(SessionStorage.get().getUser().getName());
 
         Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
-        avatarItem.addClickListener(e -> walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet())));
+        avatarItem.addClickListener(e -> {
+            SessionStorage.updateUserFromDB();
+            walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        });
 
         Icon walletIcon = new Icon(VaadinIcon.WALLET);
         HorizontalLayout walletLayout = new HorizontalLayout();
