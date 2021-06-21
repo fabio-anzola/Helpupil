@@ -9,6 +9,9 @@ const updateRating = catchAsync(async (req, res) => {
     if (!document) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Document not found');
     }
+    if (document.user.toString() == req.user._id.toString()) {
+        throw new ApiError(httpStatus.FORBIDDEN, 'You cannot rate your own document!');
+    }
     if (document.reviewer.includes(req.user._id)) {
         throw new ApiError(httpStatus.FORBIDDEN, 'You have already rated this document!');
     }
