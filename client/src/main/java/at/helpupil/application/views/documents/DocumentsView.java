@@ -13,6 +13,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -254,6 +255,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         documentGrid.removeColumnByKey("id");
 
         documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "uname", "price");
+
+        documentGrid.getColumnByKey("name").setResizable(true);
+        documentGrid.getColumnByKey("name").setTextAlign(ColumnTextAlign.START);
 
         documentGrid.getColumnByKey("uname").setHeader("User");
         documentGrid.getColumnByKey("subject_sn").setHeader("Subject");
