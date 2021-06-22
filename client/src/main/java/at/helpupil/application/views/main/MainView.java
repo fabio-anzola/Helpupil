@@ -40,6 +40,7 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.VaadinSession;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -69,6 +70,7 @@ public class MainView extends AppLayout {
      * initializes main view
      */
     public MainView() {
+        VaadinSession.getCurrent().getSession().setMaxInactiveInterval(30 * 24 * 60 * 60); // 30 days
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
