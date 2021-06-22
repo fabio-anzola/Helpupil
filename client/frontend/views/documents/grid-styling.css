@@ -1,0 +1,7 @@
+:host(.document-grid) [part="row"] [part~="header-cell"] {
+    text-align: center;
+}
+
+:host(.document-grid) [part="row"] [part~="body-cell"][first-column] {
+    text-align: left;
+}

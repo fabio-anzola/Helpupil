@@ -49,6 +49,7 @@ import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
 @CssImport("./views/documents/documents-view.css")
+@CssImport(value = "./views/documents/grid-styling.css", themeFor = "vaadin-grid")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
     /**
      * grid of documents
@@ -247,6 +248,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             documentsList.add(document);
         }
 
+        documentGrid.addClassName("document-grid");
         documentGrid.setItems(documentsList);
 
         documentGrid.removeColumnByKey("reviewer");
@@ -257,7 +259,6 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         documentGrid.setColumns("name", "type", "subject_sn", "teacher_sn", "rating", "uname", "price");
 
         documentGrid.getColumnByKey("name").setResizable(true);
-        documentGrid.getColumnByKey("name").setTextAlign(ColumnTextAlign.START);
 
         documentGrid.getColumnByKey("uname").setHeader("User");
         documentGrid.getColumnByKey("subject_sn").setHeader("Subject");
