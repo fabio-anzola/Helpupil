@@ -49,7 +49,7 @@ import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
 @CssImport("./views/documents/documents-view.css")
-@CssImport(value = "./views/documents/grid-styling.css", themeFor = "vaadin-grid")
+@CssImport(value = "./views/documents/document-grid.css", themeFor = "vaadin-grid")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
     /**
      * grid of documents
