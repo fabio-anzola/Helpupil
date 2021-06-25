@@ -3,9 +3,6 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
-import at.helpupil.application.utils.requests.Login;
-import at.helpupil.application.utils.responses.Error;
-import at.helpupil.application.utils.responses.User;
 import at.helpupil.application.views.about.AboutView;
 import at.helpupil.application.views.documents.DocumentsView;
 import at.helpupil.application.views.leaderboard.LeaderboardView;
@@ -20,33 +17,34 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.component.textfield.EmailField;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
 
 import java.util.Optional;
-
-import static at.helpupil.application.Application.BASE_URL;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -54,6 +52,7 @@ import static at.helpupil.application.Application.BASE_URL;
 @PWA(name = "Helpupil", shortName = "Helpupil", enableInstallPrompt = false)
 @JsModule("./styles/shared-styles.js")
 @CssImport("lumo-css-framework/all-classes.css")
+@CssImport(value = "./views/responsive-dialog.css", themeFor = "vaadin-dialog-overlay")
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
 
@@ -231,6 +230,10 @@ public class MainView extends AppLayout {
         HorizontalLayout walletLayout = new HorizontalLayout();
         walletLayout.add(walletIcon, walletSpan);
         avatarItem.getSubMenu().addItem(walletLayout);
+
+        avatarItem.getSubMenu().addItem("Settings",
+                e -> openSettingsDialog());
+
         avatarItem.getSubMenu().addItem("Logout",
                 e -> {
                     SessionStorage.set(null);
@@ -238,5 +241,50 @@ public class MainView extends AppLayout {
                 });
 
         return menuBar;
+    }
+
+    /**
+     * Open Settings Dialog
+     */
+    private void openSettingsDialog() {
+        Dialog dialog = new Dialog();
+        dialog.setMinWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Settings");
+
+        TextField name = new TextField("Username");
+        name.setValue(SessionStorage.get().getUser().getName());
+        EmailField email = new EmailField("Email address");
+        email.setValue(SessionStorage.get().getUser().getEmail());
+        PasswordField password = new PasswordField("Password");
+        VerticalLayout inputLayout = new VerticalLayout();
+        inputLayout.addClassName("dialog-layout");
+        email.setErrorMessage("Please enter a valid email address");
+        inputLayout.add(name, email, password);
+
+        Button confirmButton = new Button("Confirm");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e -> {
+
+            dialog.close();
+        });
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+        });
+
+        dialogButtonLayout.add(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, inputLayout, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
     }
 }
