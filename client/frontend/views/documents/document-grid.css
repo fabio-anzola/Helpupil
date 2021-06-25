@@ -5,3 +5,22 @@
 :host(.document-grid) [part="row"] [part~="body-cell"][first-column] {
     text-align: left;
 }
+
+:host(.document-grid) [part="row"] [part~="cell"][first-column] {
+    min-width: 20%;
+}
+
+:host(.document-grid) [part="row"] [part~="cell"] {
+    min-width: 10%;
+}
+
+
+@media only screen and (max-width: 900px) {
+    :host(.document-grid) [part="row"] [part~="cell"][first-column] {
+        min-width: 30%;
+    }
+
+    :host(.document-grid) [part="row"] [part~="cell"] {
+        min-width: 20%;
+    }
+}
