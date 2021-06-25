@@ -51,6 +51,7 @@ import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
 @CssImport("./views/moderator/moderator-view.css")
+@CssImport(value = "./views/moderator/moderator-grid.css", themeFor = "vaadin-grid")
 public class ModeratorView extends SecuredView {
     /**
      * current document page

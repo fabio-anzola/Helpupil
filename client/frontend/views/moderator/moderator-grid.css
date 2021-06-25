@@ -1,0 +1,3 @@
+:host(.moderator-grid) [part="row"] [part~="header-cell"] {
+    text-align: center;
+}
