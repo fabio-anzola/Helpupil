@@ -1,6 +1,9 @@
 package at.helpupil.application.views.documents;
 
-import at.helpupil.application.utils.*;
+import at.helpupil.application.utils.SecuredView;
+import at.helpupil.application.utils.SessionStorage;
+import at.helpupil.application.utils.StarObj;
+import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.views.main.MainView;
@@ -13,7 +16,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -35,12 +37,11 @@ import kong.unirest.Unirest;
 
 import java.io.ByteArrayInputStream;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.*;
-import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 
 /**
  * Here the users can see all approved documents
