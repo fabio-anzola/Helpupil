@@ -1,13 +1,12 @@
 package at.helpupil.application.views.moderator;
 
-import at.helpupil.application.utils.ResponsiveUI;
 import at.helpupil.application.utils.SecuredView;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.requests.SubjectObj;
 import at.helpupil.application.utils.requests.TeacherObj;
-import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.utils.responses.Error;
+import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -42,7 +41,6 @@ import java.util.*;
 import static at.helpupil.application.Application.BASE_URL;
 import static at.helpupil.application.utils.Resolve.resolveSubjectById;
 import static at.helpupil.application.utils.Resolve.resolveTeacherById;
-import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 
 /**
  * This view is only for moderators
@@ -50,6 +48,7 @@ import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
  */
 @Route(value = "moderator", layout = MainView.class)
 @PageTitle("Moderator")
+@CssImport(value = "./views/responsive-dialog.css", themeFor = "vaadin-dialog-overlay")
 @CssImport("./views/moderator/moderator-view.css")
 @CssImport(value = "./views/moderator/moderator-grid.css", themeFor = "vaadin-grid")
 public class ModeratorView extends SecuredView {
@@ -258,11 +257,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+            dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -315,11 +310,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showTeacherDialog(Teacher teacher) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+            dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -364,11 +355,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showSubjectDialog(Subject subject) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+            dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -643,11 +630,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showAddTeacherDialog() {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+            dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -766,11 +749,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+            dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
