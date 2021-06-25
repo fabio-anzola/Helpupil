@@ -49,6 +49,7 @@ import static at.helpupil.application.utils.ResponsiveUI.getLayoutMode;
 @Route(value = "documents", layout = MainView.class)
 @PageTitle("Documents")
 @CssImport("./views/documents/documents-view.css")
+@CssImport(value = "./views/responsive-dialog.css", themeFor = "vaadin-dialog-overlay")
 @CssImport(value = "./views/documents/document-grid.css", themeFor = "vaadin-grid")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
     /**
@@ -275,11 +276,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private void showUploadDialog() {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -370,11 +367,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("40vw");
-        }
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -555,11 +548,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private void showBuyDialog(Document document) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("25vw");
-        }
+        dialog.setMinWidth("25vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -597,11 +586,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private void showDeleteDialog(Document document) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("25vw");
-        }
+        dialog.setMinWidth("25vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -639,11 +624,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private void showDeclineDialog(Document document) {
         Dialog dialog = new Dialog();
-        if (getLayoutMode() == ResponsiveUI.LayoutMode.SMALL) {
-            dialog.setWidth("100vw");
-        } else {
-            dialog.setWidth("25vw");
-        }
+        dialog.setMinWidth("25vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
