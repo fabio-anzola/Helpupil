@@ -259,6 +259,10 @@ public class MainView extends AppLayout {
             showChangeUsernameDialog();
         });
         Button changeEmailButton = new Button("Change Email");
+        changeEmailButton.addClickListener(e -> {
+            dialog.close();
+            showChangeEmailDialog();
+        });
         Button changePasswordButton = new Button("Change Password");
 
         Button cancelButton = new Button("Cancel");
@@ -302,6 +306,43 @@ public class MainView extends AppLayout {
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
         dialogLayout.add(dialogHeading, name, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    /**
+     * Open Change-Email Dialog
+     */
+    private void showChangeEmailDialog() {
+        Dialog dialog = new Dialog();
+        dialog.setMinWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Change Email");
+
+        EmailField email = new EmailField("Email address");
+        email.setErrorMessage("Please enter a valid email address");
+        email.setPlaceholder(SessionStorage.get().getUser().getEmail());
+
+        Button confirmButton = new Button("Confirm");
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e -> {
+            //makeChangeEmailRequest(name);
+            dialog.close();
+            showSettingsDialog();
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showSettingsDialog();
+        });
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, email, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
