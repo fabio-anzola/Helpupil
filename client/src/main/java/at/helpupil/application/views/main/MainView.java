@@ -4,6 +4,7 @@ import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.requests.SignUp;
+import at.helpupil.application.utils.requests.UserEmailObj;
 import at.helpupil.application.utils.requests.UserNameObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.UserObj;
@@ -55,6 +56,7 @@ import kong.unirest.Unirest;
 import java.util.Optional;
 
 import static at.helpupil.application.Application.BASE_URL;
+import static at.helpupil.application.utils.Auth.getURL;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -212,7 +214,7 @@ public class MainView extends AppLayout {
 
 
     /**
-     * @return avatar menu so user can see his wallet and logout
+     * @return avatar menu for various user-specific interactions
      */
     private MenuBar createAvatarMenu() {
         MenuBar menuBar = new MenuBar();
@@ -374,9 +376,15 @@ public class MainView extends AppLayout {
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(e -> {
-            //makeChangeEmailRequest(name);
-            dialog.close();
-            showSettingsDialog();
+            String emailTrimmed = email.getValue().trim();
+            if (emailTrimmed.isEmpty() || email.isInvalid()) {
+                Notification.show("Check your input");
+            } else if (emailTrimmed.equals(SessionStorage.get().getUser().getEmail())) {
+                Notification.show("Current Email equals your input!");
+            } else {
+                makeChangeEmailRequest(emailTrimmed);
+                dialog.close();
+            }
         });
 
         Button cancelButton = new Button("Cancel");
@@ -445,6 +453,28 @@ public class MainView extends AppLayout {
         if (null == error) {
             SessionStorage.updateUserFromDB();
             UI.getCurrent().getPage().reload();
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
+
+    /**
+     * makes request to api to patch the email of the currently logged-in user
+     *
+     * @param email new email
+     */
+    private void makeChangeEmailRequest(String email) {
+        HttpResponse<UserEmailObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .contentType("application/json")
+                .body(new UserEmailObj(email))
+                .asObject(UserEmailObj.class);
+
+        Error error = userObj.mapError(Error.class);
+
+        if (null == error) {
+            SessionStorage.set(null);
+            Auth.redirectIfNotValid();
         } else {
             Notification.show(error.getMessage());
         }
