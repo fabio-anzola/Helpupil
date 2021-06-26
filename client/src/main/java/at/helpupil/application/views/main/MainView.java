@@ -264,6 +264,10 @@ public class MainView extends AppLayout {
             showChangeEmailDialog();
         });
         Button changePasswordButton = new Button("Change Password");
+        changePasswordButton.addClickListener(e -> {
+            dialog.close();
+            showChangePasswordDialog();
+        });
 
         Button cancelButton = new Button("Cancel");
         cancelButton.addClickListener(e -> dialog.close());
@@ -343,6 +347,42 @@ public class MainView extends AppLayout {
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
         dialogLayout.add(dialogHeading, email, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    /**
+     * Open Change-Password Dialog
+     */
+    private void showChangePasswordDialog() {
+        Dialog dialog = new Dialog();
+        dialog.setMinWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Change Password");
+
+        PasswordField oldPassword = new PasswordField("Old Password");
+        PasswordField newPassword = new PasswordField("New Password");
+
+        Button confirmButton = new Button("Confirm");
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e -> {
+            //makeChangePasswordRequest(name);
+            dialog.close();
+            showSettingsDialog();
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showSettingsDialog();
+        });
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, oldPassword, newPassword, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
