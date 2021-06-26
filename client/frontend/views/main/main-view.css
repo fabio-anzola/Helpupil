@@ -66,7 +66,8 @@ vaadin-vertical-layout.dialog-layout label {
 
 vaadin-vertical-layout.dialog-layout vaadin-text-field,
 vaadin-vertical-layout.dialog-layout vaadin-email-field,
-vaadin-vertical-layout.dialog-layout vaadin-password-field {
+vaadin-vertical-layout.dialog-layout vaadin-password-field,
+vaadin-vertical-layout.dialog-layout span {
   width: 80%;
   margin-left: auto;
   margin-right: auto;
@@ -80,6 +81,16 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
   margin-right: auto;
   display: flex;
   justify-content: center;
+}
+
+vaadin-vertical-layout.settings-layout label {
+  margin-bottom: 15px;
+}
+
+vaadin-vertical-layout.settings-layout vaadin-button {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout vaadin-button {

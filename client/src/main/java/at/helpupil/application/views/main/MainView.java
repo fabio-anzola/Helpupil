@@ -22,10 +22,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -232,7 +229,7 @@ public class MainView extends AppLayout {
         avatarItem.getSubMenu().addItem(walletLayout);
 
         avatarItem.getSubMenu().addItem("Settings",
-                e -> openSettingsDialog());
+                e -> showSettingsDialog());
 
         avatarItem.getSubMenu().addItem("Logout",
                 e -> {
@@ -246,43 +243,25 @@ public class MainView extends AppLayout {
     /**
      * Open Settings Dialog
      */
-    private void openSettingsDialog() {
+    private void showSettingsDialog() {
         Dialog dialog = new Dialog();
         dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
+        dialogLayout.addClassName("settings-layout");
 
         Label dialogHeading = new Label("Settings");
 
-        TextField name = new TextField("Username");
-        name.setValue(SessionStorage.get().getUser().getName());
-        EmailField email = new EmailField("Email address");
-        email.setValue(SessionStorage.get().getUser().getEmail());
-        PasswordField password = new PasswordField("Password");
-        VerticalLayout inputLayout = new VerticalLayout();
-        inputLayout.addClassName("dialog-layout");
-        email.setErrorMessage("Please enter a valid email address");
-        inputLayout.add(name, email, password);
+        Button changeUsernameButton = new Button("Change Username");
+        Button changeEmailButton = new Button("Change Email");
+        Button changePasswordButton = new Button("Change Password");
 
-        Button confirmButton = new Button("Confirm");
         Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> dialog.close());
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout(cancelButton);
 
-        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
-
-        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        confirmButton.addClickListener(e -> {
-
-            dialog.close();
-        });
-
-        cancelButton.addClickListener(e -> {
-            dialog.close();
-        });
-
-        dialogButtonLayout.add(confirmButton, cancelButton);
-
-        dialogLayout.add(dialogHeading, inputLayout, dialogButtonLayout);
+        dialogLayout.add(dialogHeading, changeUsernameButton, changeEmailButton, changePasswordButton, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
