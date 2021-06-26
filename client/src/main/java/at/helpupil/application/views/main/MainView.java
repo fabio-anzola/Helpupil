@@ -220,7 +220,8 @@ public class MainView extends AppLayout {
         Icon userIcon = new Icon(VaadinIcon.USER);
         HorizontalLayout userLayout = new HorizontalLayout();
         userLayout.add(userIcon, userSpan);
-        avatarItem.getSubMenu().addItem(userLayout);
+        avatarItem.getSubMenu().addItem(userLayout,
+                e -> showSettingsDialog());
 
 
         Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
@@ -228,14 +229,6 @@ public class MainView extends AppLayout {
         HorizontalLayout walletLayout = new HorizontalLayout();
         walletLayout.add(walletIcon, walletSpan);
         avatarItem.getSubMenu().addItem(walletLayout);
-
-
-        Span settingsSpan = new Span("Settings");
-        Icon settingsIcon = new Icon(VaadinIcon.COG);
-        HorizontalLayout settingsLayout = new HorizontalLayout();
-        settingsLayout.add(settingsIcon, settingsSpan);
-        avatarItem.getSubMenu().addItem(settingsLayout,
-                e -> showSettingsDialog());
 
 
         Span logoutSpan = new Span("Logout");
@@ -279,7 +272,7 @@ public class MainView extends AppLayout {
         dialogLayout.addClassName("dialog-layout");
         dialogLayout.addClassName("settings-layout");
 
-        Label dialogHeading = new Label("Settings");
+        Label dialogHeading = new Label("User Settings");
 
         Button changeUsernameButton = new Button("Change Username");
         changeUsernameButton.addClickListener(e -> {
