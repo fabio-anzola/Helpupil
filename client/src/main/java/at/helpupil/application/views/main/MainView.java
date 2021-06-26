@@ -215,27 +215,55 @@ public class MainView extends AppLayout {
         avatar.setName(SessionStorage.get().getUser().getName());
         MenuItem avatarItem = menuBar.addItem(avatar);
 
-        avatarItem.getSubMenu().addItem(SessionStorage.get().getUser().getName());
+
+        Span userSpan = new Span(SessionStorage.get().getUser().getName());
+        Icon userIcon = new Icon(VaadinIcon.USER);
+        HorizontalLayout userLayout = new HorizontalLayout();
+        userLayout.add(userIcon, userSpan);
+        avatarItem.getSubMenu().addItem(userLayout);
+
 
         Span walletSpan = new Span(String.valueOf(SessionStorage.get().getUser().getWallet()));
-        avatarItem.addClickListener(e -> {
-            SessionStorage.updateUserFromDB();
-            walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet()));
-        });
-
         Icon walletIcon = new Icon(VaadinIcon.WALLET);
         HorizontalLayout walletLayout = new HorizontalLayout();
         walletLayout.add(walletIcon, walletSpan);
         avatarItem.getSubMenu().addItem(walletLayout);
 
-        avatarItem.getSubMenu().addItem("Settings",
+
+        Span settingsSpan = new Span("Settings");
+        Icon settingsIcon = new Icon(VaadinIcon.COG);
+        HorizontalLayout settingsLayout = new HorizontalLayout();
+        settingsLayout.add(settingsIcon, settingsSpan);
+        avatarItem.getSubMenu().addItem(settingsLayout,
                 e -> showSettingsDialog());
 
-        avatarItem.getSubMenu().addItem("Logout",
+
+        Span logoutSpan = new Span("Logout");
+        Icon logoutIcon = new Icon(VaadinIcon.POWER_OFF);
+        HorizontalLayout logoutLayout = new HorizontalLayout();
+        logoutLayout.add(logoutIcon, logoutSpan);
+        avatarItem.getSubMenu().addItem(logoutLayout,
                 e -> {
                     SessionStorage.set(null);
                     Auth.redirectIfNotValid();
                 });
+
+
+        avatarItem.getSubMenu().getItems()
+                .forEach(e -> e.getChildren().forEach(n -> {
+                    n.getElement().getStyle().set("margin", "8px 0");
+                    n.getChildren()
+                            .filter(m -> m.getClass() == Icon.class).forEach(o -> ((Icon) o)
+                            .getStyle().set("width", "20px").set("margin-right", "5px"));
+                    n.getChildren()
+                            .filter(m -> m.getClass() == Span.class).forEach(o -> ((Span) o)
+                            .getStyle().set("margin-top", "auto").set("margin-bottom", "auto").set("padding-bottom", "2px"));
+                }));
+
+        avatarItem.addClickListener(e -> {
+            SessionStorage.updateUserFromDB();
+            walletSpan.setText(String.valueOf(SessionStorage.get().getUser().getWallet()));
+        });
 
         return menuBar;
     }
