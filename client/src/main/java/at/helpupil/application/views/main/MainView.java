@@ -3,6 +3,10 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
+import at.helpupil.application.utils.requests.SignUp;
+import at.helpupil.application.utils.requests.UserNameObj;
+import at.helpupil.application.utils.responses.Error;
+import at.helpupil.application.utils.responses.UserObj;
 import at.helpupil.application.views.about.AboutView;
 import at.helpupil.application.views.documents.DocumentsView;
 import at.helpupil.application.views.leaderboard.LeaderboardView;
@@ -13,6 +17,7 @@ import at.helpupil.application.views.subjects.SubjectsView;
 import at.helpupil.application.views.teachers.TeachersView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -22,11 +27,15 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -40,8 +49,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 
 import java.util.Optional;
+
+import static at.helpupil.application.Application.BASE_URL;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -318,9 +331,15 @@ public class MainView extends AppLayout {
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(e -> {
-            //makeChangeUsernameRequest(name);
-            dialog.close();
-            showSettingsDialog();
+            String nameTrimmed = name.getValue().trim();
+            if (nameTrimmed.isEmpty()) {
+                Notification.show("Check your input");
+            } else if (nameTrimmed.equals(SessionStorage.get().getUser().getName())) {
+                Notification.show("Current Username equals your input!");
+            } else {
+                makeChangeUsernameRequest(nameTrimmed);
+                dialog.close();
+            }
         });
 
         Button cancelButton = new Button("Cancel");
@@ -407,5 +426,27 @@ public class MainView extends AppLayout {
 
         dialog.add(dialogLayout);
         dialog.open();
+    }
+
+    /**
+     * makes request to api to patch the username of the currently logged-in user
+     *
+     * @param name new username
+     */
+    private void makeChangeUsernameRequest(String name) {
+        HttpResponse<UserObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .contentType("application/json")
+                .body(new UserNameObj(name))
+                .asObject(UserObj.class);
+
+        Error error = userObj.mapError(Error.class);
+
+        if (null == error) {
+            SessionStorage.updateUserFromDB();
+            UI.getCurrent().getPage().reload();
+        } else {
+            Notification.show(error.getMessage());
+        }
     }
 }
