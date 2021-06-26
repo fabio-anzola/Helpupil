@@ -254,6 +254,10 @@ public class MainView extends AppLayout {
         Label dialogHeading = new Label("Settings");
 
         Button changeUsernameButton = new Button("Change Username");
+        changeUsernameButton.addClickListener(e -> {
+            dialog.close();
+            showChangeUsernameDialog();
+        });
         Button changeEmailButton = new Button("Change Email");
         Button changePasswordButton = new Button("Change Password");
 
@@ -262,6 +266,42 @@ public class MainView extends AppLayout {
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(cancelButton);
 
         dialogLayout.add(dialogHeading, changeUsernameButton, changeEmailButton, changePasswordButton, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    /**
+     * Open Change-Username Dialog
+     */
+    private void showChangeUsernameDialog() {
+        Dialog dialog = new Dialog();
+        dialog.setMinWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Change Username");
+
+        TextField name = new TextField("Username");
+        name.setPlaceholder(SessionStorage.get().getUser().getName());
+
+        Button confirmButton = new Button("Confirm");
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e -> {
+            //makeChangeUsernameRequest(name);
+            dialog.close();
+            showSettingsDialog();
+        });
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showSettingsDialog();
+        });
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeading, name, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
