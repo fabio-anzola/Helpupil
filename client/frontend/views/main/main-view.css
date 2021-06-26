@@ -84,7 +84,7 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
 }
 
 vaadin-vertical-layout.settings-layout label {
-  margin-bottom: 15px;
+  margin-bottom: 30px;
 }
 
 vaadin-vertical-layout.settings-layout vaadin-button {
