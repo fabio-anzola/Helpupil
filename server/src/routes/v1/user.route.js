@@ -215,10 +215,16 @@ module.exports = router;
  *                 format: password
  *                 minLength: 8
  *                 description: At least one number and one letter
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 description: Your current password
  *             example:
  *               name: fake name
  *               email: fake@example.com
- *               password: password1
+ *               password: password12
+ *               currentPassword: password1
  *     responses:
  *       "200":
  *         description: OK
