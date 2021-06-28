@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { userService, emailService, tokenService } = require('../services');
+const { userService, emailService, tokenService, authService } = require('../services');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -36,6 +36,12 @@ const getPublicUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
+  if (req.body.email != null || req.body.password != null) {
+    if (req.body.currentPassword == null) {
+      throw new ApiError(httpStatus.FORBIDDEN, 'Please enter your current password');
+    }
+    await authService.loginUserWithEmailAndPassword(req.user.email, req.body.currentPassword);
+  }
   if (req.body.email != null) {
     req.body.isEmailVerified = false;
   }
