@@ -378,13 +378,14 @@ public class MainView extends AppLayout {
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(e -> {
-            String emailTrimmed = email.getValue().trim();
-            if (emailTrimmed.isEmpty() || email.isInvalid()) {
+            String emailValue = email.getValue().trim();
+            String passwordValue = password.getValue();
+            if (emailValue.isEmpty() || email.isInvalid() || passwordValue.isEmpty()) {
                 Notification.show("Check your input");
-            } else if (emailTrimmed.equals(SessionStorage.get().getUser().getEmail())) {
+            } else if (emailValue.equals(SessionStorage.get().getUser().getEmail())) {
                 Notification.show("Current Email equals your input!");
             } else {
-                makeChangeEmailRequest(emailTrimmed);
+                makeChangeEmailRequest(emailValue, passwordValue);
                 dialog.close();
             }
         });
@@ -414,17 +415,18 @@ public class MainView extends AppLayout {
 
         Label dialogHeading = new Label("Change Password");
 
-        PasswordField oldPassword = new PasswordField("Old Password");
+        PasswordField currentPassword = new PasswordField("Current Password");
         PasswordField newPassword = new PasswordField("New Password");
 
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(e -> {
-            String password = newPassword.getValue();
-            if (password.isEmpty()) {
+            String newPasswordValue = newPassword.getValue();
+            String currentPasswordValue = currentPassword.getValue();
+            if (newPasswordValue.isEmpty() || currentPasswordValue.isEmpty()) {
                 Notification.show("Check your input");
             } else {
-                makeChangePasswordRequest(password);
+                makeChangePasswordRequest(newPasswordValue, currentPasswordValue);
                 dialog.close();
             }
         });
@@ -436,7 +438,7 @@ public class MainView extends AppLayout {
         });
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, oldPassword, newPassword, dialogButtonLayout);
+        dialogLayout.add(dialogHeading, currentPassword, newPassword, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
@@ -469,11 +471,11 @@ public class MainView extends AppLayout {
      *
      * @param email new email
      */
-    private void makeChangeEmailRequest(String email) {
+    private void makeChangeEmailRequest(String email, String currentPassword) {
         HttpResponse<UserEmailObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .contentType("application/json")
-                .body(new UserEmailObj(email))
+                .body(new UserEmailObj(email, currentPassword))
                 .asObject(UserEmailObj.class);
 
         Error error = userObj.mapError(Error.class);
@@ -491,17 +493,18 @@ public class MainView extends AppLayout {
      *
      * @param password new password
      */
-    private void makeChangePasswordRequest(String password) {
+    private void makeChangePasswordRequest(String password, String currentPassword) {
         HttpResponse<UserPasswordObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .contentType("application/json")
-                .body(new UserPasswordObj(password))
+                .body(new UserPasswordObj(password, currentPassword))
                 .asObject(UserPasswordObj.class);
 
         Error error = userObj.mapError(Error.class);
 
         if (null == error) {
             SessionStorage.set(null);
+            Auth.redirectIfNotValid();
         } else {
             Notification.show(error.getMessage());
         }

@@ -10,10 +10,16 @@ public class UserEmailObj {
     private String email;
 
     /**
+     * current password
+     */
+    private String currentPassword;
+
+    /**
      * @param email new email
      */
-    public UserEmailObj(String email) {
+    public UserEmailObj(String email, String currentPassword) {
         this.email = email;
+        this.currentPassword = currentPassword;
     }
 
     /**
@@ -28,5 +34,19 @@ public class UserEmailObj {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     * @return current password
+     */
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    /**
+     * @param currentPassword set current password
+     */
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
 }
