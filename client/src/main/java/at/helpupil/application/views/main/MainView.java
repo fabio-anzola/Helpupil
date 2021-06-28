@@ -6,6 +6,7 @@ import at.helpupil.application.utils.ThemeHelper;
 import at.helpupil.application.utils.requests.SignUp;
 import at.helpupil.application.utils.requests.UserEmailObj;
 import at.helpupil.application.utils.requests.UserNameObj;
+import at.helpupil.application.utils.requests.UserPasswordObj;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.UserObj;
 import at.helpupil.application.views.about.AboutView;
@@ -419,9 +420,13 @@ public class MainView extends AppLayout {
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(e -> {
-            //makeChangePasswordRequest(name);
-            dialog.close();
-            showSettingsDialog();
+            String password = newPassword.getValue();
+            if (password.isEmpty()) {
+                Notification.show("Check your input");
+            } else {
+                makeChangePasswordRequest(password);
+                dialog.close();
+            }
         });
 
         Button cancelButton = new Button("Cancel");
@@ -476,6 +481,27 @@ public class MainView extends AppLayout {
         if (null == error) {
             SessionStorage.set(null);
             Auth.redirectIfNotValid();
+        } else {
+            Notification.show(error.getMessage());
+        }
+    }
+
+    /**
+     * makes request to api to patch the password of the currently logged-in user
+     *
+     * @param password new password
+     */
+    private void makeChangePasswordRequest(String password) {
+        HttpResponse<UserPasswordObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
+                .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
+                .contentType("application/json")
+                .body(new UserPasswordObj(password))
+                .asObject(UserPasswordObj.class);
+
+        Error error = userObj.mapError(Error.class);
+
+        if (null == error) {
+            SessionStorage.set(null);
         } else {
             Notification.show(error.getMessage());
         }
