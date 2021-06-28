@@ -372,6 +372,7 @@ public class MainView extends AppLayout {
         EmailField email = new EmailField("Email address");
         email.setErrorMessage("Please enter a valid email address");
         email.setPlaceholder(SessionStorage.get().getUser().getEmail());
+        PasswordField password = new PasswordField("Password");
 
         Button confirmButton = new Button("Confirm");
         confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -394,7 +395,7 @@ public class MainView extends AppLayout {
         });
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, email, dialogButtonLayout);
+        dialogLayout.add(dialogHeading, email, password, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
