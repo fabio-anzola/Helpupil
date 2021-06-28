@@ -340,8 +340,9 @@ public class MainView extends AppLayout {
             } else if (nameTrimmed.equals(SessionStorage.get().getUser().getName())) {
                 Notification.show("Current Username equals your input!");
             } else {
-                makeChangeUsernameRequest(nameTrimmed);
-                dialog.close();
+                if (makeChangeUsernameRequest(nameTrimmed)) {
+                    dialog.close();
+                }
             }
         });
 
@@ -385,8 +386,9 @@ public class MainView extends AppLayout {
             } else if (emailValue.equals(SessionStorage.get().getUser().getEmail())) {
                 Notification.show("Current Email equals your input!");
             } else {
-                makeChangeEmailRequest(emailValue, passwordValue);
-                dialog.close();
+                if (makeChangeEmailRequest(emailValue, passwordValue)) {
+                    dialog.close();
+                }
             }
         });
 
@@ -426,8 +428,9 @@ public class MainView extends AppLayout {
             if (newPasswordValue.isEmpty() || currentPasswordValue.isEmpty()) {
                 Notification.show("Check your input");
             } else {
-                makeChangePasswordRequest(newPasswordValue, currentPasswordValue);
-                dialog.close();
+                if (makeChangePasswordRequest(newPasswordValue, currentPasswordValue)) {
+                    dialog.close();
+                }
             }
         });
 
@@ -448,8 +451,9 @@ public class MainView extends AppLayout {
      * makes request to api to patch the username of the currently logged-in user
      *
      * @param name new username
+     * @return true if request worked
      */
-    private void makeChangeUsernameRequest(String name) {
+    private boolean makeChangeUsernameRequest(String name) {
         HttpResponse<UserObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .contentType("application/json")
@@ -461,8 +465,10 @@ public class MainView extends AppLayout {
         if (null == error) {
             SessionStorage.updateUserFromDB();
             UI.getCurrent().getPage().reload();
+            return true;
         } else {
             Notification.show(error.getMessage());
+            return false;
         }
     }
 
@@ -470,8 +476,9 @@ public class MainView extends AppLayout {
      * makes request to api to patch the email of the currently logged-in user
      *
      * @param email new email
+     * @return true if request worked
      */
-    private void makeChangeEmailRequest(String email, String currentPassword) {
+    private boolean makeChangeEmailRequest(String email, String currentPassword) {
         HttpResponse<UserEmailObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .contentType("application/json")
@@ -483,8 +490,10 @@ public class MainView extends AppLayout {
         if (null == error) {
             SessionStorage.set(null);
             Auth.redirectIfNotValid();
+            return true;
         } else {
             Notification.show(error.getMessage());
+            return false;
         }
     }
 
@@ -492,8 +501,9 @@ public class MainView extends AppLayout {
      * makes request to api to patch the password of the currently logged-in user
      *
      * @param password new password
+     * @return true if request worked
      */
-    private void makeChangePasswordRequest(String password, String currentPassword) {
+    private boolean makeChangePasswordRequest(String password, String currentPassword) {
         HttpResponse<UserPasswordObj> userObj = Unirest.patch(BASE_URL + "/users/" + SessionStorage.get().getUser().getId())
                 .header("Authorization", "Bearer " + SessionStorage.get().getTokens().getAccess().getToken())
                 .contentType("application/json")
@@ -505,8 +515,10 @@ public class MainView extends AppLayout {
         if (null == error) {
             SessionStorage.set(null);
             Auth.redirectIfNotValid();
+            return true;
         } else {
             Notification.show(error.getMessage());
+            return false;
         }
     }
 }
