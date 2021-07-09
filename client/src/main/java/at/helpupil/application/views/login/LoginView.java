@@ -16,6 +16,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -82,7 +83,13 @@ public class LoginView extends OpenView {
                 Notification.show("Check your input");
             }
         });
-        forgotPassword.addClickListener(e -> forgotPassword(email.getValue().trim()));
+        forgotPassword.addClickListener(e -> {
+            if (email.getValue().trim().isEmpty()) {
+                Notification.show("Email field cannot be empty").addThemeVariants(NotificationVariant.LUMO_ERROR);
+            } else {
+                forgotPassword(email.getValue().trim());
+            }
+        });
     }
 
     /**

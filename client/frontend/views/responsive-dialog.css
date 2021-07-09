@@ -1,0 +1,5 @@
+@media only screen and (max-width: 900px) {
+    [part="overlay"] {
+        width: 100vw;
+    }
+}

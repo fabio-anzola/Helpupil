@@ -55,3 +55,47 @@ vaadin-menu-bar.avatar-menu {
   margin-left: auto;
   margin-right: var(--lumo-space-m);
 }
+
+/* Dialog */
+vaadin-vertical-layout.dialog-layout label {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16pt;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-text-field,
+vaadin-vertical-layout.dialog-layout vaadin-email-field,
+vaadin-vertical-layout.dialog-layout vaadin-password-field,
+vaadin-vertical-layout.dialog-layout span {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+
+vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout {
+  width: 60%;
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+}
+
+vaadin-vertical-layout.settings-layout label {
+  margin-bottom: 30px;
+}
+
+vaadin-vertical-layout.settings-layout vaadin-button {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+vaadin-vertical-layout.dialog-layout.settings-layout vaadin-horizontal-layout vaadin-button {
+  margin-top: 0;
+  width: 50%;
+}

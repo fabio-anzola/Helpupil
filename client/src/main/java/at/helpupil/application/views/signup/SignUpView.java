@@ -41,7 +41,7 @@ public class SignUpView extends OpenView {
     /**
      * name of new user
      */
-    private final TextField name = new TextField("Username: ");
+    private final TextField name = new TextField("Username");
     /**
      * password of new user
      */
