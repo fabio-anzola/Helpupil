@@ -71,7 +71,7 @@ public class LeaderboardView extends SecuredView {
      * Create a podium place
      *
      * @param username username of user
-     * @param wallet wallet value of user
+     * @param wallet   wallet value of user
      * @return div podium place
      */
     private Div createPodiumPlaceLayout(String username, int wallet) {
