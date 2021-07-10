@@ -266,6 +266,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         documentGrid.getColumnByKey("subject_sn").setHeader("Subject");
         documentGrid.getColumnByKey("teacher_sn").setHeader("Teacher");
 
+        documentGrid.getColumnByKey("price").setSortable(false);
+
         documentGrid.addItemClickListener(item -> showDocumentDialog(item.getItem()));
         documentGrid.addComponentColumn(this::createBuyOrShowButton);
 
