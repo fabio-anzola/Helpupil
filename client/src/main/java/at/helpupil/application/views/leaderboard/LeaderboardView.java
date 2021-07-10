@@ -8,6 +8,7 @@ import at.helpupil.application.utils.responses.LeaderboardObj;
 import at.helpupil.application.utils.responses.LeaderboardObjs;
 import at.helpupil.application.views.main.MainView;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
@@ -64,6 +65,11 @@ public class LeaderboardView extends SecuredView {
         Grid<LeaderboardObj> topUserGrid = new Grid<>(LeaderboardObj.class);
         topUserGrid.setColumns("place", "name", "wallet");
         topUserGrid.setItems(leaderboardObjList);
+        topUserGrid.getColumnByKey("place").setTextAlign(ColumnTextAlign.END);
+        topUserGrid.getColumnByKey("name").setTextAlign(ColumnTextAlign.CENTER);
+        topUserGrid.getColumnByKey("place").setSortable(false);
+        topUserGrid.getColumnByKey("name").setSortable(false);
+        topUserGrid.getColumnByKey("wallet").setSortable(false);
         add(topUserGrid);
     }
 
