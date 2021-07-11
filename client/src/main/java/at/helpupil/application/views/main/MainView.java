@@ -119,11 +119,13 @@ public class MainView extends AppLayout {
         layout.getThemeList().set("spacing-s", true);
         layout.setAlignItems(FlexComponent.Alignment.STRETCH);
         HorizontalLayout logoLayout = new HorizontalLayout();
+        logoLayout.getStyle().set("display", "flex").set("justify-content", "space-between");
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "Helpupil logo"));
-        logoLayout.add(new H1("Helpupil"));
-
+        Image logoImage = new Image("images/logo.png", "Helpupil logo");
+        logoImage.setHeight("32px");
+        logoImage.getStyle().set("margin-left", "0");
+        logoLayout.add(logoImage);
         logoLayout.add(new Button(new Icon(VaadinIcon.LIGHTBULB), click -> ThemeHelper.onClick()));
 
         layout.add(logoLayout, menu);
@@ -369,7 +371,14 @@ public class MainView extends AppLayout {
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
 
+
         Label dialogHeading = new Label("Change Email");
+        dialogHeading.addClassName("dialog-heading");
+        Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
+        infoIcon.addClassName("info-icon");
+
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon);
+        dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         EmailField email = new EmailField("Email address");
         email.setErrorMessage("Please enter a valid email address");
@@ -399,7 +408,7 @@ public class MainView extends AppLayout {
         });
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, email, password, dialogButtonLayout);
+        dialogLayout.add(dialogHeadingLayout, email, password, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
