@@ -119,11 +119,13 @@ public class MainView extends AppLayout {
         layout.getThemeList().set("spacing-s", true);
         layout.setAlignItems(FlexComponent.Alignment.STRETCH);
         HorizontalLayout logoLayout = new HorizontalLayout();
+        logoLayout.getStyle().set("display", "flex").set("justify-content", "space-between");
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "Helpupil logo"));
-        //logoLayout.add(new H1("Helpupil"));
-
+        Image logoImage = new Image("images/logo.png", "Helpupil logo");
+        logoImage.setHeight("32px");
+        logoImage.getStyle().set("margin-left", "0");
+        logoLayout.add(logoImage);
         logoLayout.add(new Button(new Icon(VaadinIcon.LIGHTBULB), click -> ThemeHelper.onClick()));
 
         layout.add(logoLayout, menu);
