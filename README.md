@@ -9,10 +9,8 @@
 <br />
 <p align="center">
   <a href="https://github.com/fabio-anzola/Helpupil">
-    <img src="https://github.com/fabio-anzola/Helpupil/blob/master/client/src/main/resources/META-INF/resources/images/logo.png?raw=true" alt="Logo" width="80" height="80">
+    <img src="https://raw.githubusercontent.com/fabio-anzola/Helpupil/client/client/src/main/resources/META-INF/resources/images/logo.png" alt="Helpupil Logo" height="64">
   </a>
-
-  <h3 align="center">Helpupil</h3>
 
   <p align="center">
     Helpupil is a platform where users can upload documents and make them available for other users to learn. For uploading files you get points, but only if they are marked as valid by a moderator. With these points one can compete with other users on a leaderboard. Other users of the platform can spend points to get access to documents for further education.
