@@ -99,3 +99,30 @@ vaadin-vertical-layout.dialog-layout.settings-layout vaadin-horizontal-layout va
   margin-top: 0;
   width: 50%;
 }
+
+.dialog-heading {
+  width: max-content !important;
+}
+
+.info-icon {
+  width: 18px;
+  margin-left: 10px;
+}
+
+
+@media only screen and (max-width: 900px) {
+  .dialog-heading {
+    margin-left: 0;
+  }
+
+  .info-icon {
+    padding-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .dialog-heading-layout {
+    display: flex;
+    flex-direction: column;
+  }
+}
