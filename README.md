@@ -9,7 +9,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/fabio-anzola/Helpupil">
-    <img src="https://raw.githubusercontent.com/fabio-anzola/Helpupil/client/client/src/main/resources/META-INF/resources/images/logo.png" alt="Helpupil Logo" height="64">
+    <img src="https://raw.githubusercontent.com/fabio-anzola/Helpupil/master/client/src/main/resources/META-INF/resources/images/logo.png" alt="Helpupil Logo" height="64">
   </a>
 
   <p align="center">
