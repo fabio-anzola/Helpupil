@@ -36,8 +36,8 @@ div.podium-layout div.podium-place-div div.podium-place-inner-div div:first-chil
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;
-  background-color: hsl(214, 35%, 21%);
   padding: 5px 12px;
+  background-color: hsl(214, 35%, 21%);
   text-align: center;
   border-radius: 8px;
   -webkit-box-shadow: 5px 5px 12px 3px rgba(0, 0, 0, 0.12);
@@ -46,11 +46,11 @@ div.podium-layout div.podium-place-div div.podium-place-inner-div div:first-chil
 }
 
 div.podium-layout div.podium-place-div div.podium-place-inner-div div:first-child span {
-  font-size: 18pt;
   color: rgb(245, 249, 255);
-  text-shadow: 5px 5px 12px rgba(0, 0, 0, 0.12);
+  font-size: 18pt;
   font-weight: 500;
   word-wrap: break-word;
+  text-shadow: 5px 5px 12px rgba(0, 0, 0, 0.12);
 }
 
 div.podium-layout div.podium-place-div div.podium-place-inner-div div:last-child {
@@ -112,7 +112,6 @@ div.podium-layout div.podium-place-div:first-child:nth-last-child(2) + div.podiu
 
 div.podium-layout div.podium-place-div div.podium-place-inner-div div:last-child span {
   color: rgb(245, 249, 255);
-  font-size: medium;
   font-size: 45pt;
   text-shadow: 5px 5px 12px rgba(0, 0, 0, 0.12);
   font-weight: 500;
@@ -123,6 +122,7 @@ div.podium-layout div.podium-place-div div.podium-place-inner-div div:last-child
   div.leaderboard-view {
     width: 100%;
   }
+
 
   div.podium-layout {
     width: 90%;
