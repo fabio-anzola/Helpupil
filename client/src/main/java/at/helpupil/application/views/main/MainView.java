@@ -122,7 +122,7 @@ public class MainView extends AppLayout {
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         logoLayout.add(new Image("images/logo.png", "Helpupil logo"));
-        logoLayout.add(new H1("Helpupil"));
+        //logoLayout.add(new H1("Helpupil"));
 
         logoLayout.add(new Button(new Icon(VaadinIcon.LIGHTBULB), click -> ThemeHelper.onClick()));
 
