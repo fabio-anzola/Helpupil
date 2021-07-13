@@ -3,7 +3,6 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
-import at.helpupil.application.utils.requests.SignUp;
 import at.helpupil.application.utils.requests.UserEmailObj;
 import at.helpupil.application.utils.requests.UserNameObj;
 import at.helpupil.application.utils.requests.UserPasswordObj;
@@ -17,6 +16,7 @@ import at.helpupil.application.views.moderator.ModeratorView;
 import at.helpupil.application.views.signup.SignUpView;
 import at.helpupil.application.views.subjects.SubjectsView;
 import at.helpupil.application.views.teachers.TeachersView;
+import com.vaadin.componentfactory.Tooltip;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
@@ -29,10 +29,7 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -57,7 +54,6 @@ import kong.unirest.Unirest;
 import java.util.Optional;
 
 import static at.helpupil.application.Application.BASE_URL;
-import static at.helpupil.application.utils.Auth.getURL;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -377,8 +373,13 @@ public class MainView extends AppLayout {
         Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
         infoIcon.addClassName("info-icon");
 
-        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon);
+        Tooltip tooltip = new Tooltip(infoIcon);
+        tooltip.addClassName("info-tooltip");
+        tooltip.add(new Paragraph("After updating, you will have to verify your new Email-address."));
+
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon, tooltip);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
+
 
         EmailField email = new EmailField("Email address");
         email.setErrorMessage("Please enter a valid email address");
