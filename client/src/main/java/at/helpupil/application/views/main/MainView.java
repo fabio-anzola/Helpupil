@@ -16,7 +16,6 @@ import at.helpupil.application.views.moderator.ModeratorView;
 import at.helpupil.application.views.signup.SignUpView;
 import at.helpupil.application.views.subjects.SubjectsView;
 import at.helpupil.application.views.teachers.TeachersView;
-import com.vaadin.componentfactory.Tooltip;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
@@ -48,6 +47,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
+import dev.mett.vaadin.tooltip.Tooltips;
+import dev.mett.vaadin.tooltip.config.TooltipConfiguration;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -367,19 +368,13 @@ public class MainView extends AppLayout {
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
 
-
         Label dialogHeading = new Label("Change Email");
         dialogHeading.addClassName("dialog-heading");
         Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
         infoIcon.addClassName("info-icon");
-
-        Tooltip tooltip = new Tooltip(infoIcon);
-        tooltip.addClassName("info-tooltip");
-        tooltip.add(new Paragraph("After updating, you will have to verify your new Email-address."));
-
-        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon, tooltip);
+        Tooltips.getCurrent().setTooltip(infoIcon, "You will be logged out and you will have to verify your new email-address.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
-
 
         EmailField email = new EmailField("Email address");
         email.setErrorMessage("Please enter a valid email address");

@@ -109,12 +109,6 @@ vaadin-vertical-layout.dialog-layout.settings-layout vaadin-horizontal-layout va
   margin-left: 10px;
 }
 
-.info-tooltip {
-  background-color: unset;
-  inset: unset !important;
-  top: -25% !important;
-}
-
 @media only screen and (max-width: 900px) {
   .dialog-heading {
     margin-left: 0;
