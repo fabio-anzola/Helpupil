@@ -421,6 +421,10 @@ public class MainView extends AppLayout {
         dialogLayout.addClassName("dialog-layout");
 
         Label dialogHeading = new Label("Change Password");
+        dialogHeading.addClassName("dialog-heading");
+        TooltipComp changePasswordTooltip = new TooltipComp("You will be logged out.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changePasswordTooltip);
+        dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         PasswordField currentPassword = new PasswordField("Current Password");
         PasswordField newPassword = new PasswordField("New Password");
@@ -446,7 +450,7 @@ public class MainView extends AppLayout {
         });
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, currentPassword, newPassword, dialogButtonLayout);
+        dialogLayout.add(dialogHeadingLayout, currentPassword, newPassword, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
