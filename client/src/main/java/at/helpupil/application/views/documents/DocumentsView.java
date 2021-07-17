@@ -1,9 +1,6 @@
 package at.helpupil.application.views.documents;
 
-import at.helpupil.application.utils.SecuredView;
-import at.helpupil.application.utils.SessionStorage;
-import at.helpupil.application.utils.StarObj;
-import at.helpupil.application.utils.ThemeHelper;
+import at.helpupil.application.utils.*;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.*;
 import at.helpupil.application.views.main.MainView;
@@ -331,6 +328,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         upload.addFileRejectedListener(error -> Notification.show(error.getErrorMessage()));
 
         Label dialogHeading = new Label("Upload document");
+        dialogHeading.addClassName("dialog-heading");
+        TooltipComp changePasswordTooltip = new TooltipComp("The uploaded document is on pending until a moderator has approved it.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changePasswordTooltip);
+        dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         Button confirmButton = new Button("Confirm");
         Button cancelButton = new Button("Cancel");
@@ -357,7 +358,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         dialogButtonLayout.add(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, name, teacherSelect, subjectSelect, typeSelect, upload, dialogButtonLayout);
+        dialogLayout.add(dialogHeadingLayout, name, teacherSelect, subjectSelect, typeSelect, upload, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
