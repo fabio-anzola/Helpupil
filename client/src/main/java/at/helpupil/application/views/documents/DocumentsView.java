@@ -329,8 +329,8 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         Label dialogHeading = new Label("Upload document");
         dialogHeading.addClassName("dialog-heading");
-        TooltipComp changePasswordTooltip = new TooltipComp("The uploaded document is on pending until a moderator has approved it.");
-        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changePasswordTooltip);
+        TooltipComp uploadDocumentTooltip = new TooltipComp("The uploaded document is on pending until a moderator has approved it.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, uploadDocumentTooltip);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         Button confirmButton = new Button("Confirm");
