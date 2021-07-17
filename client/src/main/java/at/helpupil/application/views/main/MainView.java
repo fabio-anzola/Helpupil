@@ -28,7 +28,10 @@ import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
@@ -48,7 +51,6 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import dev.mett.vaadin.tooltip.Tooltips;
-import dev.mett.vaadin.tooltip.config.TooltipConfiguration;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -93,7 +95,7 @@ public class MainView extends AppLayout {
     private Component createHeaderContent() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setId("header");
-        layout.getThemeList().set("dark", true);
+        layout.getStyle().set("box-shadow", "var(--lumo-box-shadow-xs)");
         layout.setWidthFull();
         layout.setSpacing(false);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
