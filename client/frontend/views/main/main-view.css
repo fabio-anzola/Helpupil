@@ -109,22 +109,23 @@ vaadin-vertical-layout.dialog-layout.settings-layout vaadin-horizontal-layout va
 }
 
 @media only screen and (max-width: 900px) {
+  .dialog-heading-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
   .dialog-heading {
     margin-left: 0;
   }
 
-  .tooltip-comp iron-icon {
-    padding-top: 5px;
+  .tooltip-comp {
+    margin-left: unset;
+    padding-top: 10px;
   }
 
   .dialog-heading,
-  .tooltip-comp iron-icon  {
+  .tooltip-comp {
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .dialog-heading-layout {
-    display: flex;
-    flex-direction: column;
   }
 }

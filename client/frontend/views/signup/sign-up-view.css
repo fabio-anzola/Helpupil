@@ -9,6 +9,39 @@ div.sign-up-view {
   margin-right: auto;
 }
 
+
+vaadin-horizontal-layout.view-title-layout {
+  display: flex;
+  justify-content: center;
+}
+
+vaadin-horizontal-layout.view-title-layout .view-title {
+  width: max-content !important;
+}
+
+vaadin-horizontal-layout.view-title-layout .tooltip-comp {
+  margin-top: 27px;
+}
+
+@media only screen and (max-width: 900px) {
+  vaadin-horizontal-layout.view-title-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  vaadin-horizontal-layout.view-title-layout .view-title {
+    margin-left: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  vaadin-horizontal-layout.view-title-layout .tooltip-comp {
+    margin-top: unset;
+    padding-top: unset;
+  }
+}
+
+
 vaadin-vertical-layout.form-layout {
   padding: 10px 0;
 }
