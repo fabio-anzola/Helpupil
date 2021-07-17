@@ -16,10 +16,9 @@ public class TooltipComp extends Composite<Div> {
      * @param tooltip tooltip-text
      */
     public TooltipComp(String tooltip) {
+        getElement().getClassList().add("tooltip-comp");
         Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
-        infoIcon.addClassName("info-icon");
         Tooltips.getCurrent().setTooltip(infoIcon, tooltip);
-
         getContent().add(infoIcon);
     }
 }
