@@ -3,6 +3,7 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
+import at.helpupil.application.utils.TooltipComp;
 import at.helpupil.application.utils.requests.UserEmailObj;
 import at.helpupil.application.utils.requests.UserNameObj;
 import at.helpupil.application.utils.requests.UserPasswordObj;
@@ -50,7 +51,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
-import dev.mett.vaadin.tooltip.Tooltips;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 
@@ -372,10 +372,8 @@ public class MainView extends AppLayout {
 
         Label dialogHeading = new Label("Change Email");
         dialogHeading.addClassName("dialog-heading");
-        Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
-        infoIcon.addClassName("info-icon");
-        Tooltips.getCurrent().setTooltip(infoIcon, "You will be logged out and you will have to verify your new email-address.");
-        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon);
+        TooltipComp changeEmailTooltip = new TooltipComp("You will be logged out and you will have to verify your new email-address.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changeEmailTooltip);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         EmailField email = new EmailField("Email address");
