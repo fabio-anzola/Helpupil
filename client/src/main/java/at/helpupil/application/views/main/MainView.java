@@ -422,7 +422,7 @@ public class MainView extends AppLayout {
 
         Label dialogHeading = new Label("Change Password");
         dialogHeading.addClassName("dialog-heading");
-        TooltipComp changePasswordTooltip = new TooltipComp("You will be logged out.");
+        TooltipComp changePasswordTooltip = new TooltipComp("You will have to log back into your account.");
         HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changePasswordTooltip);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
 
