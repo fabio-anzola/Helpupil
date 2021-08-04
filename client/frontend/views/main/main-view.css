@@ -104,25 +104,28 @@ vaadin-vertical-layout.dialog-layout.settings-layout vaadin-horizontal-layout va
   width: max-content !important;
 }
 
-.info-icon {
+.tooltip-comp iron-icon {
   width: 18px;
-  margin-left: 10px;
 }
 
-
 @media only screen and (max-width: 900px) {
+  .dialog-heading-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
   .dialog-heading {
     margin-left: 0;
   }
 
-  .info-icon {
-    padding-top: 5px;
-    margin-left: auto;
-    margin-right: auto;
+  .tooltip-comp {
+    margin-left: unset;
+    padding-top: 10px;
   }
 
-  .dialog-heading-layout {
-    display: flex;
-    flex-direction: column;
+  .dialog-heading,
+  .tooltip-comp {
+    margin-left: auto;
+    margin-right: auto;
   }
 }

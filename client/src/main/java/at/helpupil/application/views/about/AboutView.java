@@ -33,10 +33,13 @@ public class AboutView extends Div {
         addClassName("about-view");
 
         try {
-            URL url = new URL("https://raw.githubusercontent.com/fabio-anzola/Helpupil/master/README.md");
+            String raw_url = "https://raw.githubusercontent.com/fabio-anzola/Helpupil/master/README.md";
+            URL url = new URL(raw_url);
             URLConnection con = url.openConnection();
             InputStream in = con.getInputStream();
             String body = new String(in.readAllBytes());
+
+            body = body.replaceAll("href=\"#", "href=\"https://github.com/fabio-anzola/Helpupil#");
 
             Parser parser = Parser.builder().build();
             Node document = parser.parse(body);

@@ -3,6 +3,7 @@ package at.helpupil.application.views.signup;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.OpenView;
 import at.helpupil.application.utils.ThemeHelper;
+import at.helpupil.application.utils.TooltipComp;
 import at.helpupil.application.utils.requests.SignUp;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.User;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -65,7 +67,7 @@ public class SignUpView extends OpenView {
 
         addClassName("sign-up-view");
 
-        add(createTitle());
+        add(createTitleLayout());
         add(createFormLayout());
         add(createButtonLayout());
 
@@ -92,10 +94,15 @@ public class SignUpView extends OpenView {
     }
 
     /**
-     * @return title as H3
+     * @return title-layout for tile & tooltip
      */
-    private Component createTitle() {
-        return new H3("Sign Up");
+    private Component createTitleLayout() {
+        H3 title = new H3("Sign Up");
+        title.addClassName("view-title");
+        TooltipComp signUpTooltip = new TooltipComp("Email verification required after submit.");
+        HorizontalLayout titleLayout = new HorizontalLayout(title, signUpTooltip);
+        titleLayout.addClassName("view-title-layout");
+        return titleLayout;
     }
 
     /**

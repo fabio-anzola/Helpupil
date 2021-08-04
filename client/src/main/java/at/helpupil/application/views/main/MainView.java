@@ -3,7 +3,7 @@ package at.helpupil.application.views.main;
 import at.helpupil.application.utils.Auth;
 import at.helpupil.application.utils.SessionStorage;
 import at.helpupil.application.utils.ThemeHelper;
-import at.helpupil.application.utils.requests.SignUp;
+import at.helpupil.application.utils.TooltipComp;
 import at.helpupil.application.utils.requests.UserEmailObj;
 import at.helpupil.application.utils.requests.UserNameObj;
 import at.helpupil.application.utils.requests.UserPasswordObj;
@@ -57,7 +57,6 @@ import kong.unirest.Unirest;
 import java.util.Optional;
 
 import static at.helpupil.application.Application.BASE_URL;
-import static at.helpupil.application.utils.Auth.getURL;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -96,7 +95,7 @@ public class MainView extends AppLayout {
     private Component createHeaderContent() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setId("header");
-        layout.getThemeList().set("dark", true);
+        layout.getStyle().set("box-shadow", "var(--lumo-box-shadow-xs)");
         layout.setWidthFull();
         layout.setSpacing(false);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -371,13 +370,10 @@ public class MainView extends AppLayout {
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
 
-
         Label dialogHeading = new Label("Change Email");
         dialogHeading.addClassName("dialog-heading");
-        Icon infoIcon = new Icon(VaadinIcon.INFO_CIRCLE_O);
-        infoIcon.addClassName("info-icon");
-
-        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, infoIcon);
+        TooltipComp changeEmailTooltip = new TooltipComp("You will be logged out after that you'll have to verify your new email address.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changeEmailTooltip);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         EmailField email = new EmailField("Email address");
@@ -425,6 +421,10 @@ public class MainView extends AppLayout {
         dialogLayout.addClassName("dialog-layout");
 
         Label dialogHeading = new Label("Change Password");
+        dialogHeading.addClassName("dialog-heading");
+        TooltipComp changePasswordTooltip = new TooltipComp("You will have to log back into your account.");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changePasswordTooltip);
+        dialogHeadingLayout.addClassName("dialog-heading-layout");
 
         PasswordField currentPassword = new PasswordField("Current Password");
         PasswordField newPassword = new PasswordField("New Password");
@@ -450,7 +450,7 @@ public class MainView extends AppLayout {
         });
         HorizontalLayout dialogButtonLayout = new HorizontalLayout(confirmButton, cancelButton);
 
-        dialogLayout.add(dialogHeading, currentPassword, newPassword, dialogButtonLayout);
+        dialogLayout.add(dialogHeadingLayout, currentPassword, newPassword, dialogButtonLayout);
 
         dialog.add(dialogLayout);
         dialog.open();
