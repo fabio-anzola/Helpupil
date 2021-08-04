@@ -99,7 +99,7 @@ public class SignUpView extends OpenView {
     private Component createTitleLayout() {
         H3 title = new H3("Sign Up");
         title.addClassName("view-title");
-        TooltipComp signUpTooltip = new TooltipComp("Email-verification required to access your account.");
+        TooltipComp signUpTooltip = new TooltipComp("Email verification required submit.");
         HorizontalLayout titleLayout = new HorizontalLayout(title, signUpTooltip);
         titleLayout.addClassName("view-title-layout");
         return titleLayout;

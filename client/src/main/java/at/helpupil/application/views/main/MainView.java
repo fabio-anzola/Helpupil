@@ -372,7 +372,7 @@ public class MainView extends AppLayout {
 
         Label dialogHeading = new Label("Change Email");
         dialogHeading.addClassName("dialog-heading");
-        TooltipComp changeEmailTooltip = new TooltipComp("You will be logged out and you will have to verify your new email-address.");
+        TooltipComp changeEmailTooltip = new TooltipComp("You will be logged out after that you'll have to verify your new email address.");
         HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading, changeEmailTooltip);
         dialogHeadingLayout.addClassName("dialog-heading-layout");
 
