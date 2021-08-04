@@ -39,7 +39,7 @@ public class AboutView extends Div {
             InputStream in = con.getInputStream();
             String body = new String(in.readAllBytes());
 
-            body = body.replaceAll("\"#", "\"https://github.com/fabio-anzola/Helpupil#");
+            body = body.replaceAll("href=\"#", "href=\"https://github.com/fabio-anzola/Helpupil#");
 
             Parser parser = Parser.builder().build();
             Node document = parser.parse(body);
