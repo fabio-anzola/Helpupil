@@ -2,6 +2,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
+[![GNU AGPL v3.0][license-shield]][license-url]
 
 
 
@@ -139,7 +140,7 @@ Contributions are what make the open source community such an amazing place to b
 
 ## License
 
-The creators hold all copyrights.
+Distributed under the GNU AGPL v3.0. See `LICENSE` for more information.
 
 ## Contact
 
@@ -159,3 +160,5 @@ Project Link: [https://github.com/fabio-anzola/Helpupil](https://github.com/fabi
 [stars-url]: https://github.com/fabio-anzola/Helpupil/stargazers
 [issues-shield]: https://img.shields.io/github/issues/fabio-anzola/Helpupil.svg?style=for-the-badge
 [issues-url]: https://github.com/fabio-anzola/Helpupil/issues
+[license-url]: https://github.com/fabio-anzola/Helpupil/blob/master/LICENSE
+[license-shield]: https://img.shields.io/github/license/fabio-anzola/Helpupil.svg?style=for-the-badge
