@@ -257,7 +257,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showDocumentDialog(Document document) {
         Dialog dialog = new Dialog();
-            dialog.setMinWidth("40vw");
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -310,7 +310,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showTeacherDialog(Teacher teacher) {
         Dialog dialog = new Dialog();
-            dialog.setMinWidth("40vw");
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -355,7 +355,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showSubjectDialog(Subject subject) {
         Dialog dialog = new Dialog();
-            dialog.setMinWidth("40vw");
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -630,7 +630,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showAddTeacherDialog() {
         Dialog dialog = new Dialog();
-            dialog.setMinWidth("40vw");
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
@@ -749,7 +749,7 @@ public class ModeratorView extends SecuredView {
      */
     private void showAddSubjectDialog() {
         Dialog dialog = new Dialog();
-            dialog.setMinWidth("40vw");
+        dialog.setMinWidth("40vw");
 
         VerticalLayout dialogLayout = new VerticalLayout();
         dialogLayout.addClassName("dialog-layout");
