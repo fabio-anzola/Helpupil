@@ -401,24 +401,35 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         }
 
 
+        Button deleteDeclineButton = new Button();
         if (document.getUser().equals(SessionStorage.get().getUser().getId())) {
-            Button deleteButton = new Button("Delete");
-            deleteButton.addClassName("document-delete-decline-button");
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            deleteButton.addClickListener(e -> {
+            deleteDeclineButton.setText("Delete");
+            deleteDeclineButton.addClickListener(e -> {
                 dialog.close();
                 showDeleteDialog(document);
             });
-            dialogLayout.add(deleteButton);
         } else if (SessionStorage.get().getUser().getRole().equals("moderator")) {
-            Button declineButton = new Button("Decline");
-            declineButton.addClassName("document-delete-decline-button");
-            declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-            declineButton.addClickListener(e -> {
+            deleteDeclineButton.setText("Decline");
+            deleteDeclineButton.addClickListener(e -> {
                 dialog.close();
                 showDeclineDialog(document);
             });
-            dialogLayout.add(declineButton);
+        }
+
+        if (document.getUser().equals(SessionStorage.get().getUser().getId())
+                || SessionStorage.get().getUser().getRole().equals("moderator")) {
+            Button renameButton = new Button("Rename");
+            renameButton.addClassName("document-rename-button");
+            renameButton.addClickListener(e -> {
+                dialog.close();
+                showRenameDialog(document);
+            });
+            dialogLayout.add(renameButton);
+
+
+            deleteDeclineButton.addClassName("document-delete-decline-button");
+            deleteDeclineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+            dialogLayout.add(deleteDeclineButton);
         }
 
 
@@ -584,7 +595,56 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     }
 
     /**
-     * show delete dialog to moderator so he can delete this document
+     * show rename dialog to document owner or moderator, so he can rename this document
+     *
+     * @param document to show rename dialog
+     */
+    private void showRenameDialog(Document document) {
+        Dialog dialog = new Dialog();
+        dialog.setMinWidth("40vw");
+
+        VerticalLayout dialogLayout = new VerticalLayout();
+        dialogLayout.addClassName("dialog-layout");
+
+        Label dialogHeading = new Label("Rename " + document.getName());
+        dialogHeading.addClassName("dialog-heading");
+        HorizontalLayout dialogHeadingLayout = new HorizontalLayout(dialogHeading);
+        if (document.getUser().equals(SessionStorage.get().getUser().getId())) {
+            TooltipComp changePasswordTooltip = new TooltipComp("Document renamed. Waiting on a moderator to approve it.");
+            dialogHeadingLayout.add(changePasswordTooltip);
+        }
+        dialogHeadingLayout.addClassName("dialog-heading-layout");
+
+        TextField newDocumentName = new TextField("Document Name");
+        newDocumentName.setValue(document.getName());
+        newDocumentName.addClassName("rename-text-field");
+
+        Button confirmButton = new Button("Confirm");
+        Button cancelButton = new Button("Cancel");
+
+        HorizontalLayout dialogButtonLayout = new HorizontalLayout();
+
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e -> {
+            dialog.close();
+            //makeRenameRequest(document.getId(), newDocumentName.getValue());
+        });
+
+        cancelButton.addClickListener(e -> {
+            dialog.close();
+            showDocumentDialog(document);
+        });
+
+        dialogButtonLayout.add(confirmButton, cancelButton);
+
+        dialogLayout.add(dialogHeadingLayout, newDocumentName, dialogButtonLayout);
+
+        dialog.add(dialogLayout);
+        dialog.open();
+    }
+
+    /**
+     * show delete dialog to moderator, so he can delete this document
      *
      * @param document to show delete dialog
      */
@@ -622,7 +682,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     }
 
     /**
-     * shows decline dialog to moderator so he can decline this document
+     * shows decline dialog to moderator, so he can decline this document
      *
      * @param document to show decline dialog
      */

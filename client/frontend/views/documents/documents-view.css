@@ -129,7 +129,8 @@ vaadin-vertical-layout.dialog-layout vaadin-horizontal-layout.rating-layout iron
   cursor: pointer;
 }
 
-vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-button {
+vaadin-vertical-layout.dialog-layout vaadin-button.document-delete-decline-button,
+vaadin-vertical-layout.dialog-layout vaadin-button.document-rename-button {
   width: 35%;
   margin-left: auto;
   margin-right: auto;
