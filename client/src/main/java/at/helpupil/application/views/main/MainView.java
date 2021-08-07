@@ -65,6 +65,7 @@ import static at.helpupil.application.Application.BASE_URL;
 @JsModule("./styles/shared-styles.js")
 @CssImport("lumo-css-framework/all-classes.css")
 @CssImport(value = "./views/responsive-dialog.css", themeFor = "vaadin-dialog-overlay")
+@CssImport(value = "./views/main/avatar-menu_menu-bar-button.css", themeFor = "vaadin-menu-bar-button")
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
 
@@ -264,10 +265,10 @@ public class MainView extends AppLayout {
                     n.getElement().getStyle().set("margin", "8px 0");
                     n.getChildren()
                             .filter(m -> m.getClass() == Icon.class).forEach(o -> ((Icon) o)
-                            .getStyle().set("width", "20px").set("margin-right", "5px"));
+                                    .getStyle().set("width", "20px").set("margin-right", "5px"));
                     n.getChildren()
                             .filter(m -> m.getClass() == Span.class).forEach(o -> ((Span) o)
-                            .getStyle().set("margin-top", "auto").set("margin-bottom", "auto").set("padding-bottom", "2px"));
+                                    .getStyle().set("margin-top", "auto").set("margin-bottom", "auto").set("padding-bottom", "2px"));
                 }));
 
         avatarItem.addClickListener(e -> {

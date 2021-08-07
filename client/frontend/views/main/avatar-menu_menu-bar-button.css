@@ -1,0 +1,7 @@
+:host([expanded][theme~="tertiary"])::after, :host([expanded][theme~="tertiary-inline"])::after {
+    transition: none;
+}
+
+:host([expanded][theme~="tertiary"]), :host([expanded][theme~="tertiary-inline"]) {
+    background-color: unset !important;
+}
