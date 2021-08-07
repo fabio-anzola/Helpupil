@@ -1,6 +1,5 @@
 package at.helpupil.application.utils;
 
-import at.helpupil.application.utils.requests.Login;
 import at.helpupil.application.utils.responses.Error;
 import at.helpupil.application.utils.responses.Tokens;
 import at.helpupil.application.utils.responses.User;
