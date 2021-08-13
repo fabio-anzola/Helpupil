@@ -104,11 +104,11 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
     /**
      * @return top div for button to upload document
-     * + searchbox to filter documents
+     * + search box to filter documents
      */
     private Component createTopDiv() {
         Div topDiv = new Div();
-        topDiv.addClassName("top-div-doc");
+        topDiv.addClassName("top-div-documents");
 
 
         Div emptyDiv = new Div();
@@ -121,15 +121,17 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         addDocument.addClickListener(e -> showUploadDialog());
 
 
-        Div innerDiv = new Div();
-        innerDiv.addClassName("search-inner-div");
+        Div searchDiv = new Div();
+        searchDiv.addClassName("search-div");
 
+        Div searchInnerDiv = new Div();
+        searchInnerDiv.addClassName("search-inner-div");
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
-        searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
         searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));
+        searchInnerDiv.add(searchBox);
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
         searchIcon.addClickListener(e -> makeSearchRequest(searchBox.getValue()));
@@ -150,10 +152,13 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             }
         });
 
-        innerDiv.add(searchIcon, searchBox, exitSearchState);
+        Icon searchSettings = new Icon(VaadinIcon.COG_O);
 
 
-        topDiv.add(emptyDiv, addDocumentDiv, innerDiv);
+        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, searchSettings);
+
+
+        topDiv.add(emptyDiv, addDocumentDiv, searchDiv);
         return topDiv;
     }
 

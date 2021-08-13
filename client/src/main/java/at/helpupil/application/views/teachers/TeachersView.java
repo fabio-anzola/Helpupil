@@ -86,26 +86,30 @@ public class TeachersView extends SecuredView {
 
         addClassName("teachers-view");
 
-        add(createSearchBox());
+        add(createTopDiv());
         add(createTeacherCards());
         add(createPagingMenu(teacher.getTotalPages()));
     }
 
     /**
-     * @return search box for user to search something
+     * @return top div with search box to filter teachers
      */
-    private Component createSearchBox() {
+    private Component createTopDiv() {
+        Div topDiv = new Div();
+        topDiv.addClassName("top-div-teachers");
+
         Div searchDiv = new Div();
         searchDiv.addClassName("search-div");
 
-        Div innerDiv = new Div();
-
+        Div searchInnerDiv = new Div();
+        searchInnerDiv.addClassName("search-inner-div");
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
         searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
         searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));
+        searchInnerDiv.add(searchBox);
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
         searchIcon.addClickListener(e -> makeSearchRequest(searchBox.getValue()));
@@ -121,16 +125,19 @@ public class TeachersView extends SecuredView {
             }
         });
 
-        innerDiv.add(searchIcon, searchBox, exitSearchState);
+        Icon searchSettings = new Icon(VaadinIcon.COG_O);
 
 
-        searchDiv.add(innerDiv);
+        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, searchSettings);
 
-        return searchDiv;
+
+        topDiv.add(searchDiv);
+        return topDiv;
     }
 
     /**
      * make api request to filter documents
+     *
      * @param searchText to filter for
      */
     private void makeSearchRequest(String searchText) {

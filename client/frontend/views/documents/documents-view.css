@@ -15,8 +15,8 @@ div.documents-view {
   flex-direction: column;
 }
 
-/* Search Layout */
-div.top-div-doc {
+/* Top-Div Layout */
+div.top-div-documents {
   margin-top: 15px;
   width: 90%;
   display: grid;
@@ -25,25 +25,34 @@ div.top-div-doc {
   margin-right: auto;
 }
 
-div.top-div-doc div.add-document-div {
+div.top-div-documents div.add-document-div {
   padding: 0 15px;
 }
 
-div.top-div-doc div.search-inner-div {
+div.top-div-documents div.search-div {
+  display: flex;
+  justify-content: flex-end;
   white-space: nowrap;
 }
 
-div.top-div-doc iron-icon {
-  margin-left: 15px;
-  margin-right: 15px;
+div.top-div-documents div.search-inner-div {
+  margin-left: 9px;
+  margin-right: 9px;
 }
 
-div.top-div-doc iron-icon:hover {
+div.top-div-documents iron-icon {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 9px;
+  margin-right: 9px;
+}
+
+div.top-div-documents iron-icon:hover {
   cursor: pointer;
 }
 
 
-
+/* Document Grid */
 vaadin-grid {
   margin-top: 15px;
   margin-bottom: 15px;
@@ -144,16 +153,16 @@ vaadin-vertical-layout.dialog-layout vaadin-button.document-rename-button {
 
 
 @media only screen and (max-width: 900px) {
-  div.top-div-doc {
+  div.top-div-documents {
     justify-content: center;
     grid-template-columns: none;
   }
 
-  div.top-div-doc div.add-document-div {
+  div.top-div-documents div.add-document-div {
     width: unset;
   }
 
-  div.top-div-doc div.search-inner-div {
+  div.top-div-documents div.search-div {
     margin-top: 10px;
   }
 
