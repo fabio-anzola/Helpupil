@@ -397,7 +397,7 @@ public class ModeratorView extends SecuredView {
      */
     private Component createTeacherTopDiv() {
         Div topDiv = new Div();
-        topDiv.addClassName("top-div-doc");
+        topDiv.addClassName("top-div-moderator");
 
 
         Div emptyDiv = new Div();
@@ -410,15 +410,17 @@ public class ModeratorView extends SecuredView {
         addTeacher.addClickListener(e -> showAddTeacherDialog());
 
 
-        Div innerDiv = new Div();
-        innerDiv.addClassName("search-inner-div");
+        Div searchDiv = new Div();
+        searchDiv.addClassName("search-div");
 
+        Div searchInnerDiv = new Div();
+        searchInnerDiv.addClassName("search-inner-div");
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
-        searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
         searchBox.addKeyDownListener(Key.ENTER, e -> makeTeacherSearchRequest(searchBox.getValue()));
+        searchInnerDiv.add(searchBox);
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
         searchIcon.addClickListener(e -> makeTeacherSearchRequest(searchBox.getValue()));
@@ -434,10 +436,13 @@ public class ModeratorView extends SecuredView {
             }
         });
 
-        innerDiv.add(searchIcon, searchBox, exitSearchState);
+        Icon searchSettings = new Icon(VaadinIcon.COG_O);
 
 
-        topDiv.add(emptyDiv, addTeacherDiv, innerDiv);
+        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, searchSettings);
+
+
+        topDiv.add(emptyDiv, addTeacherDiv, searchDiv);
         return topDiv;
     }
 
@@ -446,7 +451,7 @@ public class ModeratorView extends SecuredView {
      */
     private Component createSubjectTopDiv() {
         Div topDiv = new Div();
-        topDiv.addClassName("top-div-doc");
+        topDiv.addClassName("top-div-moderator");
 
 
         Div emptyDiv = new Div();
@@ -459,15 +464,17 @@ public class ModeratorView extends SecuredView {
         addSubject.addClickListener(e -> showAddSubjectDialog());
 
 
-        Div innerDiv = new Div();
-        innerDiv.addClassName("search-inner-div");
+        Div searchDiv = new Div();
+        searchDiv.addClassName("search-div");
 
+        Div searchInnerDiv = new Div();
+        searchInnerDiv.addClassName("search-inner-div");
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
-        searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
         searchBox.addKeyDownListener(Key.ENTER, e -> makeSubjectSearchRequest(searchBox.getValue()));
+        searchInnerDiv.add(searchBox);
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
         searchIcon.addClickListener(e -> makeSubjectSearchRequest(searchBox.getValue()));
@@ -483,10 +490,13 @@ public class ModeratorView extends SecuredView {
             }
         });
 
-        innerDiv.add(searchIcon, searchBox, exitSearchState);
+        Icon searchSettings = new Icon(VaadinIcon.COG_O);
 
 
-        topDiv.add(emptyDiv, addTeacherDiv, innerDiv);
+        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, searchSettings);
+
+
+        topDiv.add(emptyDiv, addTeacherDiv, searchDiv);
         return topDiv;
     }
 
