@@ -41,9 +41,10 @@ div.top-div-teachers iron-icon {
   margin-right: 9px;
 }
 
-div.top-div-doc iron-icon:hover {
+div.top-div-teachers iron-icon:hover {
   cursor: pointer;
 }
+
 
 /* teacher Layout */
 div.teacher-layout-div {

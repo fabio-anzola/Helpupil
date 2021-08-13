@@ -105,7 +105,6 @@ public class TeachersView extends SecuredView {
         searchInnerDiv.addClassName("search-inner-div");
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
-        searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
         searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));

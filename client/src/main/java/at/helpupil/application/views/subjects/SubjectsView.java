@@ -86,26 +86,29 @@ public class SubjectsView extends SecuredView {
 
         addClassName("subjects-view");
 
-        add(createSearchBox());
+        add(createTopDiv());
         add(createSubjectCards());
         add(createPagingMenu(subject.getTotalPages()));
     }
 
     /**
-     * @return search box where users can filter documents
+     * @return top div with search box to filter subjects
      */
-    private Component createSearchBox() {
+    private Component createTopDiv() {
+        Div topDiv = new Div();
+        topDiv.addClassName("top-div-subjects");
+
         Div searchDiv = new Div();
         searchDiv.addClassName("search-div");
 
-        Div innerDiv = new Div();
-
+        Div searchInnerDiv = new Div();
+        searchInnerDiv.addClassName("search-inner-div");
         TextField searchBox = new TextField();
         searchBox.setPlaceholder("Search");
-        searchBox.setClearButtonVisible(true);
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
         searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));
+        searchInnerDiv.add(searchBox);
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
         searchIcon.addClickListener(e -> makeSearchRequest(searchBox.getValue()));
@@ -121,12 +124,14 @@ public class SubjectsView extends SecuredView {
             }
         });
 
-        innerDiv.add(searchIcon, searchBox, exitSearchState);
+        Icon searchSettings = new Icon(VaadinIcon.COG_O);
 
 
-        searchDiv.add(innerDiv);
+        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, searchSettings);
 
-        return searchDiv;
+
+        topDiv.add(searchDiv);
+        return topDiv;
     }
 
     /**
