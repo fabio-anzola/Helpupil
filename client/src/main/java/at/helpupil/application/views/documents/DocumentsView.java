@@ -181,8 +181,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                 .set("height", "32px")
                 .set("bottom", "-1.9px")
                 .set("margin", "0");
-        MenuItem avatarItem = menuBar.addItem(searchSettings);
-
+        MenuItem checkboxGroupItem = menuBar.addItem(searchSettings);
 
         CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
         checkboxGroup.addClassName("search-settings-checkbox-group");
@@ -192,7 +191,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 
 
-        avatarItem.getSubMenu().addItem(checkboxGroup);
+        checkboxGroupItem.getSubMenu().addItem(checkboxGroup);
 
         return menuBar;
     }

@@ -45,16 +45,21 @@ div.top-div-documents iron-icon {
   margin-bottom: auto;
   margin-left: 9px;
   margin-right: 9px;
+  transition: opacity 0.2s;
 }
 
 div.top-div-documents iron-icon:hover {
-  cursor: pointer;
+  opacity: 0.8;
 }
 
 /* Search Menu */
 vaadin-checkbox-group.search-settings-checkbox-group {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+vaadin-checkbox-group.search-settings-checkbox-group:hover {
+  background-color: rebeccapurple;
 }
 
 /* Document Grid */
