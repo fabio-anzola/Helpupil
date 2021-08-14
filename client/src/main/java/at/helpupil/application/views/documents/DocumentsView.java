@@ -74,6 +74,10 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private boolean searchState = false;
     /**
+     * map of available search options and their state
+     */
+    private HashMap<String, Boolean> searchSettings = new HashMap<>();
+    /**
      * list of found ids
      */
     private final ArrayList<String> foundIds = new ArrayList<>();
@@ -174,24 +178,37 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
 
         menuBar.addClassName("search-settings-menu");
         menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
-        Icon searchSettings = new Icon(VaadinIcon.COG_O);
-        searchSettings.getStyle()
+        Icon searchSettingsIcon = new Icon(VaadinIcon.COG_O);
+        searchSettingsIcon.getStyle()
                 .set("box-sizing", "unset")
                 .set("width", "32px")
                 .set("height", "32px")
                 .set("bottom", "-1.9px")
                 .set("margin", "0");
-        MenuItem checkboxGroupItem = menuBar.addItem(searchSettings);
+
+        MenuItem checkboxGroupItem = menuBar.addItem(searchSettingsIcon);
+
+        searchSettings.put("Case Sensitive", false);
+        searchSettings.put("Exact Match", false);
+        searchSettings.put("Inverse Search", false);
 
         CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
         checkboxGroup.addClassName("search-settings-checkbox-group");
         checkboxGroup.setLabel("Search Settings");
-        checkboxGroup.setItems("Case Sensitive", "Exact Match", "Inverse Search", "Search by Uploader");
-        checkboxGroup.setValue(Collections.singleton("Option one"));
+        checkboxGroup.setItems(searchSettings.keySet());
         checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
 
-
         checkboxGroupItem.getSubMenu().addItem(checkboxGroup);
+
+
+        checkboxGroup.addValueChangeListener(e -> {
+            searchSettings.forEach((k, v) -> searchSettings.replace(k, checkboxGroup.getSelectedItems().contains(k)));
+            if (searchSettings.values().stream().anyMatch(n -> n)) {
+                menuBar.addClassName("settings-active");
+            } else {
+                menuBar.removeClassName("settings-active");
+            }
+        });
 
         return menuBar;
     }

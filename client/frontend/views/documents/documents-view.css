@@ -53,6 +53,10 @@ div.top-div-documents iron-icon:hover {
 }
 
 /* Search Menu */
+div.top-div-documents div.search-div vaadin-menu-bar.search-settings-menu.settings-active {
+  color: var(--lumo-primary-color);
+}
+
 vaadin-checkbox-group.search-settings-checkbox-group {
   padding-top: 10px;
   padding-bottom: 10px;
