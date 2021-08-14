@@ -74,9 +74,13 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      */
     private boolean searchState = false;
     /**
+     * text to search for document names
+     */
+    private String searchString = "";
+    /**
      * map of available search options and their state
      */
-    private HashMap<String, Boolean> searchSettings = new HashMap<>();
+    private final HashMap<String, Boolean> searchSettings = new HashMap<>();
     /**
      * list of found ids
      */
@@ -140,17 +144,24 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
         searchBox.setPlaceholder("Search");
         searchBox.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         searchBox.addKeyDownListener(Key.ESCAPE, e -> searchBox.blur());
-        searchBox.addKeyDownListener(Key.ENTER, e -> makeSearchRequest(searchBox.getValue()));
+        searchBox.addKeyDownListener(Key.ENTER, e -> {
+            searchString = searchBox.getValue();
+            makeSearchRequest(searchString);
+        });
         searchInnerDiv.add(searchBox);
 
         Icon searchIcon = new Icon(VaadinIcon.SEARCH);
-        searchIcon.addClickListener(e -> makeSearchRequest(searchBox.getValue()));
+        searchIcon.addClickListener(e -> {
+            searchString = searchBox.getValue();
+            makeSearchRequest(searchString);
+        });
 
         Icon exitSearchState = new Icon(VaadinIcon.CLOSE_BIG);
         exitSearchState.addClickListener(e -> {
             searchBox.clear();
             if (searchState) {
                 searchState = false;
+                searchString = "";
                 currentPage = 1;
                 if (filter == null) {
                     documents = getDocuments(currentPage);
@@ -208,6 +219,7 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             } else {
                 menuBar.removeClassName("settings-active");
             }
+            makeSearchRequest(searchString);
         });
 
         return menuBar;
@@ -234,10 +246,9 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
     /**
      * now only documents which apply the filter are shown
      *
-     * @param searchText to filter for
+     * @param searchText to filter for document names
      */
     private void makeSearchRequest(String searchText) {
-        searchText = searchText.toLowerCase();
         foundIds.clear();
 
         String[] resolvedFilter = new String[2];
@@ -271,9 +282,12 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
                     pages = documents.getBody().getTotalPages();
                 }
 
-                String finalSearchText = searchText;
                 Arrays.stream(documents.getBody().getResults()).forEach(n -> {
-                    if (n.getName().toLowerCase().contains(finalSearchText)) {
+                    if (searchSettings.get("Case Sensitive")) {
+                        if (n.getName().contains(searchText)) {
+                            foundIds.add(n.getId());
+                        }
+                    } else if (n.getName().toLowerCase().contains(searchText.toLowerCase())) {
                         foundIds.add(n.getId());
                     }
                 });
