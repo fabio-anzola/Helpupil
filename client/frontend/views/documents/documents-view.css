@@ -58,10 +58,6 @@ vaadin-checkbox-group.search-settings-checkbox-group {
   padding-bottom: 10px;
 }
 
-vaadin-checkbox-group.search-settings-checkbox-group:hover {
-  background-color: rebeccapurple;
-}
-
 /* Document Grid */
 vaadin-grid {
   margin-top: 15px;
