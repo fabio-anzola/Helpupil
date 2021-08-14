@@ -139,6 +139,13 @@ public class SubjectsView extends SecuredView {
      * @param searchText to filter for
      */
     private void makeSearchRequest(String searchText) {
+        if (searchText.isEmpty()) {
+            currentPage = 1;
+            subject = getSubjects(currentPage);
+            return;
+        }
+
+
         searchText = searchText.toLowerCase();
         foundIds.clear();
 

@@ -249,12 +249,24 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
      * @param searchText to filter for document names
      */
     private void makeSearchRequest(String searchText) {
-        foundIds.clear();
-
         String[] resolvedFilter = new String[2];
         if (filter != null) {
             resolvedFilter = resolveFilter();
         }
+
+        if (searchText.isEmpty()) {
+            currentPage = 1;
+            if (filter == null) {
+                documents = getDocuments(currentPage);
+            } else {
+                documents = getDocuments(currentPage, resolvedFilter[0], resolvedFilter[1]);
+            }
+            updateDocumentPage();
+            return;
+        }
+
+
+        foundIds.clear();
 
         int pageIndex = 0;
         int pages = 1;

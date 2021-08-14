@@ -1062,6 +1062,13 @@ public class ModeratorView extends SecuredView {
      * @param searchText to search for
      */
     private void makeTeacherSearchRequest(String searchText) {
+        if (searchText.isEmpty()) {
+            currentTeacherPage = 1;
+            teachers = getTeachers(currentTeacherPage);
+            return;
+        }
+
+
         searchText = searchText.toLowerCase();
         foundTeacherIds.clear();
 
@@ -1108,6 +1115,13 @@ public class ModeratorView extends SecuredView {
      * @param searchText to search for
      */
     private void makeSubjectSearchRequest(String searchText) {
+        if (searchText.isEmpty()) {
+            currentSubjectPage = 1;
+            subjects = getSubjects(currentSubjectPage);
+            return;
+        }
+
+
         searchText = searchText.toLowerCase();
         foundSubjectIds.clear();
 

@@ -140,6 +140,13 @@ public class TeachersView extends SecuredView {
      * @param searchText to filter for
      */
     private void makeSearchRequest(String searchText) {
+        if (searchText.isEmpty()) {
+            currentPage = 1;
+            teacher = getTeachers(currentPage);
+            return;
+        }
+
+
         searchText = searchText.toLowerCase();
         foundIds.clear();
 
