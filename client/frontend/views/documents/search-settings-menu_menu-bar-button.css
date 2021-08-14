@@ -1,0 +1,7 @@
+:host([theme~="tertiary"]), :host([theme~="tertiary-inline"]) {
+    color: unset !important;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+}

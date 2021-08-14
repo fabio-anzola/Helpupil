@@ -10,7 +10,10 @@ import com.vaadin.flow.component.KeyModifier;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -18,6 +21,8 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -49,6 +54,7 @@ import static at.helpupil.application.utils.Resolve.*;
 @CssImport(value = "./views/responsive-dialog.css", themeFor = "vaadin-dialog-overlay")
 @CssImport("./views/documents/documents-view.css")
 @CssImport(value = "./views/documents/document-grid.css", themeFor = "vaadin-grid")
+@CssImport(value = "./views/documents/search-settings-menu_menu-bar-button.css", themeFor = "vaadin-menu-bar-button")
 public class DocumentsView extends SecuredView implements HasUrlParameter<String> {
     /**
      * grid of documents
@@ -152,14 +158,43 @@ public class DocumentsView extends SecuredView implements HasUrlParameter<String
             }
         });
 
-        Icon searchSettings = new Icon(VaadinIcon.COG_O);
 
-
-        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, searchSettings);
+        searchDiv.add(searchIcon, searchInnerDiv, exitSearchState, createSearchSettingsMenu());
 
 
         topDiv.add(emptyDiv, addDocumentDiv, searchDiv);
         return topDiv;
+    }
+
+    /**
+     * @return search menu for search settings
+     */
+    private MenuBar createSearchSettingsMenu() {
+        MenuBar menuBar = new MenuBar();
+
+        menuBar.addClassName("search-settings-menu");
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
+        Icon searchSettings = new Icon(VaadinIcon.COG_O);
+        searchSettings.getStyle()
+                .set("box-sizing", "unset")
+                .set("width", "32px")
+                .set("height", "32px")
+                .set("bottom", "-1.9px")
+                .set("margin", "0");
+        MenuItem avatarItem = menuBar.addItem(searchSettings);
+
+
+        CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
+        checkboxGroup.addClassName("search-settings-checkbox-group");
+        checkboxGroup.setLabel("Search Settings");
+        checkboxGroup.setItems("Case Sensitive", "Exact Match", "Inverse Search", "Search by Uploader");
+        checkboxGroup.setValue(Collections.singleton("Option one"));
+        checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+
+
+        avatarItem.getSubMenu().addItem(checkboxGroup);
+
+        return menuBar;
     }
 
     /**

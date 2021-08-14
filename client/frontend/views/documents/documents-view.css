@@ -51,6 +51,11 @@ div.top-div-documents iron-icon:hover {
   cursor: pointer;
 }
 
+/* Search Menu */
+vaadin-checkbox-group.search-settings-checkbox-group {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
 /* Document Grid */
 vaadin-grid {
