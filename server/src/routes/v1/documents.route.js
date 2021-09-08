@@ -48,6 +48,10 @@ router
   .get(auth(), validate(documentValidation.get), documentController.getDocuments);
 
 router
+  .route('/search/')
+  .get(auth(), validate(documentValidation.search), documentController.searchDocuments);
+
+router
   .route('/file/')
   .post(auth(), upload.single('file'), validate(documentValidation.createFile), documentController.createDocument)
 
