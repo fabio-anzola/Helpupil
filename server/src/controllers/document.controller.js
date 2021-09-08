@@ -77,6 +77,11 @@ const getDocument = catchAsync(async (req, res) => {
 	res.send(document);
 });
 
+const searchDocuments = catchAsync(async (req, res) => {
+	console.log(req);
+	res.send(req.query);
+});
+
 const deleteDocument = catchAsync(async (req, res) => {
 	const document = await documentService.getDocumentById(req.params.documentId);
 	if (!document) {
@@ -111,4 +116,5 @@ module.exports = {
 	deleteDocument,
 	getDocumentTypes,
 	createDocumentBase64,
+	searchDocuments,
 };

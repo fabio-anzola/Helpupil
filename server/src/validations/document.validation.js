@@ -54,9 +54,9 @@ const get = {
 const search = {
 	query: Joi.object().keys({
 		searchstring: Joi.string().required(),
-		sensitive: Joi.boolean(),
-		exact: Joi.boolean(),
-		inverse: Joi.boolean(),
+		sensitive: Joi.boolean().default(false),
+		exact: Joi.boolean().default(false),
+		inverse: Joi.boolean().default(false),
 	  }),
 };
 
