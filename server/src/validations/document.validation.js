@@ -57,6 +57,9 @@ const search = {
 		sensitive: Joi.boolean().default(false),
 		exact: Joi.boolean().default(false),
 		inverse: Joi.boolean().default(false),
+		sortBy: Joi.string(),
+		limit: Joi.number().integer(),
+		page: Joi.number().integer(),
 	  }),
 };
 

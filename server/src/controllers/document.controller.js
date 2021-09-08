@@ -78,27 +78,31 @@ const getDocument = catchAsync(async (req, res) => {
 });
 
 const searchDocuments = catchAsync(async (req, res) => {
-	var options = '';
+	const options = pick(req.query, ['sortBy', 'limit', 'page']);
+
+	var mongo_options = '';
 	var regex = '';
 
 	if (req.query.sensitive == false) {
-		options += 'i';
+		mongo_options += 'i';
 	}
 	if (req.query.exact == false) {
 		regex = req.query.searchstring;
 	} else {
 		regex = `(.+)?${req.query.searchstring}(.+)?`; 
 	}
+
 	var query = {"name":{$regex: regex, $options: options}};
 
 	if (req.query.inverse == true) {
 		query = {$nor:[query]};
 	}
-	const documents = await documentService.find(query);
+	query.status = statusTypes.APPROVED;
 
-	if (!documents) {
-		throw new ApiError(httpStatus.NOT_FOUND, 'No documents found');
-	}
+	console.log(query);
+
+	const result = await documentService.queryDocuments(query, options);
+	res.send(result);
 });
 
 const deleteDocument = catchAsync(async (req, res) => {
