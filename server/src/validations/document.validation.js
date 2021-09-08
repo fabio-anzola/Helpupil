@@ -51,8 +51,18 @@ const get = {
 	  }),
 };
 
+const search = {
+	query: Joi.object().keys({
+		searchstring: Joi.string().required(),
+		sensitive: Joi.boolean(),
+		exact: Joi.boolean(),
+		inverse: Joi.boolean(),
+	  }),
+};
+
 module.exports = {
   createFile,
 	createBase64,
   get,
+	search,
 };
