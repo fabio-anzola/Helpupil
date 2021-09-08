@@ -78,8 +78,27 @@ const getDocument = catchAsync(async (req, res) => {
 });
 
 const searchDocuments = catchAsync(async (req, res) => {
-	console.log(req);
-	res.send(req.query);
+	var options = '';
+	var regex = '';
+
+	if (req.query.sensitive == false) {
+		options += 'i';
+	}
+	if (req.query.exact == false) {
+		regex = req.query.searchstring;
+	} else {
+		regex = `(.+)?${req.query.searchstring}(.+)?`; 
+	}
+	var query = {"name":{$regex: regex, $options: options}};
+
+	if (req.query.inverse == true) {
+		query = {$nor:[query]};
+	}
+	const documents = await documentService.find(query);
+
+	if (!documents) {
+		throw new ApiError(httpStatus.NOT_FOUND, 'No documents found');
+	}
 });
 
 const deleteDocument = catchAsync(async (req, res) => {
