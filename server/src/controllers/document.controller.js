@@ -82,24 +82,23 @@ const searchDocuments = catchAsync(async (req, res) => {
 
 	var mongo_options = '';
 	var regex = '';
+	var query = '';
 
 	if (req.query.sensitive == false) {
 		mongo_options += 'i';
 	}
 	if (req.query.exact == false) {
-		regex = req.query.searchstring;
-	} else {
 		regex = `(.+)?${req.query.searchstring}(.+)?`; 
+		query = {"name":{$regex: regex, $options: mongo_options}};
+	} else {
+		regex = req.query.searchstring;
+		query = {"name": regex};
 	}
-
-	var query = {"name":{$regex: regex, $options: options}};
 
 	if (req.query.inverse == true) {
 		query = {$nor:[query]};
 	}
 	query.status = statusTypes.APPROVED;
-
-	console.log(query);
 
 	const result = await documentService.queryDocuments(query, options);
 	res.send(result);
